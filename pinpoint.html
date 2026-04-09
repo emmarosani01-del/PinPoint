@@ -488,7 +488,7 @@ textarea.inp{resize:none;height:80px;line-height:1.5}
   <div style="padding:20px 24px 14px;flex-shrink:0"><div class="h1">Profile</div></div>
   <div class="scr">
     <div style="padding:0 24px 120px">
-      <div class="p-hero"><div class="av">A</div><div class="pn">Alex Rivera</div><div class="pe">alex.rivera@email.com</div><div class="p-pills"><div class="pp a">🌿 Nature</div><div class="pp a">🍜 Food</div><div class="pp a">📷 Photo</div><div class="pp">Backpacker</div></div></div>
+      <div class="p-hero"><div class="av">A</div><div class="pn">Alex Rivera</div><div class="pe"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0968656c71277b607f6c7b68496c64686065276a6664">[email&#160;protected]</a></div><div class="p-pills"><div class="pp a">🌿 Nature</div><div class="pp a">🍜 Food</div><div class="pp a">📷 Photo</div><div class="pp">Backpacker</div></div></div>
       <div class="p-stats"><div class="pst"><div class="psv">12</div><div class="psl">Trips</div></div><div class="pst"><div class="psv">34</div><div class="psl">Countries</div></div><div class="pst"><div class="psv">218</div><div class="psl">Days abroad</div></div></div>
       <div class="p-sec"><div class="p-sec-t">Travel preferences</div><div class="pcard">
         <div class="prow" onclick="openPrefModal('budget')"><div class="pr-l"><div class="pr-ic">🪙</div><div><div class="pr-lb">Default budget</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="pv-budget">Low</div><div class="pr-a">›</div></div></div>
@@ -583,7 +583,7 @@ textarea.inp{resize:none;height:80px;line-height:1.5}
 <div id="toast"></div>
 </div><!-- shell -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ═══════════════════════════════════════════
    NAV
 ═══════════════════════════════════════════ */
@@ -698,217 +698,233 @@ function getCities(){return [...document.querySelectorAll('.city-inp')].map(i=>i
 /* ═══════════════════════════════════════════
    AI CALL HELPER
 ═══════════════════════════════════════════ */
-function callAI(userMsg){
-  return fetch('/api/generate',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({messages:[{role:'user',content:userMsg}]})
-  }).then(r=>{
-    if(!r.ok) return r.json().then(e=>{throw new Error(e.error||'HTTP '+r.status);});
+// Call a server-side endpoint that builds the prompt for us
+function callEndpoint(endpoint, params) {
+  return fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  }).then(r => {
+    if (!r.ok) return r.json().then(e => { throw new Error(e.error || 'HTTP ' + r.status); });
     return r.json();
-  }).then(data=>{
-    if(data.error) throw new Error(data.error);
-    const raw=data.content.map(b=>b.text||'').join('');
-    const parsed=extractJSON(raw);
-    if(!parsed) throw new Error('Could not parse AI response as JSON');
-    return parsed;
+  }).then(data => {
+    if (data.error) throw new Error(typeof data.error === 'string' ? data.error : data.error.message || JSON.stringify(data.error));
+    const raw = data.content.map(b => b.text || '').join('');
+    const start = raw.indexOf('{');
+    const end   = raw.lastIndexOf('}');
+    if (start === -1 || end === -1) throw new Error('No JSON in response — check server logs');
+    const candidate = raw.slice(start, end + 1);
+    try { return JSON.parse(candidate); }
+    catch(e) {
+      try { return JSON.parse(candidate.replace(/[\x00-\x1F\x7F]/g, ' ')); }
+      catch(e2) { console.error('JSON parse failed:', e2.message, '\nRaw:', raw.slice(0, 300)); throw new Error('JSON parse failed — response may be truncated'); }
+    }
   });
 }
 
-function extractJSON(str){
-  // Find first { and last } to extract JSON even with surrounding text
-  const start=str.indexOf('{');
-  const end=str.lastIndexOf('}');
-  if(start===-1||end===-1||end<=start) return null;
-  const candidate=str.slice(start,end+1);
-  try{return JSON.parse(candidate);}
-  catch(e){
-    // strip control chars and try again
-    try{return JSON.parse(candidate.replace(/[\x00-\x1F\x7F]/g,' '));}
-    catch(e2){console.error('JSON extract failed',e2.message);return null;}
-  }
-}
-
 /* ═══════════════════════════════════════════
-   GENERATE ITINERARY
+   GENERATE ITINERARY — one AI call per city
 ═══════════════════════════════════════════ */
-let generatedDays=[];
-let currentCities=[];
-let currentDateFrom='';
-let currentDateTo='';
+let generatedDays   = [];
+let currentCities   = [];
+let currentDateFrom = '';
+let currentDateTo   = '';
 
-async function startGen(){
-  const cities=getCities();
-  if(!cities.length){showToast('⚠️ Enter at least one destination');return;}
+async function startGen() {
+  const cities = getCities();
+  if (!cities.length) { showToast('⚠️ Enter at least one destination'); return; }
 
-  const f=document.getElementById('d1').value;
-  const t=document.getElementById('d2').value;
-  currentDateFrom=f; currentDateTo=t; currentCities=cities;
+  const f = document.getElementById('d1').value;
+  const t = document.getElementById('d2').value;
+  currentDateFrom = f; currentDateTo = t; currentCities = cities;
 
-  // Compute exact date list for labelling
-  const dateList=[];
-  if(f&&t){
-    const start=new Date(f);const end=new Date(t);
-    for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+  const dateList = [];
+  if (f && t) {
+    for (let d = new Date(f); d <= new Date(t); d.setDate(d.getDate() + 1))
       dateList.push(new Date(d));
-    }
   }
-  const totalDays=dateList.length||5;
+  const totalDays = dateList.length || 5;
 
-  const budget=document.querySelector('#bc .chip.ons')?.dataset.v||'low';
-  const pace=document.querySelector('#pc .chip.ons')?.dataset.v||'balanced';
-  const ints=[...document.querySelectorAll('#ic .chip.on')].map(c=>c.dataset.v);
-  const mustdo=document.getElementById('md').value.trim();
-  const startPt=document.getElementById('sp').value.trim();
-  const isMulti=cities.length>1;
+  const budget  = document.querySelector('#bc .chip.ons')?.dataset.v || 'low';
+  const pace    = document.querySelector('#pc .chip.ons')?.dataset.v || 'balanced';
+  const ints    = [...document.querySelectorAll('#ic .chip.on')].map(c => c.dataset.v);
+  const mustdo  = document.getElementById('md').value.trim();
+  const startPt = document.getElementById('sp').value.trim();
 
-  // Update generating screen
-  document.getElementById('gen-title').textContent=cities.map(c=>c.split(',')[0].trim()).join(' → ');
-  document.getElementById('gen-sub').textContent='Calling AI…';
-  for(let i=0;i<5;i++){const g=document.getElementById('gs-'+i);g.classList.remove('on','dn');}
+  const WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function dateLabel(i) {
+    if (!dateList[i]) return 'Day ' + (i + 1);
+    const d = dateList[i];
+    return WD[d.getDay()] + ' ' + d.getDate() + ' ' + MO[d.getMonth()];
+  }
+
+  const cityBlocks = buildCityBlocks(cities, totalDays);
+
+  document.getElementById('gen-title').textContent = cities.map(c => c.split(',')[0].trim()).join(' → ');
+  document.getElementById('gen-sub').textContent = 'Calling AI...';
+  for (let i = 0; i < 5; i++) { const g = document.getElementById('gs-' + i); g.classList.remove('on', 'dn'); }
   goTab('gen');
 
-  let step=0;
-  const steps=[
-    'Researching '+(isMulti?cities.map(c=>c.split(',')[0]).join(' & '):cities[0].split(',')[0])+'…',
-    'Finding hidden gems & local spots…',
-    isMulti?'Distributing '+totalDays+' days across '+cities.length+' cities…':'Building daily schedule…',
-    'Calculating routes & transport…',
-    'Adding curiosities & local tips…'
-  ];
-  const timer=setInterval(()=>{
-    if(step>0){const p=document.getElementById('gs-'+(step-1));p.classList.remove('on');p.classList.add('dn');}
-    if(step<5){const c=document.getElementById('gs-'+step);c.classList.add('on');document.getElementById('gen-sub').textContent=steps[step];step++;}
-  },900);
+  let step = 0;
+  const stepLabels = cities.map(c => 'Generating ' + c.split(',')[0].trim() + '...');
+  while (stepLabels.length < 5) stepLabels.push('Finalizing...');
+  const stepTimer = setInterval(() => {
+    if (step > 0) { const p = document.getElementById('gs-' + (step-1)); p.classList.remove('on'); p.classList.add('dn'); }
+    if (step < 5) { const c = document.getElementById('gs-' + step); c.classList.add('on'); document.getElementById('gen-sub').textContent = stepLabels[step]; step++; }
+  }, 800);
 
-  // Build the exact date labels so AI uses them
-  const dayLabels=dateList.length>0
-    ? dateList.map((d,i)=>{
-        const wd=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-        const dd=d.getDate();
-        const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
-        return 'Day '+(i+1)+' ('+wd+' '+dd+' '+mo+')';
-      })
-    : Array.from({length:totalDays},(_,i)=>'Day '+(i+1));
+  const budgetDesc = {
+    low:      'backpacker budget — hostels, street food, free or cheap attractions, under $30/day',
+    medium:   'mid-range budget — guesthouses, sit-down restaurants, paid attractions, $30-80/day',
+    flexible: 'comfortable budget — nice hotels, good restaurants, any attraction, $80+/day'
+  }[budget] || budget;
 
-  // Multi-city: compute which city covers which days
-  let cityDayMap='';
-  if(isMulti){
-    const perCity=Math.floor(totalDays/cities.length);
-    const rem=totalDays-(perCity*cities.length);
-    let dayIdx=0;
-    cityDayMap='\n\nCITY-TO-DAY MAPPING (follow exactly):\n';
-    cities.forEach((city,ci)=>{
-      const n=perCity+(ci===cities.length-1?rem:0);
-      const from=dayIdx+1, to=dayIdx+n;
-      cityDayMap+='- Days '+from+'-'+to+': '+city+'\n';
-      // Insert travel day between cities (except after last)
-      if(ci<cities.length-1){
-        dayIdx+=n;
-        cityDayMap+='- Day '+(dayIdx+1)+' (travel): transit from '+city.split(',')[0].trim()+' to '+cities[ci+1].split(',')[0].trim()+'\n';
-        dayIdx++;
+  const paceDesc = {
+    chill:    '2-3 activities per day — slow and relaxed, plenty of free time',
+    balanced: '4-5 activities per day — moderate pace',
+    intense:  '6-7 activities per day — packed schedule'
+  }[pace] || pace;
+
+  try {
+    const allDays = [];
+    for (const block of cityBlocks) {
+      if (block.travel) {
+        const idx = block.dayIndex;
+        allDays.push({
+          label:    'Day ' + (idx + 1),
+          date:     dateLabel(idx),
+          city:     block.from + ' to ' + block.to,
+          cityNote: 'Travel day. Book transport in advance — bus, train or flight from ' + block.from + ' to ' + block.to + '.',
+          items: [
+            { time: '8:00',  name: 'Pack and check out', meta: 'Prepare for journey to ' + block.to, cost: 'free', costLevel: 'free', highlight: false, fact: '' },
+            { transport: 'Travel from ' + block.from + ' to ' + block.to + ' — check local buses, trains or flights' },
+            { time: '–', name: 'Arrive in ' + block.to, meta: 'Check in, rest and explore your neighbourhood', cost: 'free', costLevel: 'free', highlight: false, fact: '' }
+          ]
+        });
       } else {
-        dayIdx+=n;
+        const cityDays = block.days;
+        const nDays    = cityDays.length;
+        const cityName = block.city;
+        const dateStr  = cityDays.map(d => 'Day ' + (d.globalIdx + 1) + ' = ' + d.label).join(', ');
+        const firstDate = cityDays[0].label;
+        const firstDayNum = cityDays[0].globalIdx + 1;
+
+        const result = await callEndpoint('/api/itinerary', {
+          city:       cityName,
+          nDays:      nDays,
+          budget:     budget,
+          pace:       pace,
+          interests:  ints.join(', ') || 'general',
+          mustdo:     mustdo || '',
+          startPt:    (block === cityBlocks[0] ? startPt : '') || '',
+          firstDayNum: firstDayNum,
+          firstDate:  firstDate,
+          dateStr:    dateStr
+        });
+
+        if (!result.days || !result.days.length) throw new Error('No days returned for ' + cityName);
+
+        result.days.forEach((day, i) => {
+          const gIdx = cityDays[i] ? cityDays[i].globalIdx : allDays.length;
+          allDays.push({
+            ...day,
+            label: 'Day ' + (gIdx + 1),
+            date:  dateLabel(gIdx),
+            city:  day.city || cityName
+          });
+        });
       }
-    });
-  }
+    }
 
-  const prompt=
-    'Create a detailed '+totalDays+'-day travel itinerary.\n\n'
-    +'DESTINATION'+(isMulti?'S':'')+': '+cities.join(' → ')
-    +cityDayMap+'\n\n'
-    +'DATES: '+dayLabels.join(', ')+'\n\n'
-    +'TRAVELLER PROFILE:\n'
-    +'- Budget: '+({low:'under $30/day (hostels, street food, free attractions)',medium:'$30-80/day (mid-range hotels, restaurants, some paid attractions)',flexible:'$80+/day (comfort stays, fine dining, any attraction)'}[budget]||budget)+'\n'
-    +'- Pace: '+({chill:'relaxed, 2-3 activities per day with rest time',balanced:'moderate, 4-5 activities per day',intense:'packed, 6-7 activities per day'}[pace]||pace)+'\n'
-    +'- Interests: '+(ints.join(', ')||'general sightseeing')+'\n'
-    +(mustdo?'- Must include: '+mustdo+'\n':''  )
-    +(startPt?'- Starting from: '+startPt+'\n':''  )
-    +'\nReturn ONLY this JSON structure (no other text):\n'
-    +'{'
-    +'"destination":string,'
-    +'"country":string,'
-    +'"totalCostEstimate":string,'
-    +'"walkingPerDay":string,'
-    +'"days":['
-    +  '{'
-    +    '"label":string,'        // e.g. "Day 1"
-    +    '"date":string,'         // e.g. "Tue 15 Apr" — use the exact date from the DATES list above
-    +    '"city":string,'         // exact city name for this day
-    +    '"cityNote":string,'     // 1-2 sentence local curiosity or tip specific to this city
-    +    '"items":['
-    +      '{"time":string,"name":string,"meta":string,"fact":string,"cost":string,"costLevel":"free|low|mid|high","highlight":boolean}'
-    +      '|{"transport":string}'  // transport connector between activities
-    +    ']'
-    +  '}'
-    +']'
-    +'}\n\n'
-    +'RULES (all mandatory):\n'
-    +'1. "name" must be the REAL specific place name (e.g. "Wat Pho" not "Buddhist temple")\n'
-    +'2. "fact" must be a genuine surprising fact about that specific place (1 sentence)\n'
-    +'3. "cityNote" must be a real local tip about that city (not generic travel advice)\n'
-    +'4. "date" must exactly match the date label from the DATES list (e.g. "Tue 15 Apr")\n'
-    +'5. "city" must be set on every single day object\n'
-    +'6. Costs must be realistic in USD for that specific city\n'
-    +'7. Generate EXACTLY '+totalDays+' day objects — count before responding';
+    clearInterval(stepTimer);
+    for (let i = 0; i < 5; i++) { const g = document.getElementById('gs-'+i); g.classList.remove('on'); g.classList.add('dn'); }
 
-  try{
-    const parsed=await callAI(prompt);
-    clearInterval(timer);
-    for(let i=0;i<5;i++){const g=document.getElementById('gs-'+i);g.classList.remove('on');g.classList.add('dn');}
-    if(!parsed.days||!parsed.days.length) throw new Error('Empty days array');
-    generatedDays=parsed.days;
-    populateItinHeader(parsed,cities,f,t,totalDays,budget,pace,ints);
+    if (!allDays.length) throw new Error('No days generated');
+    generatedDays = allDays;
+    populateItinHeader(cities, f, t, totalDays, budget, pace, ints);
     buildDaysFromData(generatedDays);
-    if(document.getElementById('ot').checked) document.getElementById('ofc').classList.add('show');
+    if (document.getElementById('ot').checked) document.getElementById('ofc').classList.add('show');
     goTab('itin');
-  }catch(err){
-    clearInterval(timer);
-    for(let i=0;i<5;i++){const g=document.getElementById('gs-'+i);g.classList.remove('on','dn');}
-    console.error('Generation error:',err);
-    showToast('⚠️ '+err.message);
-    // fallback: show basic days
-    generatedDays=makeFallbackDays(cities,totalDays,dateList);
-    populateItinHeader(null,cities,f,t,totalDays,budget,pace,ints);
+
+  } catch (err) {
+    clearInterval(stepTimer);
+    for (let i = 0; i < 5; i++) { const g = document.getElementById('gs-'+i); g.classList.remove('on', 'dn'); }
+    console.error('Generation error:', err);
+    showToast('AI error: ' + err.message);
+    generatedDays = makeFallbackDays(cities, totalDays, dateList);
+    populateItinHeader(cities, f, t, totalDays, budget, pace, ints);
     buildDaysFromData(generatedDays);
     goTab('itin');
   }
 }
 
-function populateItinHeader(parsed,cities,f,t,totalDays,budget,pace,ints){
-  const isMulti=cities.length>1;
-  const displayCity=isMulti?cities.map(c=>c.split(',')[0].trim()).join(' → '):(parsed&&parsed.destination)||cities[0].split(',')[0].trim();
-  const country=(parsed&&parsed.country)||(cities[0].includes(',')? cities[0].split(',').slice(1).join(',').trim():'');
-  const fs=f? new Date(f).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
-  const ts=t? new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
-  document.getElementById('hc-ci').textContent=displayCity;
-  document.getElementById('hc-co').textContent=country;
-  document.getElementById('hc-da').textContent=(fs&&ts?fs+' – '+ts+' · ':'')+totalDays+' days';
-  document.getElementById('sc').textContent=(parsed&&parsed.totalCostEstimate)||({low:'$28–54',medium:'$60–95',flexible:'$120+'}[budget]||'$42');
-  document.getElementById('sw').textContent=(parsed&&parsed.walkingPerDay)||({chill:'5 km',balanced:'9 km',intense:'14 km'}[pace]||'9 km');
-  const actCount=generatedDays.reduce((a,d)=>a+(d.items||[]).filter(i=>i.name).length,0);
-  document.getElementById('sa').textContent=actCount||totalDays*4;
-  document.getElementById('ipp').innerHTML=ints.map(i=>'<div class="ip">'+i+'</div>').join('');
+function buildCityBlocks(cities, totalDays) {
+  if (cities.length === 1) {
+    const days = Array.from({length: totalDays}, (_, i) => ({globalIdx: i, label: 'Day ' + (i+1)}));
+    return [{city: cities[0], days}];
+  }
+  const blocks = [];
+  let dayIdx = 0;
+  const travelDays = cities.length - 1;
+  const actDays = totalDays - travelDays;
+  const base = Math.floor(actDays / cities.length);
+  const extra = actDays - base * cities.length;
+
+  cities.forEach((city, ci) => {
+    const n = base + (ci === 0 ? extra : 0);
+    const days = Array.from({length: n}, () => ({globalIdx: dayIdx++, label: 'Day ' + dayIdx}));
+    // Fix: globalIdx was incremented before label was set
+    days.forEach((d, i) => { d.globalIdx = dayIdx - n + i; d.label = 'Day ' + (d.globalIdx + 1); });
+    blocks.push({city, days});
+    if (ci < cities.length - 1) {
+      blocks.push({travel:true, from: city.split(',')[0].trim(), to: cities[ci+1].split(',')[0].trim(), dayIndex: dayIdx});
+      dayIdx++;
+    }
+  });
+  return blocks;
 }
 
-function makeFallbackDays(cities,totalDays,dateList){
-  const days=[];
-  for(let i=0;i<totalDays;i++){
-    const cityIdx=Math.min(Math.floor(i/(totalDays/cities.length)),cities.length-1);
-    const city=cities[cityIdx].split(',')[0].trim();
-    const dateLabel=dateList[i]? ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateList[i].getDay()]+' '+dateList[i].getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dateList[i].getMonth()] : 'Day '+(i+1);
-    days.push({label:'Day '+(i+1),date:dateLabel,city,cityNote:'Explore '+city+' at your own pace today.',items:[
-      {time:'9:00',name:'Morning walk in '+city,meta:'Historic centre · explore on foot',cost:'free',costLevel:'free',highlight:true},
-      {transport:'Walk or local transport'},
-      {time:'11:30',name:'Local market',meta:'Fresh food & local products',cost:'$3',costLevel:'low',highlight:false},
-      {time:'13:00',name:'Lunch',meta:'Local restaurant · authentic cuisine',cost:'$8–12',costLevel:'low',highlight:false},
-      {transport:'15 min walk'},
-      {time:'15:00',name:'Main attraction',meta:'Top sight in '+city+' · 1.5 hr',cost:'$5–10',costLevel:'low',highlight:true},
-      {time:'18:00',name:'Sunset spot',meta:'Best viewpoint in the city',cost:'free',costLevel:'free',highlight:false},
-      {time:'19:30',name:'Dinner',meta:'Neighbourhood restaurant',cost:'$10–15',costLevel:'mid',highlight:false},
-    ]});
-  }
-  return days;
+function populateItinHeader(cities, f, t, totalDays, budget, pace, ints) {
+  const displayCity = cities.length > 1
+    ? cities.map(c => c.split(',')[0].trim()).join(' → ')
+    : cities[0].split(',')[0].trim();
+  const country = cities[0].includes(',') ? cities[0].split(',').slice(1).join(',').trim() : '';
+  const fs = f ? new Date(f).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '';
+  const ts = t ? new Date(t).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '';
+  document.getElementById('hc-ci').textContent = displayCity;
+  document.getElementById('hc-co').textContent = country;
+  document.getElementById('hc-da').textContent = (fs && ts ? fs + ' – ' + ts + ' · ' : '') + totalDays + ' days';
+  const actCount = generatedDays.reduce((a, d) => a + (d.items||[]).filter(i => i.name).length, 0);
+  document.getElementById('sc').textContent = {low:'$28–54',medium:'$60–95',flexible:'$120+'}[budget] || '$42';
+  document.getElementById('sw').textContent = {chill:'5 km',balanced:'9 km',intense:'14 km'}[pace] || '9 km';
+  document.getElementById('sa').textContent = actCount || totalDays * 4;
+  document.getElementById('ipp').innerHTML = ints.map(i => '<div class="ip">' + i + '</div>').join('');
+}
+
+function makeFallbackDays(cities, totalDays, dateList) {
+  const WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return Array.from({length: totalDays}, (_, i) => {
+    const ci = Math.min(Math.floor(i / (totalDays / cities.length)), cities.length - 1);
+    const city = cities[ci].split(',')[0].trim();
+    const d = dateList[i];
+    const dl = d ? WD[d.getDay()] + ' ' + d.getDate() + ' ' + MO[d.getMonth()] : 'Day ' + (i+1);
+    return {
+      label: 'Day ' + (i+1), date: dl, city,
+      cityNote: 'AI generation failed for ' + city + '. Use Quick Adjustments below to get AI suggestions.',
+      items: [
+        {time:'9:00',  name:'City centre walk', meta:'Explore the main streets on foot', cost:'free', costLevel:'free', highlight:true, fact:''},
+        {transport:'Walk or local bus'},
+        {time:'11:30', name:'Local market',      meta:'Fresh produce and local food',    cost:'$3',   costLevel:'low',  highlight:false, fact:''},
+        {time:'13:00', name:'Lunch',             meta:'Local restaurant',                cost:'$8',   costLevel:'low',  highlight:false, fact:''},
+        {transport:'15 min walk'},
+        {time:'15:00', name:'Main attraction',   meta:'Top sight of ' + city,            cost:'$6',   costLevel:'low',  highlight:true,  fact:''},
+        {time:'18:00', name:'Sunset viewpoint',  meta:'Best panoramic view',             cost:'free', costLevel:'free', highlight:false, fact:''},
+        {time:'19:30', name:'Dinner',            meta:'Neighbourhood restaurant',        cost:'$12',  costLevel:'mid',  highlight:false, fact:''},
+      ]
+    };
+  });
 }
 
 /* ═══════════════════════════════════════════
@@ -1022,24 +1038,25 @@ async function qaOpen(type){
     alts:   'I am in '+city+(dayDate?' on '+dayDate:'')+' and my plans might change. I was going to do: '+existingActs+'. Give me 4 specific backup alternatives in '+city+' in case of rain, closures or delays.',
   };
 
-  const prompt=qPrompts[type]
-    +'\n\nReturn ONLY this JSON (no other text): {"options":['
-    +'{"label":"Exact real place or action name","sub":"Why it fits, how far, local tip","cost":"$X or free","costLevel":"free|low|mid|high"}'
-    +']} — exactly 4 options.';
-
-  try{
-    const parsed=await callAI(prompt);
+  try {
+    const parsed = await callEndpoint('/api/qa', {
+      type:               type,
+      city:               city,
+      dayLabel:           dayLabel,
+      dayDate:            dayDate,
+      existingActivities: day ? (day.items||[]).filter(i=>i.name).map(i=>i.name).slice(0,5) : []
+    });
     if(!parsed.options||!parsed.options.length) throw new Error('No options');
     qaAiOptions=parsed.options.slice(0,4);
     renderQaOptions(qaAiOptions,city,cfg,dayLabel);
     document.getElementById('qa-apply-btn').style.display='block';
-  }catch(e){
+  } catch(e) {
     console.error('QA error:',e);
     qaAiOptions=[
       {label:'Explore '+city+' on foot',sub:'Best way to discover the city organically',cost:'free',costLevel:'free'},
       {label:'Ask your hostel reception',sub:'They know current local favourites',cost:'free',costLevel:'free'},
       {label:'Search "best things to do in '+city+'"',sub:'Check recent travel blogs & Reddit',cost:'free',costLevel:'free'},
-      {label:'Wander a neighbourhood market',sub:'Every city has one — ask a local where',cost:'$2–5',costLevel:'low'},
+      {label:'Wander a neighbourhood market',sub:'Every city has one — ask a local where',cost:'$2-5',costLevel:'low'},
     ];
     renderQaOptions(qaAiOptions,city,cfg,dayLabel);
     document.getElementById('qa-apply-btn').style.display='block';
@@ -1320,7 +1337,8 @@ function publishPost(){
 ═══════════════════════════════════════════ */
 function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  t.textContent=msg;
+  t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
   clearTimeout(t._t);
   t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(10px)';},3200);
 }
