@@ -1,12 +1,8 @@
 {
-  "name": "pinpoint-server",
+  "name": "pinpoint",
   "version": "1.0.0",
-  "description": "PinPoint AI Travel Planner – local dev server",
+  "description": "PinPoint AI Travel Planner",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "engines": {
-    "node": ">=16"
-  }
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
 }
