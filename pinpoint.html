@@ -225,7 +225,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/><circle cx="17.1" cy="10.4" r=".7" fill="white"/></svg>
       <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--tx)">Pin<span style="color:var(--ac)">Point</span></div>
     </div>
-    <div style="padding:20px 24px 0;font-family:'Syne',sans-serif;font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-1.2px;color:var(--tx)">Where to<br>next?</div>
+    <div data-i18n="home_heading" style="padding:20px 24px 0;font-family:'Syne',sans-serif;font-size:34px;font-weight:800;line-height:1.05;letter-spacing:-1.2px;color:var(--tx)">Where to<br>next?</div>
     <div class="cta" onclick="goTab('plan')">
       <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.8px;margin-bottom:6px">AI-POWERED PLANNER</div>
       <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:18px;position:relative;z-index:1">Plan your next<br>adventure</div>
@@ -285,10 +285,10 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
 <!-- PLAN -->
 <div class="screen" id="s-plan">
-  <div class="ph"><div class="ibt" onclick="goTab('home')">←</div><div class="h2">New trip</div><div style="width:40px"></div></div>
+  <div class="ph"><div class="ibt" onclick="goTab('home')">←</div><div class="h2" data-i18n="plan_title">New trip</div><div style="width:40px"></div></div>
   <div class="scr" style="padding:0 24px 20px">
     <div class="fg">
-      <label class="fl">Destinations</label>
+      <label class="fl" data-i18n="destinations_label">Destinations</label>
       <div id="city-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
         <div class="city-row" style="display:flex;align-items:center;gap:8px">
           <input class="inp city-inp" type="text" placeholder="City, country…" style="flex:1">
@@ -298,12 +298,12 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <button onclick="addCity()" style="width:100%;padding:10px;background:transparent;border:.5px dashed var(--b2);border-radius:var(--r);font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--t2);cursor:pointer">+ Add another city (max 4)</button>
       <div style="font-size:11px;color:var(--t3);margin-top:6px">AI splits days across cities automatically</div>
     </div>
-    <div class="fg"><label class="fl">Dates</label><div class="dr"><input class="inp" type="date" id="d1"><input class="inp" type="date" id="d2"></div></div>
-    <div class="fg"><label class="fl">Budget</label><div class="chips" id="bc"><div class="chip ons" data-v="low">🪙 Low</div><div class="chip" data-v="medium">💳 Medium</div><div class="chip" data-v="flexible">💸 Flexible</div></div></div>
-    <div class="fg"><label class="fl">Interests</label><div class="chips" id="ic"><div class="chip on" data-v="food">🍜 Food</div><div class="chip" data-v="culture">🏛 Culture</div><div class="chip on" data-v="nature">🌿 Nature</div><div class="chip" data-v="nightlife">🌙 Nightlife</div><div class="chip on" data-v="photography">📷 Photography</div><div class="chip" data-v="adventure">⛰ Adventure</div></div></div>
-    <div class="fg"><label class="fl">Pace</label><div class="chips" id="pc"><div class="chip" data-v="chill">🌊 Chill</div><div class="chip ons" data-v="balanced">⚖️ Balanced</div><div class="chip" data-v="intense">🔥 Intense</div></div></div>
-    <div class="fg"><label class="fl">Must-do <span style="text-transform:none;font-weight:400;opacity:.5">(optional)</span></label><textarea class="inp" id="md" placeholder="Specific places or activities…"></textarea></div>
-    <button class="btn" onclick="tryStartGen()">Generate itinerary →</button>
+    <div class="fg"><label class="fl" data-i18n="dates_label">Dates</label><div class="dr"><input class="inp" type="date" id="d1"><input class="inp" type="date" id="d2"></div></div>
+    <div class="fg"><label class="fl" data-i18n="budget_label">Budget</label><div class="chips" id="bc"><div class="chip ons" data-v="low">🪙 Low</div><div class="chip" data-v="medium">💳 Medium</div><div class="chip" data-v="flexible">💸 Flexible</div></div></div>
+    <div class="fg"><label class="fl" data-i18n="interests_label">Interests</label><div class="chips" id="ic"><div class="chip on" data-v="food">🍜 Food</div><div class="chip" data-v="culture">🏛 Culture</div><div class="chip on" data-v="nature">🌿 Nature</div><div class="chip" data-v="nightlife">🌙 Nightlife</div><div class="chip on" data-v="photography">📷 Photography</div><div class="chip" data-v="adventure">⛰ Adventure</div></div></div>
+    <div class="fg"><label class="fl" data-i18n="pace_label">Pace</label><div class="chips" id="pc"><div class="chip" data-v="chill">🌊 Chill</div><div class="chip ons" data-v="balanced">⚖️ Balanced</div><div class="chip" data-v="intense">🔥 Intense</div></div></div>
+    <div class="fg"><label class="fl" data-i18n="mustdo_label">Must-do <span style="text-transform:none;font-weight:400;opacity:.5">(optional)</span></label><textarea class="inp" id="md" placeholder="Specific places or activities…"></textarea></div>
+    <button class="btn" data-i18n="gen_btn" onclick="tryStartGen()">Generate itinerary →</button>
     <div class="gap"></div>
   </div>
   <div id="nav-plan"></div>
@@ -345,14 +345,14 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="scr">
     <div id="dpanes"></div>
     <div class="qa-sec">
-      <div class="qa-lb">Quick adjustments</div>
+      <div class="qa-lb" data-i18n="quick_adj">Quick adjustments</div>
       <div class="qa-g">
-        <div class="qa" onclick="qaOpen('cheaper')"><div class="qi">🪙</div><div class="ql">Cheaper options</div></div>
-        <div class="qa" onclick="qaOpen('closer')"><div class="qi">📍</div><div class="ql">Something closer</div></div>
-        <div class="qa" onclick="qaOpen('outdoors')"><div class="qi">🌿</div><div class="ql">More outdoors</div></div>
-        <div class="qa" onclick="qaOpen('shorter')"><div class="qi">⏱</div><div class="ql">Shorter day</div></div>
-        <div class="qa" onclick="qaOpen('extend')"><div class="qi">🌙</div><div class="ql">Extend evening</div></div>
-        <div class="qa" onclick="qaOpen('alts')"><div class="qi">🔄</div><div class="ql">Alternatives</div></div>
+        <div class="qa" onclick="qaOpen('cheaper')"><div class="qi">🪙</div><div class="ql" data-i18n="cheaper">Cheaper options</div></div>
+        <div class="qa" onclick="qaOpen('closer')"><div class="qi">📍</div><div class="ql" data-i18n="closer">Something closer</div></div>
+        <div class="qa" onclick="qaOpen('outdoors')"><div class="qi">🌿</div><div class="ql" data-i18n="outdoors">More outdoors</div></div>
+        <div class="qa" onclick="qaOpen('shorter')"><div class="qi">⏱</div><div class="ql" data-i18n="shorter">Shorter day</div></div>
+        <div class="qa" onclick="qaOpen('extend')"><div class="qi">🌙</div><div class="ql" data-i18n="extend">Extend evening</div></div>
+        <div class="qa" onclick="qaOpen('alts')"><div class="qi">🔄</div><div class="ql" data-i18n="alts">Alternatives</div></div>
       </div>
     </div>
     <div class="gap"></div>
@@ -1179,7 +1179,7 @@ function calcBudget(dayList){
   });
   const estAcc=cats.accommodation===0?actDays*22:0;
   total+=estAcc;if(estAcc>0)cats.accommodation=estAcc;
-  return{total,totalDisplay:'$'+Math.round(total),perDayDisplay:'$'+Math.round(total/Math.max(actDays,1)),cats,actDays,estAcc};
+  return{total,totalDisplay:'$'+Math.round(total),perDay:Math.round(total/Math.max(actDays,1)),perDayDisplay:'$'+Math.round(total/Math.max(actDays,1)),cats,actDays,estAcc};
 }
 
 function openBudgetDetail(){
@@ -1979,37 +1979,25 @@ function setLang(code, name) {
 
 function applyI18n(code) {
   const t = I18N[code] || I18N['en'];
-  // Home heading
-  const heading = document.querySelector('#s-home [style*="font-size:34px"], #s-home .disp');
-  if (heading) heading.innerHTML = t.home_heading;
-  // Plan screen
-  const planH2 = document.querySelector('#s-plan .h2');
-  if (planH2) planH2.textContent = t.plan_title;
-  const genBtn = document.querySelector('#s-plan .btn');
-  if (genBtn) genBtn.textContent = t.gen_btn;
-  // Field labels
-  [['#s-plan [for="d1"]','dates_label'],['#s-plan #ic','interests_label'],['#s-plan #pc','pace_label'],['#s-plan #bc','budget_label']].forEach(([sel,key])=>{
-    const el=document.querySelector(sel);
-    if(el&&el.previousElementSibling){el.previousElementSibling.textContent=t[key]||'';}
+  // Use data-i18n attributes — simple and reliable
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
   });
-  // Quick adjustment buttons
-  const qaMap={cheaper:'cheaper',closer:'closer',outdoors:'outdoors',shorter:'shorter',extend:'extend',alts:'alts'};
-  document.querySelectorAll('.ql').forEach(el=>{
-    const qa=el.closest('.qa');if(!qa)return;
-    const type=qa.getAttribute('onclick')?.match(/qaOpen\('(\w+)'\)/)?.[1];
-    if(type&&t[type])el.textContent=t[type];
-  });
-  // QA section label
-  const qaLb=document.querySelector('.qa-lb');
-  if(qaLb)qaLb.textContent=t.quick_adj;
   // Nav labels
-  const navMap={home:'nav_home',plan:'nav_plan',trips:'nav_trips',blog:'nav_blog',account:'nav_profile'};
-  document.querySelectorAll('.ni').forEach(ni=>{
-    const lbl=ni.querySelector('.ni-lbl');if(!lbl)return;
-    const onclick=ni.getAttribute('onclick')||'';
-    const match=onclick.match(/goTab\('(\w+)'\)/);
-    if(match&&navMap[match[1]]&&t[navMap[match[1]]])lbl.textContent=t[navMap[match[1]]];
+  const navMap = {home:'nav_home',plan:'nav_plan',trips:'nav_trips',blog:'nav_blog',account:'nav_profile'};
+  document.querySelectorAll('.ni').forEach(ni => {
+    const lbl = ni.querySelector('.ni-lbl'); if (!lbl) return;
+    const m = (ni.getAttribute('onclick')||'').match(/goTab\('(\w+)'\)/);
+    if (m && navMap[m[1]] && t[navMap[m[1]]]) lbl.textContent = t[navMap[m[1]]];
   });
+  // Update QA modal titles
+  if (t.cheaper) QA_TYPES.cheaper.title = t.cheaper;
+  if (t.closer)  QA_TYPES.closer.title  = t.closer;
+  if (t.outdoors)QA_TYPES.outdoors.title = t.outdoors;
+  if (t.shorter) QA_TYPES.shorter.title = t.shorter;
+  if (t.extend)  QA_TYPES.extend.title  = t.extend;
+  if (t.alts)    QA_TYPES.alts.title    = t.alts;
 }
 function openCurr(){
   document.getElementById('curr-list').innerHTML=CURRENCIES.map(c=>`<div class="curr-row${c.code===currentCurrency?' sel':''}" onclick="setCurrency('${c.code}','${c.symbol}','${c.name}')"><div><div class="lang-name">${c.code} — ${c.name}</div><div class="lang-native">${c.symbol} · 1 USD = ${c.code==='USD'?'1.00':(FX[c.code]||1).toFixed(c.code==='JPY'||c.code==='KRW'||c.code==='IDR'?0:2)} ${c.code}</div></div><div class="lang-check">✓</div></div>`).join('');
@@ -2022,8 +2010,10 @@ function setCurrency(code,symbol,name){
   closeCurr();showToast('Currency set to '+code);
   if(generatedDays.length&&budgetData){
     const rate=FX[code]||1;
-    document.getElementById('sc').textContent=symbol+Math.round(budgetData.total*rate);
-    document.getElementById('sw').textContent=symbol+Math.round(budgetData.perDay*rate);
+    const total=Math.round(budgetData.total*rate);
+    const perDay=Math.round((budgetData.total/Math.max(budgetData.actDays||1,1))*rate);
+    document.getElementById('sc').textContent=symbol+total;
+    document.getElementById('sw').textContent=symbol+perDay;
   }
 }
 
