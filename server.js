@@ -83,9 +83,12 @@ async function getUserItineraries(userId, userToken) {
 }
 
 // Save itinerary to DB
-async function saveItinerary(userId, title, cities, daysCount, data, userToken) {
+async function saveItinerary(userId, title, cities, daysCount, data, startDate, endDate, userToken) {
   try {
-    await supabase('POST', '/rest/v1/itineraries', { user_id: userId, title, cities, days_count: daysCount, data }, userToken || null);
+    await supabase('POST', '/rest/v1/itineraries', {
+      user_id: userId, title, cities, days_count: daysCount, data,
+      start_date: startDate || null, end_date: endDate || null
+    }, userToken || null);
   } catch(e) { console.error('Save itinerary error:', e.message); }
 }
 
@@ -367,7 +370,7 @@ const server = http.createServer(async (req, res) => {
       const token = getToken(req);
       const user  = await getUser(token);
       if (!user) { json(401, { error: 'Not authenticated' }); return; }
-      await saveItinerary(user.id, p.title, p.cities, p.daysCount, p.data, token);
+      await saveItinerary(user.id, p.title, p.cities, p.daysCount, p.data, p.startDate, p.endDate, token);
       json(200, { ok: true });
     });
     return;
@@ -380,6 +383,49 @@ const server = http.createServer(async (req, res) => {
       console.log('[/api/qa]', p.type, 'in', p.city);
       askClaude(qaPrompt(p), 1400, res);
     });
+    return;
+  }
+
+  // ── Get bucket list ──
+  if (req.method === 'GET' && req.url === '/api/bucket') {
+    const token = getToken(req);
+    const user  = await getUser(token);
+    if (!user) { json(401, { error: 'Not authenticated' }); return; }
+    try {
+      const r = await supabase('GET', '/rest/v1/bucket_list?user_id=eq.'+user.id+'&select=*&order=created_at.desc', null, token);
+      json(200, { items: r.status===200 ? r.body : [] });
+    } catch(e) { json(200, { items: [] }); }
+    return;
+  }
+
+  // ── Add bucket item ──
+  if (req.method === 'POST' && req.url === '/api/bucket') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Not authenticated' }); return; }
+      try {
+        const r = await supabase('POST', '/rest/v1/bucket_list', {
+          user_id: user.id, destination: p.destination,
+          description: p.description||'', category: p.category||'destination'
+        }, token);
+        json(r.status < 300 ? 200 : r.status, r.status < 300 ? { ok: true } : r.body);
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
+  // ── Delete bucket item ──
+  if (req.method === 'DELETE' && req.url.startsWith('/api/bucket/')) {
+    const id = req.url.split('/').pop();
+    const token = getToken(req);
+    const user  = await getUser(token);
+    if (!user) { json(401, { error: 'Not authenticated' }); return; }
+    try {
+      await supabase('DELETE', '/rest/v1/bucket_list?id=eq.'+id+'&user_id=eq.'+user.id, null, token);
+      json(200, { ok: true });
+    } catch(e) { json(500, { error: e.message }); }
     return;
   }
 

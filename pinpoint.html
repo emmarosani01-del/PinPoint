@@ -183,6 +183,28 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--s3);border:.5px solid var(--b2);color:var(--tx);font-size:13px;padding:11px 20px;border-radius:40px;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;z-index:600;pointer-events:none;max-width:320px;text-align:center}
 .gap{height:28px}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;position:relative;font-size:13px;font-weight:500;color:var(--t2)}
+.cal-day.today{background:var(--ac);color:#fff;font-weight:700}
+.cal-day.has-trip{color:var(--tx);font-weight:600}
+.cal-day.has-trip::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--tl);position:absolute;bottom:3px;left:50%;transform:translateX(-50%)}
+.cal-day.today.has-trip::after{background:#fff}
+.cal-day.other-month{opacity:.25}
+.cal-day:active{background:var(--s2)}
+.bitem{background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.bitem-ic{width:38px;height:38px;border-radius:12px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bitem-body{flex:1;min-width:0}
+.bitem-dest{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.bitem-meta{font-size:11px;color:var(--t2);line-height:1.4}
+.bitem-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.bact{font-size:10px;padding:3px 9px;border-radius:8px;cursor:pointer;font-weight:500;border:.5px solid var(--b2);color:var(--t2);background:var(--s2)}
+.bact.primary{background:var(--ac2);color:var(--ac);border-color:rgba(255,76,106,.2)}
+.lang-row,.curr-row{display:flex;align-items:center;justify-content:space-between;padding:13px 24px;cursor:pointer;border-bottom:.5px solid var(--b1)}
+.lang-row:last-child,.curr-row:last-child{border-bottom:none}
+.lang-row:active,.curr-row:active{background:var(--s2)}
+.lang-name{font-size:14px;color:var(--tx)}
+.lang-native{font-size:12px;color:var(--t2);margin-top:1px}
+.lang-check{color:var(--ac);font-size:16px;opacity:0}
+.lang-row.sel .lang-check,.curr-row.sel .lang-check{opacity:1}
 </style>
 </head>
 <body>
@@ -339,6 +361,140 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 </div>
 
 <!-- BLOG -->
+<!-- TRIPS CALENDAR -->
+<div class="screen" id="s-trips">
+  <div style="padding:20px 24px 12px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
+    <div><div class="h2" id="cal-month-title">April 2026</div><div style="font-size:12px;color:var(--t2)" id="cal-subtitle">Your travel calendar</div></div>
+    <div style="display:flex;gap:8px">
+      <div class="ibt" onclick="calPrev()" style="font-size:16px">‹</div>
+      <div class="ibt" onclick="calNext()" style="font-size:16px">›</div>
+    </div>
+  </div>
+  <!-- Calendar grid -->
+  <div style="padding:0 16px;flex-shrink:0">
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">S</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">M</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">T</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">W</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">T</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">F</div>
+      <div style="text-align:center;font-size:10px;font-weight:600;color:var(--t3);padding:4px 0">S</div>
+    </div>
+    <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px"></div>
+  </div>
+  <div class="scr" style="padding:12px 16px 100px">
+    <!-- Today's trip highlight -->
+    <div id="cal-today-trip" style="display:none;background:linear-gradient(135deg,var(--ac2),rgba(155,111,255,.08));border-radius:var(--rl);border:.5px solid rgba(255,76,106,.2);padding:14px 16px;margin-bottom:14px;cursor:pointer" onclick="goTab('itin')">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ac);margin-bottom:6px">TODAY'S TRIP</div>
+      <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:3px" id="cal-today-city"></div>
+      <div style="font-size:12px;color:var(--t2)" id="cal-today-meta"></div>
+    </div>
+    <!-- Upcoming trips -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Upcoming trips</div>
+    <div id="cal-upcoming-list">
+      <div style="font-size:13px;color:var(--t3);text-align:center;padding:20px 0">No trips scheduled yet</div>
+    </div>
+    <!-- Bucket list promo -->
+    <div onclick="goTab('bucket')" style="margin-top:14px;background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(155,111,255,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🌍</div>
+      <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px">Bucket List</div><div style="font-size:12px;color:var(--t2)">Destinations you want to visit</div></div>
+      <div style="margin-left:auto;color:var(--t3);font-size:16px">›</div>
+    </div>
+  </div>
+  <div id="nav-trips"></div>
+</div>
+
+<!-- BUCKET LIST -->
+<div class="screen" id="s-bucket">
+  <div class="ph"><div class="ibt" onclick="goTab('trips')">←</div><div class="h2">Bucket List 🌍</div><div class="ibt" onclick="openAddBucket()" style="font-size:18px;background:var(--ac);color:#fff;border:none">+</div></div>
+  <div class="scr" style="padding:0 16px 100px">
+    <!-- Premium gate -->
+    <div id="bucket-premium-gate" style="display:none;margin-bottom:16px;background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:20px;text-align:center;cursor:pointer" onclick="openPremium()">
+      <div style="font-size:28px;margin-bottom:8px">✦</div>
+      <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:6px">Premium Feature</div>
+      <div style="font-size:13px;color:rgba(200,185,255,.8);margin-bottom:14px">Unlock Bucket List to save and plan dream destinations</div>
+      <div style="background:var(--pu);color:#fff;padding:10px 20px;border-radius:40px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;display:inline-block">Upgrade to Premium →</div>
+    </div>
+    <!-- Bucket list content (premium only) -->
+    <div id="bucket-content">
+      <div id="bucket-items-list" style="margin-bottom:14px"></div>
+      <div id="bucket-empty" style="text-align:center;padding:32px 0;display:none">
+        <div style="font-size:40px;margin-bottom:12px">🗺</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px">Start your bucket list</div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:20px">Add destinations and experiences you want to explore</div>
+        <button class="btn" style="width:auto;padding:11px 24px" onclick="openAddBucket()">Add first destination</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD BUCKET ITEM OVERLAY -->
+<div class="ovl" id="bucket-ovl" onclick="if(event.target===this)closeBucket()">
+  <div class="sheet" style="padding-bottom:36px">
+    <div class="sh"></div>
+    <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div class="h2">Add to bucket list</div>
+      <div class="ibt" onclick="closeBucket()" style="width:32px;height:32px;font-size:13px">✕</div>
+    </div>
+    <div style="padding:0 24px">
+      <div class="fg"><label class="fl">Destination or experience</label><input class="inp" id="bucket-dest-inp" type="text" placeholder="e.g. Kyoto in cherry blossom season…"></div>
+      <div class="fg"><label class="fl">Category</label>
+        <div class="chips" id="bucket-cats">
+          <div class="chip ons" data-v="destination">🌍 Destination</div>
+          <div class="chip" data-v="experience">⚡ Experience</div>
+          <div class="chip" data-v="food">🍜 Food</div>
+          <div class="chip" data-v="adventure">⛰ Adventure</div>
+          <div class="chip" data-v="culture">🏛 Culture</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Notes (optional)</label><textarea class="inp" id="bucket-notes-inp" style="height:72px" placeholder="Why do you want to go? Any specific things to do?"></textarea></div>
+      <button class="btn" onclick="saveBucketItem()">Add to list</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET AI PREVIEW OVERLAY -->
+<div class="ovl" id="bucket-ai-ovl" onclick="if(event.target===this)closeBucketAI()">
+  <div class="sheet" style="padding-bottom:36px">
+    <div class="sh"></div>
+    <div style="padding:0 24px 4px;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="h2" id="bucket-ai-title">Dream Trip</div>
+      <div class="ibt" onclick="closeBucketAI()" style="width:32px;height:32px;font-size:13px">✕</div>
+    </div>
+    <div style="padding:0 24px 16px;font-size:13px;color:var(--t2)" id="bucket-ai-subtitle"></div>
+    <div id="bucket-ai-content" style="padding:0 24px"></div>
+    <div style="padding:14px 24px 0;display:flex;gap:8px">
+      <button id="bucket-plan-btn" class="btn" onclick="planFromBucket()" style="flex:1">Plan this trip →</button>
+      <div class="ibt" onclick="closeBucketAI()" style="flex-shrink:0">✕</div>
+    </div>
+  </div>
+</div>
+
+<!-- LANGUAGE OVERLAY -->
+<div class="ovl" id="lang-ovl" onclick="if(event.target===this)closeLang()">
+  <div class="sheet" style="padding-bottom:36px">
+    <div class="sh"></div>
+    <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div class="h2">Language</div>
+      <div class="ibt" onclick="closeLang()" style="width:32px;height:32px;font-size:13px">✕</div>
+    </div>
+    <div id="lang-list"></div>
+  </div>
+</div>
+
+<!-- CURRENCY OVERLAY -->
+<div class="ovl" id="curr-ovl" onclick="if(event.target===this)closeCurr()">
+  <div class="sheet" style="padding-bottom:36px">
+    <div class="sh"></div>
+    <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div class="h2">Currency</div>
+      <div class="ibt" onclick="closeCurr()" style="width:32px;height:32px;font-size:13px">✕</div>
+    </div>
+    <div id="curr-list"></div>
+  </div>
+</div>
+
 <div class="screen" id="s-blog">
   <!-- Blog list -->
   <div id="blog-list" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
@@ -521,8 +677,9 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
     <!-- App settings -->
     <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">App settings</div>
     <div class="pcard" style="margin-bottom:20px">
-      <div class="prow" onclick="showToast('Language setting')"><div class="pr-l"><div class="pr-ic">🌐</div><div><div class="pr-lb">Language</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">English</div><div class="pr-a">›</div></div></div>
-      <div class="prow" onclick="showToast('Currency setting')"><div class="pr-l"><div class="pr-ic">💱</div><div><div class="pr-lb">Currency</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">USD</div><div class="pr-a">›</div></div></div>
+      <div class="prow" onclick="openLang()"><div class="pr-l"><div class="pr-ic">🌐</div><div><div class="pr-lb">Language</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="curr-lang-label">English</div><div class="pr-a">›</div></div></div>
+      <div class="prow" onclick="openCurr()"><div class="pr-l"><div class="pr-ic">💱</div><div><div class="pr-lb">Currency</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="curr-currency-label">USD</div><div class="pr-a">›</div></div></div>
+      <div class="prow" onclick="goTab('bucket')"><div class="pr-l"><div class="pr-ic">🌍</div><div><div class="pr-lb">Bucket List</div><div class="pr-sub">Premium feature</div></div></div><div class="pr-a">›</div></div>
       <div class="prow" onclick="showToast('Thanks for the feedback!')"><div class="pr-l"><div class="pr-ic">⭐</div><div><div class="pr-lb">Rate PinPoint</div></div></div><div class="pr-a">›</div></div>
     </div>
     <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="signOut()">Sign out</button>
@@ -651,15 +808,15 @@ document.getElementById('d1').value=td.toISOString().slice(0,10);
 document.getElementById('d2').value=td2.toISOString().slice(0,10);
 
 // NAV — 5 tabs
-const TABS={home:'s-home',plan:'s-plan',gen:'s-gen',itin:'s-itin',blog:'s-blog',account:'s-account',auth:'s-auth'};
-const NAV_SLOTS={home:'nav-home',plan:'nav-plan',itin:'nav-itin',blog:'nav-blog',account:'nav-account'};
-const NAV_KEY={home:'home',plan:'plan',itin:'itin',blog:'blog',account:'account'};
+const TABS={home:'s-home',plan:'s-plan',gen:'s-gen',itin:'s-itin',trips:'s-trips',bucket:'s-bucket',blog:'s-blog',account:'s-account',auth:'s-auth'};
+const NAV_SLOTS={home:'nav-home',plan:'nav-plan',itin:'nav-itin',trips:'nav-trips',blog:'nav-blog',account:'nav-account'};
+const NAV_KEY={home:'home',plan:'plan',itin:'itin',trips:'trips',blog:'blog',account:'account'};
 const NAV_ITEMS=[
-  {k:'home',   lbl:'Home',      ic:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'},
-  {k:'plan',   lbl:'Plan',      ic:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'},
-  {k:'itin',   lbl:'Trips',     ic:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'},
-  {k:'blog',   lbl:'Blog',      ic:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>'},
-  {k:'account',lbl:'Profile',   ic:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'},
+  {k:'home',   lbl:'Home',    ic:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'},
+  {k:'plan',   lbl:'Plan',    ic:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'},
+  {k:'trips',  lbl:'Trips',   ic:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'},
+  {k:'blog',   lbl:'Blog',    ic:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>'},
+  {k:'account',lbl:'Profile', ic:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'},
 ];
 function buildNav(slot,active){
   const el=document.getElementById(slot);if(!el||el.children.length)return;
@@ -675,8 +832,8 @@ Object.keys(NAV_SLOTS).forEach(k=>buildNav(NAV_SLOTS[k],NAV_KEY[k]));
 
 function goTab(tab){
   Object.values(TABS).forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
-  // If going to account and not logged in → show auth
-  if(tab==='account' && !currentUser && !isGuest){tab='auth';}
+  if(tab==='account'&&!currentUser&&!isGuest){tab='auth';}
+  if(tab==='bucket'&&!isPremium){openPremium();return;}
   if(tab==='blog'){
     document.getElementById('blog-list').style.display='flex';
     document.getElementById('blog-compose').style.display='none';
@@ -684,9 +841,11 @@ function goTab(tab){
   }
   const s=document.getElementById(TABS[tab]);if(s)s.classList.add('active');
   if(tab==='itin'&&generatedDays.length)buildDaysFromData(generatedDays);
-  if(tab==='account'&&currentUser){ loadProfile(); setTimeout(loadSavedTrips, 300); }
-  if(tab==='blog') initBlog();
-  if(tab==='home') loadHomeTrips();
+  if(tab==='account'&&currentUser){loadProfile();setTimeout(loadSavedTrips,300);}
+  if(tab==='blog')initBlog();
+  if(tab==='home')loadHomeTrips();
+  if(tab==='trips')initCalendar();
+  if(tab==='bucket')initBucketList();
 }
 
 // ─── AUTH STATE ──────────────────────────────────────────────
@@ -820,10 +979,12 @@ async function loadSavedTrips() {
 async function saveCurrentItinerary() {
   if (!currentUser||!authToken){showToast('Sign in to save trips');return;}
   if (!generatedDays.length){showToast('No itinerary to save');return;}
-  const title  = document.getElementById('hc-ci').textContent;
-  const cities = currentCities.join(', ');
+  const title    = document.getElementById('hc-ci').textContent;
+  const cities   = currentCities.join(', ');
+  const startDate= document.getElementById('d1').value||null;
+  const endDate  = document.getElementById('d2').value||null;
   try {
-    const r = await fetch('/api/itineraries/save',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({title,cities,daysCount:generatedDays.length,data:generatedDays})});
+    const r = await fetch('/api/itineraries/save',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({title,cities,daysCount:generatedDays.length,data:generatedDays,startDate,endDate})});
     const data = await r.json();
     console.log('Save response:', r.status, JSON.stringify(data));
     if (!r.ok) { showToast('Save failed: ' + (data.error||r.status)); return; }
@@ -1495,8 +1656,230 @@ async function publishPost() {
   } catch(e){showToast('Error publishing post');}
 }
 
+// ─── CALENDAR ────────────────────────────────────────────────
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function initCalendar(){renderCalendar();loadCalendarTrips();}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function getTripDates(){
+  const map={};
+  (window._savedItins||[]).forEach(it=>{
+    if(!it.start_date||!it.end_date)return;
+    const s=new Date(it.start_date),e=new Date(it.end_date);
+    for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))
+      map[d.toISOString().slice(0,10)]={title:it.title||it.cities||'Trip',it};
+  });
+  return map;
+}
+function renderCalendar(){
+  document.getElementById('cal-month-title').textContent=MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const todayStr=new Date().toISOString().slice(0,10);
+  const tripMap=getTripDates();
+  grid.innerHTML='';
+  for(let i=0;i<first;i++){const b=document.createElement('div');b.className='cal-day other-month';b.textContent=new Date(calYear,calMonth,-first+i+1).getDate();grid.appendChild(b);}
+  for(let d=1;d<=days;d++){
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday=ds===todayStr,hasTrip=!!tripMap[ds];
+    const cell=document.createElement('div');
+    cell.className='cal-day'+(isToday?' today':'')+(hasTrip?' has-trip':'');
+    cell.textContent=d;
+    if(hasTrip)cell.title=tripMap[ds].title;
+    cell.onclick=()=>{if(hasTrip)showToast('📅 '+tripMap[ds].title);else showToast('No trip on '+MONTHS[calMonth]+' '+d);};
+    grid.appendChild(cell);
+  }
+}
+async function loadCalendarTrips(){
+  if(!authToken)return;
+  try{
+    const r=await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
+    if(!r.ok)return;
+    const{itineraries}=await r.json();
+    window._savedItins=itineraries||[];
+    renderCalendar();renderUpcoming(itineraries||[]);checkTodayTrip(itineraries||[]);
+  }catch(e){}
+}
+function renderUpcoming(itins){
+  const container=document.getElementById('cal-upcoming-list');
+  const today=new Date().toISOString().slice(0,10);
+  const upcoming=itins.filter(it=>it.start_date&&it.start_date>=today).sort((a,b)=>a.start_date.localeCompare(b.start_date)).slice(0,5);
+  if(!upcoming.length){container.innerHTML='<div style="font-size:13px;color:var(--t3);text-align:center;padding:16px 0">No upcoming trips — plan one!</div>';return;}
+  container.innerHTML=upcoming.map(it=>{
+    const s=it.start_date?new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
+    const e=it.end_date?new Date(it.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
+    return`<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--ac2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--ac);line-height:1">${it.start_date?new Date(it.start_date).getDate():''}</div><div style="font-size:9px;color:var(--ac);text-transform:uppercase">${it.start_date?MONTHS[new Date(it.start_date).getMonth()].slice(0,3):''}</div></div><div style="flex:1;min-width:0"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px">${it.title||it.cities||'Trip'}</div><div style="font-size:11px;color:var(--t2)">${s&&e?s+' – '+e:''} · ${it.days_count||0} days</div></div></div>`;
+  }).join('');
+}
+function checkTodayTrip(itins){
+  const today=new Date().toISOString().slice(0,10);
+  const active=itins.find(it=>it.start_date&&it.end_date&&it.start_date<=today&&it.end_date>=today);
+  const el=document.getElementById('cal-today-trip');
+  if(active){
+    el.style.display='block';
+    document.getElementById('cal-today-city').textContent=active.title||active.cities||'Trip';
+    const s=new Date(active.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    const e=new Date(active.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    document.getElementById('cal-today-meta').textContent=s+' – '+e+' · '+active.days_count+' days';
+  }else el.style.display='none';
+}
 
-// ─── PREMIUM SYSTEM ─────────────────────────────────────────
+// ─── BUCKET LIST ─────────────────────────────────────────────
+let bucketItems=[];
+let currentBucketId=null;
+function initBucketList(){
+  if(!isPremium){document.getElementById('bucket-premium-gate').style.display='block';document.getElementById('bucket-content').style.display='none';return;}
+  document.getElementById('bucket-premium-gate').style.display='none';document.getElementById('bucket-content').style.display='block';
+  loadBucketList();
+}
+async function loadBucketList(){
+  if(!authToken)return;
+  try{
+    const r=await fetch('/api/bucket',{headers:{'Authorization':'Bearer '+authToken}});
+    if(!r.ok)return;
+    const{items}=await r.json();
+    bucketItems=items||[];renderBucketItems();
+  }catch(e){renderBucketItems();}
+}
+const BUCKET_ICONS={destination:'🌍',experience:'⚡',food:'🍜',adventure:'⛰',culture:'🏛'};
+function renderBucketItems(){
+  const container=document.getElementById('bucket-items-list');
+  const empty=document.getElementById('bucket-empty');
+  if(!bucketItems.length){container.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  container.innerHTML=bucketItems.map(item=>`
+    <div class="bitem">
+      <div class="bitem-ic">${BUCKET_ICONS[item.category]||'🌍'}</div>
+      <div class="bitem-body">
+        <div class="bitem-dest">${item.destination}</div>
+        ${item.description?`<div class="bitem-meta">${item.description}</div>`:''}
+        <div class="bitem-actions">
+          <div class="bact primary" onclick="getBucketAI('${item.id}','${item.destination.replace(/'/g,"\\'")}')">✨ AI preview</div>
+          <div class="bact" onclick="planFromBucketItem('${item.destination.replace(/'/g,"\\'")}')">📅 Plan trip</div>
+          <div class="bact" onclick="deleteBucketItem('${item.id}')">🗑 Remove</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function openAddBucket(){
+  if(!isPremium){openPremium();return;}
+  document.getElementById('bucket-dest-inp').value='';
+  document.getElementById('bucket-notes-inp').value='';
+  document.querySelectorAll('#bucket-cats .chip').forEach(c=>c.classList.remove('ons'));
+  document.querySelector('#bucket-cats .chip').classList.add('ons');
+  document.getElementById('bucket-ovl').classList.add('show');
+}
+function closeBucket(){document.getElementById('bucket-ovl').classList.remove('show');}
+async function saveBucketItem(){
+  const dest=document.getElementById('bucket-dest-inp').value.trim();
+  if(!dest){showToast('Enter a destination');return;}
+  const cat=document.querySelector('#bucket-cats .chip.ons')?.dataset.v||'destination';
+  const notes=document.getElementById('bucket-notes-inp').value.trim();
+  try{
+    const headers={'Content-Type':'application/json'};
+    if(authToken)headers['Authorization']='Bearer '+authToken;
+    const r=await fetch('/api/bucket',{method:'POST',headers,body:JSON.stringify({destination:dest,description:notes,category:cat})});
+    if(!r.ok){showToast('Could not save');return;}
+    closeBucket();showToast('Added to bucket list!');await loadBucketList();
+  }catch(e){showToast('Error saving');}
+}
+async function deleteBucketItem(id){
+  try{
+    await fetch('/api/bucket/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+authToken}});
+    bucketItems=bucketItems.filter(i=>i.id!==id);renderBucketItems();showToast('Removed from bucket list');
+  }catch(e){}
+}
+async function getBucketAI(id,destination){
+  currentBucketId=id;
+  document.getElementById('bucket-ai-title').textContent=destination;
+  document.getElementById('bucket-ai-subtitle').textContent='Building your dream trip preview…';
+  document.getElementById('bucket-ai-content').innerHTML='<div style="padding:16px 0;text-align:center;color:var(--t2);font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px"><span class="spinner"></span>AI is planning…</div>';
+  document.getElementById('bucket-plan-btn').dataset.dest=destination;
+  document.getElementById('bucket-ai-ovl').classList.add('show');
+  try{
+    const result=await callEndpoint('/api/itinerary',{city:destination,nDays:5,budget:'medium',pace:'balanced',interests:'culture, food, nature',mustdo:'',startPt:'',firstDate:'Day 1',firstDayNum:1,dateStr:'Day 1, Day 2, Day 3, Day 4, Day 5'});
+    if(!result.days?.length)throw new Error('No days');
+    document.getElementById('bucket-ai-subtitle').textContent='5-day preview · no dates set';
+    document.getElementById('bucket-ai-content').innerHTML=
+      result.days.slice(0,3).map(day=>`<div style="margin-bottom:12px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)"><div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px">${day.label}</div>${(day.items||[]).filter(i=>i.name).slice(0,3).map(item=>`<div style="font-size:12px;color:var(--tx);margin-bottom:3px">• ${item.name} <span style="color:var(--t2)">${item.costDisplay||''}</span></div>`).join('')}${day.cityNote?`<div style="font-size:11px;color:rgba(200,185,255,.8);margin-top:6px;padding-top:6px;border-top:.5px solid var(--b1)">💡 ${day.cityNote}</div>`:''}</div>`).join('')+
+      `<div style="font-size:12px;color:var(--t3);text-align:center;margin-top:4px">+ ${result.days.length-3} more days in full plan</div>`;
+  }catch(e){document.getElementById('bucket-ai-content').innerHTML='<div style="font-size:13px;color:var(--t2);padding:12px 0">Could not generate preview. Try again.</div>';}
+}
+function closeBucketAI(){document.getElementById('bucket-ai-ovl').classList.remove('show');}
+function planFromBucket(){planFromBucketItem(document.getElementById('bucket-plan-btn').dataset.dest);}
+function planFromBucketItem(destination){
+  closeBucketAI();
+  const inp=document.querySelector('.city-inp');if(inp)inp.value=destination;
+  goTab('plan');showToast('Destination set — pick dates and generate!');
+}
+
+// ─── LANGUAGE & CURRENCY ─────────────────────────────────────
+const LANGUAGES=[
+  {code:'en',name:'English',native:'English'},
+  {code:'es',name:'Spanish',native:'Español'},
+  {code:'zh',name:'Chinese',native:'中文'},
+  {code:'hi',name:'Hindi',native:'हिन्दी'},
+  {code:'ar',name:'Arabic',native:'العربية'},
+  {code:'pt',name:'Portuguese',native:'Português'},
+  {code:'fr',name:'French',native:'Français'},
+  {code:'de',name:'German',native:'Deutsch'},
+  {code:'ja',name:'Japanese',native:'日本語'},
+  {code:'it',name:'Italian',native:'Italiano'},
+  {code:'ko',name:'Korean',native:'한국어'},
+  {code:'ru',name:'Russian',native:'Русский'},
+  {code:'nl',name:'Dutch',native:'Nederlands'},
+  {code:'tr',name:'Turkish',native:'Türkçe'},
+  {code:'pl',name:'Polish',native:'Polski'},
+];
+const CURRENCIES=[
+  {code:'USD',symbol:'$',name:'US Dollar'},
+  {code:'EUR',symbol:'€',name:'Euro'},
+  {code:'GBP',symbol:'£',name:'British Pound'},
+  {code:'JPY',symbol:'¥',name:'Japanese Yen'},
+  {code:'CNY',symbol:'¥',name:'Chinese Yuan'},
+  {code:'INR',symbol:'₹',name:'Indian Rupee'},
+  {code:'BRL',symbol:'R$',name:'Brazilian Real'},
+  {code:'CAD',symbol:'C$',name:'Canadian Dollar'},
+  {code:'AUD',symbol:'A$',name:'Australian Dollar'},
+  {code:'CHF',symbol:'Fr',name:'Swiss Franc'},
+  {code:'KRW',symbol:'₩',name:'Korean Won'},
+  {code:'MXN',symbol:'$',name:'Mexican Peso'},
+  {code:'SGD',symbol:'S$',name:'Singapore Dollar'},
+  {code:'HKD',symbol:'HK$',name:'Hong Kong Dollar'},
+  {code:'SEK',symbol:'kr',name:'Swedish Krona'},
+  {code:'NOK',symbol:'kr',name:'Norwegian Krone'},
+  {code:'TRY',symbol:'₺',name:'Turkish Lira'},
+  {code:'ZAR',symbol:'R',name:'South African Rand'},
+  {code:'THB',symbol:'฿',name:'Thai Baht'},
+  {code:'IDR',symbol:'Rp',name:'Indonesian Rupiah'},
+];
+const FX={USD:1,EUR:0.92,GBP:0.79,JPY:151,CNY:7.23,INR:83.5,BRL:4.97,CAD:1.36,AUD:1.53,CHF:0.9,KRW:1330,MXN:17.1,SGD:1.34,HKD:7.82,SEK:10.4,NOK:10.6,TRY:32.1,ZAR:18.4,THB:35.1,IDR:15700};
+let currentLang='en',currentCurrency='USD';
+function openLang(){
+  document.getElementById('lang-list').innerHTML=LANGUAGES.map(l=>`<div class="lang-row${l.code===currentLang?' sel':''}" onclick="setLang('${l.code}','${l.name}')"><div><div class="lang-name">${l.name}</div><div class="lang-native">${l.native}</div></div><div class="lang-check">✓</div></div>`).join('');
+  document.getElementById('lang-ovl').classList.add('show');
+}
+function closeLang(){document.getElementById('lang-ovl').classList.remove('show');}
+function setLang(code,name){currentLang=code;document.getElementById('curr-lang-label').textContent=name;closeLang();showToast('Language set to '+name);}
+function openCurr(){
+  document.getElementById('curr-list').innerHTML=CURRENCIES.map(c=>`<div class="curr-row${c.code===currentCurrency?' sel':''}" onclick="setCurrency('${c.code}','${c.symbol}','${c.name}')"><div><div class="lang-name">${c.code} — ${c.name}</div><div class="lang-native">${c.symbol} · 1 USD = ${c.code==='USD'?'1.00':(FX[c.code]||1).toFixed(c.code==='JPY'||c.code==='KRW'||c.code==='IDR'?0:2)} ${c.code}</div></div><div class="lang-check">✓</div></div>`).join('');
+  document.getElementById('curr-ovl').classList.add('show');
+}
+function closeCurr(){document.getElementById('curr-ovl').classList.remove('show');}
+function setCurrency(code,symbol,name){
+  currentCurrency=code;
+  document.getElementById('curr-currency-label').textContent=code;
+  closeCurr();showToast('Currency set to '+code);
+  if(generatedDays.length&&budgetData){
+    const rate=FX[code]||1;
+    document.getElementById('sc').textContent=symbol+Math.round(budgetData.total*rate);
+    document.getElementById('sw').textContent=symbol+Math.round(budgetData.perDay*rate);
+  }
+}
+
 
 // ─── PREMIUM SYSTEM ─────────────────────────────────────────
 let isPremium    = false;
