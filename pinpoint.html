@@ -209,21 +209,15 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:18px;position:relative;z-index:1">Plan your next<br>adventure</div>
       <div style="background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:40px;font-size:13px;font-weight:700;display:inline-block;position:relative;z-index:1">Start planning →</div>
     </div>
-    <div style="padding:20px 24px 8px;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)">Recent trips</div>
-    <div style="padding:0 24px">
-      <div onclick="goTab('plan')" style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;cursor:pointer;margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-          <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--tx)">Chiang Mai</div>
-          <span class="badge bsav">Saved</span>
-        </div>
-        <div style="font-size:12px;color:var(--t2)">Apr 15–19 · Thailand · 5 days</div>
-      </div>
-      <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;cursor:pointer">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-          <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--tx)">Kyoto</div>
-          <span class="badge bdraft">Draft</span>
-        </div>
-        <div style="font-size:12px;color:var(--t2)">Jun 3–10 · Japan · 7 days</div>
+    <div style="padding:20px 24px 8px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)">Recent trips</div>
+      <div onclick="goTab('plan')" style="font-size:12px;color:var(--ac);font-weight:500;cursor:pointer">+ New trip</div>
+    </div>
+    <div id="home-trips-list" style="padding:0 24px">
+      <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b2);border-style:dashed;padding:20px;text-align:center;cursor:pointer" onclick="goTab('plan')">
+        <div style="font-size:22px;margin-bottom:8px">🗺</div>
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div>
+        <div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div>
       </div>
     </div>
     <!-- Partner links -->
@@ -346,38 +340,39 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
 <!-- BLOG -->
 <div class="screen" id="s-blog">
+  <!-- Blog list -->
   <div id="blog-list" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-    <div style="padding:20px 24px 16px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
-      <div><div class="h2" style="margin-bottom:2px">Travel Blog</div><div style="font-size:13px;color:var(--t2)">Stories from the community</div></div>
-      <div class="ibt" onclick="showCompose()" style="font-size:14px">✏️</div>
-    </div>
-    <div class="scr" style="padding:0 24px 100px">
-      <div class="bp" onclick="openPost(0)">
-        <div class="bp-img"><div class="bp-img-bg">🏮</div><div class="bp-img-grad"></div><span class="bp-tag" style="background:rgba(255,76,106,.2);color:var(--ac)">Chiang Mai</span><div class="bp-dest">The North Thai Dream</div></div>
-        <div class="bp-body"><div class="bp-title">5 days in Chiang Mai on a shoestring — everything I wish I knew</div><div class="bp-excerpt">From hidden night markets to dawn temple hikes, this city gave me more than I expected for less than $40 a day…</div><div class="bp-footer"><div class="bp-author"><div class="bp-av" style="background:linear-gradient(135deg,var(--ac),#FF2050)">A</div><div class="bp-name">Alex Rivera · 3 days ago</div></div><div class="bp-stats"><div class="bp-stat">❤️ 142</div><div class="bp-stat">💬 28</div></div></div></div>
+    <div style="padding:20px 24px 12px;flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div><div class="h2" style="margin-bottom:2px">Travel Blog</div><div style="font-size:12px;color:var(--t2)">Stories from the community</div></div>
+        <div class="ibt" onclick="showCompose()" style="font-size:14px" title="Write a post">✏️</div>
       </div>
-      <div class="bp" onclick="openPost(1)">
-        <div class="bp-img"><div class="bp-img-bg">🏛</div><div class="bp-img-grad"></div><span class="bp-tag" style="background:rgba(155,111,255,.2);color:var(--pu)">Lisbon</span><div class="bp-dest">48 Hours in Lisboa</div></div>
-        <div class="bp-body"><div class="bp-title">48 hours in Lisbon — pastéis, fado, and getting wonderfully lost</div><div class="bp-excerpt">Lisbon rewards the slow traveller. I spent two days doing almost nothing planned and somehow saw everything…</div><div class="bp-footer"><div class="bp-author"><div class="bp-av" style="background:linear-gradient(135deg,var(--pu),#7B4FFF)">M</div><div class="bp-name">@marta · 1 week ago</div></div><div class="bp-stats"><div class="bp-stat">❤️ 287</div><div class="bp-stat">💬 54</div></div></div></div>
+      <!-- Search bar -->
+      <div style="position:relative;margin-bottom:12px">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">🔍</span>
+        <input id="blog-search" class="inp" type="text" placeholder="Search destinations, topics…" style="padding-left:36px;font-size:13px" oninput="filterBlog()">
       </div>
-      <div class="bp" onclick="openPost(2)">
-        <div class="bp-img"><div class="bp-img-bg">🍷</div><div class="bp-img-grad"></div><span class="bp-tag" style="background:rgba(0,229,196,.15);color:var(--tl)">Tbilisi</span><div class="bp-dest">Wine, Walls & Warmth</div></div>
-        <div class="bp-body"><div class="bp-title">Why Tbilisi is the most underrated backpacker city in Europe</div><div class="bp-excerpt">Georgia's capital has somehow stayed off the radar. The food alone is worth the flight…</div><div class="bp-footer"><div class="bp-author"><div class="bp-av" style="background:linear-gradient(135deg,var(--tl),#00B89A)">J</div><div class="bp-name">@jakub · 2 weeks ago</div></div><div class="bp-stats"><div class="bp-stat">❤️ 391</div><div class="bp-stat">💬 67</div></div></div></div>
-      </div>
-      <div class="bp" onclick="openPost(3)">
-        <div class="bp-img"><div class="bp-img-bg">🌮</div><div class="bp-img-grad"></div><span class="bp-tag" style="background:rgba(255,184,48,.15);color:var(--go)">Oaxaca</span><div class="bp-dest">Mezcal & Mole</div></div>
-        <div class="bp-body"><div class="bp-title">Oaxaca in 6 days: eating my way through Mexico's most creative city</div><div class="bp-excerpt">Every meal felt like an event. I came for the ruins and stayed for the food…</div><div class="bp-footer"><div class="bp-author"><div class="bp-av" style="background:linear-gradient(135deg,var(--go),#E09000)">S</div><div class="bp-name">@sofia · 3 weeks ago</div></div><div class="bp-stats"><div class="bp-stat">❤️ 214</div><div class="bp-stat">💬 39</div></div></div></div>
+      <!-- Filter chips -->
+      <div style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
+        <div class="chip ons" data-filter="all" onclick="setBlogFilter(this,'all')" style="font-size:12px;padding:5px 12px">All</div>
+        <div class="chip" data-filter="food" onclick="setBlogFilter(this,'food')" style="font-size:12px;padding:5px 12px">🍜 Food</div>
+        <div class="chip" data-filter="budget" onclick="setBlogFilter(this,'budget')" style="font-size:12px;padding:5px 12px">🪙 Budget</div>
+        <div class="chip" data-filter="nature" onclick="setBlogFilter(this,'nature')" style="font-size:12px;padding:5px 12px">🌿 Nature</div>
+        <div class="chip" data-filter="culture" onclick="setBlogFilter(this,'culture')" style="font-size:12px;padding:5px 12px">🏛 Culture</div>
+        <div class="chip" data-filter="solo" onclick="setBlogFilter(this,'solo')" style="font-size:12px;padding:5px 12px">🎒 Solo</div>
       </div>
     </div>
+    <div class="scr" style="padding:0 24px 100px" id="blog-posts-container"></div>
     <div id="nav-blog"></div>
   </div>
+
   <!-- Post reader -->
   <div id="blog-post-view" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
     <div class="ph" style="flex-shrink:0">
       <div class="ibt" onclick="closePost()">←</div>
-      <div style="display:flex;gap:10px">
+      <div style="display:flex;gap:8px">
         <div class="ibt" id="post-like-btn" onclick="toggleLike()" style="font-size:14px;opacity:.5">❤️</div>
-        <div class="ibt" style="font-size:14px">↑</div>
+        <div class="ibt" onclick="showToast('Link copied!')" style="font-size:14px">↑</div>
       </div>
     </div>
     <div class="scr" style="padding:0 0 40px">
@@ -391,27 +386,58 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
           <div id="post-av" class="bp-av" style="width:36px;height:36px;font-size:14px"></div>
           <div><div id="post-author-name" style="font-size:13px;font-weight:500;color:var(--tx)"></div><div id="post-author-meta" style="font-size:11px;color:var(--t2)"></div></div>
         </div>
-        <div style="display:flex;gap:12px"><div id="post-likes" style="font-size:13px;color:var(--t2)"></div><div id="post-comments" style="font-size:13px;color:var(--t2)"></div></div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div id="post-likes-count" style="font-size:13px;color:var(--t2);cursor:pointer" onclick="toggleLike()"></div>
+          <div id="post-comments-count" style="font-size:13px;color:var(--t2)"></div>
+        </div>
       </div>
       <div style="padding:20px 24px 0">
         <div id="post-full-title" style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--tx);margin-bottom:14px;letter-spacing:-.4px;line-height:1.25"></div>
         <div id="post-body-text" style="font-size:14px;color:var(--t2);line-height:1.7"></div>
       </div>
-      <div style="padding:16px 24px 0" id="post-tags-row"></div>
-      <div id="post-itin-cta" style="margin:20px 24px 0;background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="goTab('plan')">
-        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px">View attached itinerary</div><div id="post-itin-meta" style="font-size:12px;color:var(--t2)"></div></div>
-        <div style="font-size:22px">🗺</div>
+      <div style="padding:14px 24px 0" id="post-tags-row"></div>
+      <!-- Plan same trip CTA -->
+      <div style="margin:16px 24px 0;background:linear-gradient(135deg,var(--ac2),rgba(155,111,255,.08));border-radius:var(--rl);border:.5px solid rgba(255,76,106,.2);padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="goTab('plan')">
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px">Plan a similar trip</div><div id="post-itin-meta" style="font-size:12px;color:var(--t2)"></div></div>
+        <div style="font-size:22px">✈️</div>
+      </div>
+      <!-- Comments section -->
+      <div style="padding:20px 24px 0">
+        <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:12px">Comments</div>
+        <div id="post-comments-list" style="margin-bottom:14px"></div>
+        <!-- Add comment -->
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div id="comment-av" style="width:30px;height:30px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px">?</div>
+          <div style="flex:1">
+            <textarea id="comment-input" class="inp" placeholder="Add a comment…" style="height:60px;font-size:13px;resize:none"></textarea>
+            <button onclick="submitComment()" style="margin-top:6px;padding:8px 16px;background:var(--ac);color:#fff;border:none;border-radius:20px;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Post</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- Compose -->
   <div id="blog-compose" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
     <div class="ph"><div class="ibt" onclick="hideCompose()">←</div><div class="h2">New post</div><button class="btn" style="width:auto;padding:9px 18px;font-size:13px" onclick="publishPost()">Publish</button></div>
     <div class="scr" style="padding:0 24px 40px">
       <div class="fg"><label class="fl">Destination</label><input class="inp" id="post-dest" type="text" placeholder="e.g. Chiang Mai, Thailand"></div>
-      <div class="fg"><label class="fl">Title</label><input class="inp" id="post-title" type="text" placeholder="e.g. 5 days in the mountains…"></div>
-      <div class="fg"><label class="fl">Your story</label><textarea class="inp" id="post-body" style="height:180px" placeholder="Share your experience, tips, and highlights…"></textarea></div>
-      <div class="fg"><label class="fl">Tags</label><div class="chips" id="post-tags"><div class="chip" data-v="budget">🪙 Budget</div><div class="chip" data-v="food">🍜 Food</div><div class="chip" data-v="nature">🌿 Nature</div><div class="chip" data-v="culture">🏛 Culture</div><div class="chip" data-v="solo">🎒 Solo</div></div></div>
+      <div class="fg"><label class="fl">Title</label><input class="inp" id="post-title-inp" type="text" placeholder="e.g. 5 days in the mountains…"></div>
+      <div class="fg"><label class="fl">Your story</label><textarea class="inp" id="post-body-inp" style="height:200px;resize:none" placeholder="Share your experience, tips, highlights… People love specific advice!"></textarea></div>
+      <div class="fg">
+        <label class="fl">Cover emoji</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="chip ons" data-emoji="✈️" onclick="selectEmoji(this)">✈️</div>
+          <div class="chip" data-emoji="🏖" onclick="selectEmoji(this)">🏖</div>
+          <div class="chip" data-emoji="🏔" onclick="selectEmoji(this)">🏔</div>
+          <div class="chip" data-emoji="🌮" onclick="selectEmoji(this)">🌮</div>
+          <div class="chip" data-emoji="🏛" onclick="selectEmoji(this)">🏛</div>
+          <div class="chip" data-emoji="🌿" onclick="selectEmoji(this)">🌿</div>
+          <div class="chip" data-emoji="🍜" onclick="selectEmoji(this)">🍜</div>
+          <div class="chip" data-emoji="🌃" onclick="selectEmoji(this)">🌃</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Tags</label><div class="chips" id="post-tags"><div class="chip" data-v="budget">🪙 Budget</div><div class="chip" data-v="food">🍜 Food</div><div class="chip" data-v="nature">🌿 Nature</div><div class="chip" data-v="culture">🏛 Culture</div><div class="chip" data-v="solo">🎒 Solo</div><div class="chip" data-v="nightlife">🌙 Nightlife</div><div class="chip" data-v="adventure">⛰ Adventure</div></div></div>
       <div class="gap"></div>
     </div>
   </div>
@@ -659,6 +685,8 @@ function goTab(tab){
   const s=document.getElementById(TABS[tab]);if(s)s.classList.add('active');
   if(tab==='itin'&&generatedDays.length)buildDaysFromData(generatedDays);
   if(tab==='account'&&currentUser){ loadProfile(); setTimeout(loadSavedTrips, 300); }
+  if(tab==='blog') initBlog();
+  if(tab==='home') loadHomeTrips();
 }
 
 // ─── AUTH STATE ──────────────────────────────────────────────
@@ -801,10 +829,39 @@ async function saveCurrentItinerary() {
     if (!r.ok) { showToast('Save failed: ' + (data.error||r.status)); return; }
     showToast('✓ Trip saved to your account');
     loadSavedTrips();
+    loadHomeTrips();
   } catch(e){
     console.error('Save error:', e.message);
     showToast('Could not save trip: ' + e.message);
   }
+}
+
+// Load recent trips on home screen
+async function loadHomeTrips() {
+  const container = document.getElementById('home-trips-list');
+  if (!container) return;
+  if (!authToken) {
+    container.innerHTML = '<div style="background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:20px;text-align:center;cursor:pointer" onclick="goTab(\'plan\')"><div style="font-size:22px;margin-bottom:8px">🗺</div><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div><div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div></div>';
+    return;
+  }
+  try {
+    const r = await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
+    if (!r.ok) return;
+    const {itineraries} = await r.json();
+    if (!itineraries||!itineraries.length) {
+      container.innerHTML = '<div style="background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:20px;text-align:center;cursor:pointer" onclick="goTab(\'plan\')"><div style="font-size:22px;margin-bottom:8px">🗺</div><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div><div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div></div>';
+      return;
+    }
+    container.innerHTML = itineraries.slice(0,3).map(it =>
+      `<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;cursor:pointer;margin-bottom:10px" onclick="showToast('Opening trip…')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--tx)">${it.title||it.cities||'Trip'}</div>
+          <span class="badge bsav">Saved</span>
+        </div>
+        <div style="font-size:12px;color:var(--t2)">${it.days_count||0} days · ${new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>`
+    ).join('');
+  } catch(e) {}
 }
 
 // Check auth on app load
@@ -1154,62 +1211,196 @@ function renderQaOptions(opts,city,cfg,dayLabel){
 function closeQa(){document.getElementById('qa-ovl').classList.remove('show');qaAiOptions=[];}
 
 // BLOG
-const POSTS=[
-  {emoji:'🏮',tagTxt:'Chiang Mai',tagStyle:'background:rgba(255,76,106,.2);color:var(--ac)',heroTitle:'The North Thai Dream',title:'5 days in Chiang Mai on a shoestring — everything I wish I knew',author:'Alex Rivera',authorInitial:'A',authorStyle:'background:linear-gradient(135deg,var(--ac),#FF2050)',date:'3 days ago',likes:'❤️ 142',comments:'💬 28',body:'Chiang Mai surprised me in the best possible way.\n\nDay one I made the rookie mistake of hiring a private tuktuk to Doi Suthep. On the way back I discovered the shared songthaew stops right outside for a third of the price.\n\nThe Sunday Night Market on Walking Street is non-negotiable. Get there by 7:30 before it gets crowded, eat pad kra pao from the stall near the east entrance ($1.50).\n\nThe real hidden gem is the early morning temple circuit before 8 AM. Wat Phra Singh, Wat Chedi Luang, Wat Phan Tao — all empty of tourists at dawn.\n\nFor accommodation, Nimman area beats the Old City. I paid $8/night with a rooftop pool.',tags:['🌿 Nature','🍜 Food','📷 Photography','🪙 Budget'],itin:'Chiang Mai, Thailand · 5 days · low budget'},
-  {emoji:'🏛',tagTxt:'Lisbon',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'48 Hours in Lisboa',title:'48 hours in Lisbon — pastéis, fado, and getting wonderfully lost',author:'@marta',authorInitial:'M',authorStyle:'background:linear-gradient(135deg,var(--pu),#7B4FFF)',date:'1 week ago',likes:'❤️ 287',comments:'💬 54',body:'Lisbon is a city that punishes planning.\n\nI gave up on my itinerary by hour three. Best decision I made.\n\nAlfama in the morning: climb up before the tour groups arrive. The streets are genuinely labyrinthine — narrow, cobbled, steep, lined with azulejo tiles.\n\nFor food: ignore every restaurant on the tourist drag. Duck one street back. A prato do dia costs €8–10 at a real tasca.\n\nNightlife: Bairro Alto gets chaotic and fun after midnight. Drinks are cheap, strangers share wine on the steps of churches.',tags:['🏛 Culture','🍜 Food','🌙 Nightlife'],itin:'Lisbon, Portugal · 5 days · medium budget'},
-  {emoji:'🍷',tagTxt:'Tbilisi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'Wine, Walls & Warmth',title:'Why Tbilisi is the most underrated backpacker city in Europe',author:'@jakub',authorInitial:'J',authorStyle:'background:linear-gradient(135deg,var(--tl),#00B89A)',date:'2 weeks ago',likes:'❤️ 391',comments:'💬 67',body:'Georgia has a secret that backpackers keep not sharing.\n\nTbilisi has this impossible combination: ancient city walls, sulfur bath houses open 24 hours, the cheapest natural wine in the world sold out of clay jars.\n\nThe old town sits above the Mtkvari river, its balconied wooden houses leaning out over narrow lanes.\n\nFood: khinkali are the move. Never cut them — bite a small hole, drink the broth. A plate of 10 costs about $2.20.\n\nAn entire bottle of good amber wine costs $4 at Vino Underground.',tags:['🏛 Culture','🍜 Food','🌙 Nightlife','🪙 Budget'],itin:'Tbilisi, Georgia · 7 days · low budget'},
-  {emoji:'🌮',tagTxt:'Oaxaca',tagStyle:'background:rgba(255,184,48,.15);color:var(--go)',heroTitle:'Mezcal & Mole',title:'Oaxaca in 6 days: eating my way through Mexico\'s most creative city',author:'@sofia',authorInitial:'S',authorStyle:'background:linear-gradient(135deg,var(--go),#E09000)',date:'3 weeks ago',likes:'❤️ 214',comments:'💬 39',body:'I came to Oaxaca for the ruins. Monte Albán is extraordinary — a Zapotec city on a flattened mountaintop, 500 BC.\n\nBut I stayed for the food. Oaxacan cuisine is one of the most complex in Mexico: seven mole sauces, tlayudas, chapulines.\n\nMarket strategy: Mercado 20 de Noviembre is where locals eat. A full lunch is 80–120 pesos.\n\nMezcal: go to a palenque outside the city. Taste eight varieties, buy a smoky bottle for $12.\n\nThe Zócalo at night: marimba bands, street food, the whole city mixing together.',tags:['🍜 Food','🏛 Culture','🪙 Budget'],itin:'Oaxaca, Mexico · 6 days · low budget'},
+// ─── BLOG DATA ───────────────────────────────────────────────
+const POSTS = [
+  {id:0,emoji:'🏮',dest:'Chiang Mai',tagStyle:'background:rgba(255,76,106,.2);color:var(--ac)',heroTitle:'The North Thai Dream',title:'5 days in Chiang Mai on a shoestring — everything I wish I knew',author:'Alex Rivera',authorInitial:'A',authorColor:'linear-gradient(135deg,var(--ac),#FF2050)',date:'3 days ago',likes:142,tags:['nature','food','budget'],itin:'Chiang Mai, Thailand · 5 days',body:'Chiang Mai surprised me in the best possible way.\n\nDay one I made the rookie mistake of hiring a private tuktuk to Doi Suthep. On the way back I discovered the shared songthaew stops right outside for a third of the price.\n\nThe Sunday Night Market on Walking Street is non-negotiable. Get there by 7:30 before it gets crowded, eat pad kra pao from the stall near the east entrance ($1.50).\n\nThe real hidden gem is the early morning temple circuit before 8 AM. Wat Phra Singh, Wat Chedi Luang, Wat Phan Tao — all empty of tourists at dawn.\n\nFor accommodation, Nimman area beats the Old City. I paid $8/night with a rooftop pool.',comments:[{author:'Sara',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The temple circuit tip is gold! Going in March.'},{author:'Tom',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'Nimman vs Old City debate is real. Nimman wins for me too.'}]},
+  {id:1,emoji:'🏛',dest:'Lisbon',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'48 Hours in Lisboa',title:'48 hours in Lisbon — pastéis, fado, and getting wonderfully lost',author:'@marta',authorInitial:'M',authorColor:'linear-gradient(135deg,var(--pu),#7B4FFF)',date:'1 week ago',likes:287,tags:['culture','food','nightlife'],itin:'Lisbon, Portugal · 5 days',body:'Lisbon is a city that punishes planning.\n\nI gave up on my itinerary by hour three. Best decision I made.\n\nAlfama in the morning: climb up before the tour groups arrive. The streets are genuinely labyrinthine — narrow, cobbled, steep, lined with azulejo tiles.\n\nFor food: ignore every restaurant on the tourist drag. Duck one street back. A prato do dia costs €8–10 at a real tasca.\n\nNightlife: Bairro Alto gets chaotic and fun after midnight. Drinks are cheap, strangers share wine on the steps of churches.',comments:[{author:'Jake',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Alfama at sunrise is absolutely magical.'},{author:'Liu',color:'linear-gradient(135deg,var(--go),#E09000)',text:'What tasca do you recommend in Alfama?'}]},
+  {id:2,emoji:'🍷',dest:'Tbilisi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'Wine, Walls & Warmth',title:'Why Tbilisi is the most underrated backpacker city in Europe',author:'@jakub',authorInitial:'J',authorColor:'linear-gradient(135deg,var(--tl),#00B89A)',date:'2 weeks ago',likes:391,tags:['culture','food','nightlife','budget'],itin:'Tbilisi, Georgia · 7 days',body:'Georgia has a secret that backpackers keep not sharing.\n\nTbilisi has this impossible combination: ancient city walls, sulfur bath houses open 24 hours, the cheapest natural wine in the world sold out of clay jars.\n\nThe old town sits above the Mtkvari river, its balconied wooden houses leaning out over narrow lanes.\n\nFood: khinkali are the move. Never cut them — bite a small hole, drink the broth. A plate of 10 costs about $2.20.\n\nAn entire bottle of good amber wine costs $4 at Vino Underground.',comments:[{author:'Ana',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Adding Tbilisi to my list immediately!'},{author:'Mike',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The sulfur baths are a must. Go to Chreli Abano.'}]},
+  {id:3,emoji:'🌮',dest:'Oaxaca',tagStyle:'background:rgba(255,184,48,.15);color:var(--go)',heroTitle:'Mezcal & Mole',title:'Oaxaca in 6 days: eating my way through Mexico\'s most creative city',author:'@sofia',authorInitial:'S',authorColor:'linear-gradient(135deg,var(--go),#E09000)',date:'3 weeks ago',likes:214,tags:['food','culture','budget'],itin:'Oaxaca, Mexico · 6 days',body:'I came to Oaxaca for the ruins. Monte Albán is extraordinary — a Zapotec city on a flattened mountaintop, 500 BC.\n\nBut I stayed for the food. Oaxacan cuisine is one of the most complex in Mexico: seven mole sauces, tlayudas, chapulines.\n\nMarket strategy: Mercado 20 de Noviembre is where locals eat. A full lunch is 80–120 pesos.\n\nMezcal: go to a palenque outside the city. Taste eight varieties, buy a smoky bottle for $12.\n\nThe Zócalo at night: marimba bands, street food, the whole city mixing together.',comments:[{author:'Carla',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The chapulines are surprisingly good!'},{author:'Pedro',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'Which palenque did you visit for mezcal?'}]},
+  {id:4,emoji:'🌏',dest:'Hanoi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'The Chaos of the Old Quarter',title:'First 72 hours in Hanoi — how to survive and fall in love',author:'@chris',authorInitial:'C',authorColor:'linear-gradient(135deg,var(--tl),#00B89A)',date:'4 days ago',likes:178,tags:['food','culture','solo'],itin:'Hanoi, Vietnam · 4 days',body:'Nothing prepares you for crossing the street in Hanoi. Just walk slowly, make eye contact, and trust the flow of motorbikes.\n\nThe Old Quarter is 36 streets, each historically named after the goods sold there. Hang Gai is silk, Hang Ma is paper goods.\n\nBun cha for breakfast at Bun Cha Huong Lien — this is where Obama ate with Anthony Bourdain. $2.50 for a full meal.\n\nEgg coffee at Cafe Giang. It sounds wrong but it tastes like a dessert-coffee hybrid that you will crave for years.\n\nFor the night: Bia Hoi Corner. Sit on a plastic stool, pay 50 cents for fresh beer, watch the city never sleep.',comments:[{author:'Nina',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'The egg coffee changed my life honestly.'},{author:'Ben',color:'linear-gradient(135deg,var(--go),#E09000)',text:'Bun cha for breakfast is the move!'}]},
+  {id:5,emoji:'🏔',dest:'Medellín',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'The City of Eternal Spring',title:'Medellín transformed: what no travel guide tells you',author:'@lucas',authorInitial:'L',authorColor:'linear-gradient(135deg,var(--pu),#7B4FFF)',date:'5 days ago',likes:309,tags:['culture','adventure','solo'],itin:'Medellín, Colombia · 7 days',body:'Medellín has the most dramatic urban transformation story of any city I\'ve visited.\n\nThe cable cars connecting hillside comunas to the metro were the turning point. They made the city accessible and safe.\n\nEl Poblado is where tourists stay. Laureles is where you should stay — cheaper, more local, better restaurants.\n\nThe flower festival in August is extraordinary — silleterxos carry arrangements of 50,000 flowers on their backs.\n\nNightlife: Parque Lleras on weekends. Get there by 11 PM before the queues.',comments:[{author:'Mia',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Laureles tip is so right, Poblado is overrated!'},{author:'Diego',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The cable cars are incredible engineering too.'}]},
 ];
-let currentPostLiked=false;
-function openPost(idx){
-  const p=POSTS[idx];
-  document.getElementById('post-hero-bg').textContent=p.emoji;
-  document.getElementById('post-tag-hero').textContent=p.tagTxt;
-  document.getElementById('post-tag-hero').setAttribute('style',p.tagStyle+';font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px');
-  document.getElementById('post-hero-title').textContent=p.heroTitle;
-  document.getElementById('post-av').textContent=p.authorInitial;
-  document.getElementById('post-av').setAttribute('style',p.authorStyle+';width:36px;height:36px;font-size:14px');
-  document.getElementById('post-author-name').textContent=p.author;
-  document.getElementById('post-author-meta').textContent=p.date;
-  document.getElementById('post-likes').textContent=p.likes;
-  document.getElementById('post-comments').textContent=p.comments;
-  document.getElementById('post-full-title').textContent=p.title;
-  document.getElementById('post-body-text').innerHTML=p.body.split('\n\n').map(para=>'<p style="margin-bottom:14px">'+para+'</p>').join('');
-  document.getElementById('post-tags-row').innerHTML=p.tags.map(t=>'<span style="font-size:11px;padding:3px 9px;border-radius:10px;background:var(--s2);color:var(--t2);border:.5px solid var(--b1);margin-right:6px;margin-bottom:6px;display:inline-block">'+t+'</span>').join('');
-  document.getElementById('post-itin-meta').textContent=p.itin;
-  currentPostLiked=false;
-  document.getElementById('post-like-btn').style.opacity='0.5';
-  document.getElementById('post-like-btn').style.color='';
-  document.getElementById('blog-list').style.display='none';
-  document.getElementById('blog-compose').style.display='none';
-  document.getElementById('blog-post-view').style.display='flex';
+
+let currentFilter  = 'all';
+let currentPostIdx = -1;
+let likedPosts     = new Set();
+let userPosts      = []; // posts added by user in this session
+let selectedEmoji  = '✈️';
+
+function renderBlogPosts() {
+  const query  = (document.getElementById('blog-search')?.value||'').toLowerCase();
+  const allPosts = [...POSTS, ...userPosts];
+  const filtered = allPosts.filter(p => {
+    const matchFilter = currentFilter==='all' || p.tags.includes(currentFilter);
+    const matchSearch = !query || p.dest.toLowerCase().includes(query) || p.title.toLowerCase().includes(query) || (p.body||'').toLowerCase().includes(query);
+    return matchFilter && matchSearch;
+  });
+  const container = document.getElementById('blog-posts-container');
+  if (!container) return;
+  if (!filtered.length) {
+    container.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--t3);font-size:13px">No posts found for this filter</div>';
+    return;
+  }
+  container.innerHTML = filtered.map((p,i) => {
+    const liked = likedPosts.has(p.id);
+    return `<div class="bp" onclick="openPost(${p.id})">
+      <div class="bp-img"><div class="bp-img-bg">${p.emoji}</div><div class="bp-img-grad"></div><span class="bp-tag" style="${p.tagStyle}">${p.dest}</span><div class="bp-dest">${p.heroTitle}</div></div>
+      <div class="bp-body">
+        <div class="bp-title">${p.title}</div>
+        <div class="bp-excerpt">${(p.body||'').split('\n\n')[0].slice(0,120)}…</div>
+        <div class="bp-footer">
+          <div class="bp-author"><div class="bp-av" style="background:${p.authorColor}">${p.authorInitial}</div><div class="bp-name">${p.author} · ${p.date}</div></div>
+          <div class="bp-stats"><div class="bp-stat" style="${liked?'color:var(--ac)':''}">❤️ ${p.likes+(liked?1:0)}</div><div class="bp-stat">💬 ${(p.comments||[]).length}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setBlogFilter(el, filter) {
+  currentFilter = filter;
+  document.querySelectorAll('[data-filter]').forEach(c => c.classList.remove('ons'));
+  el.classList.add('ons');
+  renderBlogPosts();
+}
+
+function filterBlog() { renderBlogPosts(); }
+
+function openPost(id) {
+  const p = [...POSTS, ...userPosts].find(x => x.id === id);
+  if (!p) return;
+  currentPostIdx = id;
+  document.getElementById('post-hero-bg').textContent  = p.emoji;
+  document.getElementById('post-tag-hero').textContent = p.dest;
+  document.getElementById('post-tag-hero').setAttribute('style', p.tagStyle+';font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px');
+  document.getElementById('post-hero-title').textContent  = p.heroTitle;
+  document.getElementById('post-av').textContent = p.authorInitial;
+  document.getElementById('post-av').setAttribute('style','background:'+p.authorColor+';width:36px;height:36px;font-size:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff');
+  document.getElementById('post-author-name').textContent = p.author;
+  document.getElementById('post-author-meta').textContent = p.date;
+  const liked = likedPosts.has(id);
+  document.getElementById('post-likes-count').textContent   = '❤️ '+(p.likes+(liked?1:0));
+  document.getElementById('post-likes-count').style.color   = liked?'var(--ac)':'var(--t2)';
+  document.getElementById('post-comments-count').textContent= '💬 '+(p.comments||[]).length;
+  document.getElementById('post-like-btn').style.opacity = liked?'1':'0.5';
+  document.getElementById('post-like-btn').style.color   = liked?'var(--ac)':'';
+  document.getElementById('post-full-title').textContent = p.title;
+  document.getElementById('post-body-text').innerHTML    = (p.body||'').split('\n\n').map(para=>'<p style="margin-bottom:14px">'+para+'</p>').join('');
+  document.getElementById('post-tags-row').innerHTML     = (p.tags||[]).map(t=>'<span style="font-size:11px;padding:3px 9px;border-radius:10px;background:var(--s2);color:var(--t2);border:.5px solid var(--b1);margin-right:6px;margin-bottom:6px;display:inline-block">'+t+'</span>').join('');
+  document.getElementById('post-itin-meta').textContent  = p.itin||'';
+  // Comments
+  renderComments(p.comments||[]);
+  // Comment avatar
+  const initials = currentUser ? (currentUser.email||'?')[0].toUpperCase() : '?';
+  document.getElementById('comment-av').textContent = initials;
+  document.getElementById('comment-input').value = '';
+  document.getElementById('blog-list').style.display      = 'none';
+  document.getElementById('blog-compose').style.display   = 'none';
+  document.getElementById('blog-post-view').style.display = 'flex';
   document.querySelector('#blog-post-view .scr')?.scrollTo(0,0);
 }
-function closePost(){
-  document.getElementById('blog-list').style.display='flex';
-  document.getElementById('blog-post-view').style.display='none';
+
+function renderComments(comments) {
+  const container = document.getElementById('post-comments-list');
+  if (!comments.length) {
+    container.innerHTML = '<div style="font-size:13px;color:var(--t3);margin-bottom:12px">No comments yet — be the first!</div>';
+    return;
+  }
+  container.innerHTML = comments.map(c => `
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      <div style="width:30px;height:30px;border-radius:50%;background:${c.color||'var(--s3)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${(c.author||'?')[0].toUpperCase()}</div>
+      <div style="flex:1;background:var(--s2);border-radius:12px;padding:10px 12px;border:.5px solid var(--b1)">
+        <div style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px">${c.author}</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.5">${c.text}</div>
+      </div>
+    </div>`).join('');
 }
-function toggleLike(){
-  currentPostLiked=!currentPostLiked;
-  document.getElementById('post-like-btn').style.opacity=currentPostLiked?'1':'0.5';
-  document.getElementById('post-like-btn').style.color=currentPostLiked?'var(--ac)':'';
-  showToast(currentPostLiked?'❤️ Added to favourites':'Removed from favourites');
+
+function submitComment() {
+  const text = document.getElementById('comment-input').value.trim();
+  if (!text) { showToast('⚠️ Write something first'); return; }
+  if (!currentUser && !isGuest) { showToast('Sign in to comment'); return; }
+  const author = currentUser ? currentUser.email.split('@')[0] : 'Guest';
+  const colors = ['linear-gradient(135deg,var(--ac),#FF2050)','linear-gradient(135deg,var(--pu),#7B4FFF)','linear-gradient(135deg,var(--tl),#00B89A)','linear-gradient(135deg,var(--go),#E09000)'];
+  const color  = colors[Math.floor(Math.random()*colors.length)];
+  const post   = [...POSTS, ...userPosts].find(x => x.id === currentPostIdx);
+  if (post) {
+    post.comments = post.comments || [];
+    post.comments.push({ author, color, text });
+    document.getElementById('post-comments-count').textContent = '💬 ' + post.comments.length;
+    renderComments(post.comments);
+    document.getElementById('comment-input').value = '';
+    showToast('✓ Comment posted!');
+  }
 }
-function showCompose(){
-  document.getElementById('blog-list').style.display='none';
-  document.getElementById('blog-post-view').style.display='none';
-  document.getElementById('blog-compose').style.display='flex';
+
+function closePost() {
+  document.getElementById('blog-list').style.display      = 'flex';
+  document.getElementById('blog-post-view').style.display = 'none';
+  renderBlogPosts();
 }
-function hideCompose(){
-  document.getElementById('blog-list').style.display='flex';
-  document.getElementById('blog-compose').style.display='none';
+
+function toggleLike() {
+  if (currentPostIdx < 0) return;
+  const liked = likedPosts.has(currentPostIdx);
+  if (liked) { likedPosts.delete(currentPostIdx); }
+  else { likedPosts.add(currentPostIdx); }
+  const post = [...POSTS,...userPosts].find(x=>x.id===currentPostIdx);
+  if (post) {
+    const newLiked = likedPosts.has(currentPostIdx);
+    document.getElementById('post-likes-count').textContent = '❤️ '+(post.likes+(newLiked?1:0));
+    document.getElementById('post-likes-count').style.color = newLiked?'var(--ac)':'var(--t2)';
+    document.getElementById('post-like-btn').style.opacity  = newLiked?'1':'0.5';
+    document.getElementById('post-like-btn').style.color    = newLiked?'var(--ac)':'';
+    showToast(newLiked?'❤️ Added to favourites':'Removed from favourites');
+  }
 }
-function publishPost(){
-  const title=document.getElementById('post-title').value;
-  const dest=document.getElementById('post-dest').value;
-  if(!title||!dest){showToast('⚠️ Fill in destination and title first');return;}
-  hideCompose();showToast('✓ Post published! Your story is now live.');
+
+function selectEmoji(el) {
+  document.querySelectorAll('[data-emoji]').forEach(e=>e.classList.remove('ons'));
+  el.classList.add('ons');
+  selectedEmoji = el.dataset.emoji;
 }
+
+function showCompose() {
+  if (!currentUser && !isGuest) { showToast('Sign in to write a post'); goTab('account'); return; }
+  document.getElementById('blog-list').style.display    = 'none';
+  document.getElementById('blog-post-view').style.display = 'none';
+  document.getElementById('blog-compose').style.display = 'flex';
+}
+
+function hideCompose() {
+  document.getElementById('blog-list').style.display    = 'flex';
+  document.getElementById('blog-compose').style.display = 'none';
+}
+
+function publishPost() {
+  const title = document.getElementById('post-title-inp').value.trim();
+  const dest  = document.getElementById('post-dest').value.trim();
+  const body  = document.getElementById('post-body-inp').value.trim();
+  if (!title||!dest) { showToast('⚠️ Fill in destination and title'); return; }
+  if (body.length < 50) { showToast('⚠️ Write at least 50 characters'); return; }
+  const tags = [...document.querySelectorAll('#post-tags .chip.on')].map(c=>c.dataset.v);
+  const author = currentUser ? currentUser.email.split('@')[0] : 'Guest';
+  const newPost = {
+    id: Date.now(), emoji: selectedEmoji, dest, heroTitle: dest,
+    tagStyle: 'background:var(--ac2);color:var(--ac)',
+    title, author, authorInitial: author[0].toUpperCase(),
+    authorColor: 'linear-gradient(135deg,var(--ac),#FF2050)',
+    date: 'just now', likes: 0, tags: tags.length?tags:['culture'],
+    itin: dest, body, comments: []
+  };
+  userPosts.unshift(newPost);
+  ['post-title-inp','post-dest','post-body-inp'].forEach(id=>{document.getElementById(id).value='';});
+  document.querySelectorAll('#post-tags .chip').forEach(c=>c.classList.remove('on'));
+  hideCompose();
+  renderBlogPosts();
+  showToast('✓ Post published! Your story is now live.');
+}
+
+// Init blog on first render
+function initBlog() { renderBlogPosts(); }
+
 
 // ─── PREMIUM SYSTEM ─────────────────────────────────────────
 let isPremium    = false;
