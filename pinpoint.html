@@ -791,9 +791,16 @@ async function saveCurrentItinerary() {
   const title  = document.getElementById('hc-ci').textContent;
   const cities = currentCities.join(', ');
   try {
-    await fetch('/api/itineraries/save',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({title,cities,daysCount:generatedDays.length,data:generatedDays})});
+    const r = await fetch('/api/itineraries/save',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({title,cities,daysCount:generatedDays.length,data:generatedDays})});
+    const data = await r.json();
+    console.log('Save response:', r.status, JSON.stringify(data));
+    if (!r.ok) { showToast('Save failed: ' + (data.error||r.status)); return; }
     showToast('✓ Trip saved to your account');
-  } catch(e){showToast('Could not save trip');}
+    loadSavedTrips();
+  } catch(e){
+    console.error('Save error:', e.message);
+    showToast('Could not save trip: ' + e.message);
+  }
 }
 
 // Check auth on app load
