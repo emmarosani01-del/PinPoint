@@ -383,6 +383,120 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── Get blog posts ──
+  if (req.method === 'GET' && req.url === '/api/blog/posts') {
+    try {
+      const r = await supabase('GET',
+        '/rest/v1/blog_posts?select=*&order=created_at.desc&limit=50',
+        null, null);
+      json(200, { posts: r.status === 200 ? r.body : [] });
+    } catch(e) { json(200, { posts: [] }); }
+    return;
+  }
+
+  // ── Get comments for a post ──
+  if (req.method === 'GET' && req.url.startsWith('/api/blog/comments/')) {
+    const postId = req.url.split('/').pop();
+    try {
+      const r = await supabase('GET',
+        '/rest/v1/blog_comments?post_id=eq.' + postId + '&select=*&order=created_at.asc',
+        null, null);
+      json(200, { comments: r.status === 200 ? r.body : [] });
+    } catch(e) { json(200, { comments: [] }); }
+    return;
+  }
+
+  // ── Publish blog post ──
+  if (req.method === 'POST' && req.url === '/api/blog/posts') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = token ? await getUser(token) : null;
+      const userId = user ? user.id : null;
+      const authorName = user ? user.email.split('@')[0] : 'Guest';
+      const colors = [
+        'linear-gradient(135deg,#FF4C6A,#FF2050)',
+        'linear-gradient(135deg,#9B6FFF,#7B4FFF)',
+        'linear-gradient(135deg,#00E5C4,#00B89A)',
+        'linear-gradient(135deg,#FFB830,#E09000)'
+      ];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      try {
+        const r = await supabase('POST', '/rest/v1/blog_posts', {
+          user_id:         userId,
+          author_name:     authorName,
+          author_initial:  authorName[0].toUpperCase(),
+          author_color:    color,
+          dest:            p.dest,
+          hero_title:      p.dest,
+          emoji:           p.emoji || '✈️',
+          tag_style:       'background:rgba(255,76,106,.2);color:#FF4C6A',
+          title:           p.title,
+          body:            p.body,
+          tags:            p.tags || [],
+          likes:           0
+        }, token || null);
+        json(r.status < 300 ? 200 : r.status, r.status < 300 ? { ok: true } : r.body);
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
+  // ── Post a comment ──
+  if (req.method === 'POST' && req.url === '/api/blog/comments') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = token ? await getUser(token) : null;
+      const colors = ['linear-gradient(135deg,#FF4C6A,#FF2050)','linear-gradient(135deg,#9B6FFF,#7B4FFF)','linear-gradient(135deg,#00E5C4,#00B89A)','linear-gradient(135deg,#FFB830,#E09000)'];
+      const color  = colors[Math.floor(Math.random() * colors.length)];
+      const author = user ? user.email.split('@')[0] : 'Guest';
+      try {
+        const r = await supabase('POST', '/rest/v1/blog_comments', {
+          post_id:     p.postId,
+          user_id:     user ? user.id : null,
+          author_name: author,
+          author_color: color,
+          text:        p.text
+        }, token || null);
+        json(r.status < 300 ? 200 : r.status, r.status < 300 ? { ok: true, author, color } : r.body);
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
+  // ── Toggle like ──
+  if (req.method === 'POST' && req.url === '/api/blog/like') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Sign in to like posts' }); return; }
+      try {
+        // Check if already liked
+        const check = await supabase('GET',
+          '/rest/v1/blog_likes?user_id=eq.' + user.id + '&post_id=eq.' + p.postId,
+          null, token);
+        const alreadyLiked = check.status === 200 && check.body.length > 0;
+        if (alreadyLiked) {
+          await supabase('DELETE',
+            '/rest/v1/blog_likes?user_id=eq.' + user.id + '&post_id=eq.' + p.postId,
+            null, token);
+          await supabase('PATCH', '/rest/v1/blog_posts?id=eq.' + p.postId,
+            { likes: Math.max(0, (p.currentLikes||0) - 1) }, null);
+          json(200, { liked: false, likes: Math.max(0, (p.currentLikes||0) - 1) });
+        } else {
+          await supabase('POST', '/rest/v1/blog_likes',
+            { user_id: user.id, post_id: p.postId }, token);
+          await supabase('PATCH', '/rest/v1/blog_posts?id=eq.' + p.postId,
+            { likes: (p.currentLikes||0) + 1 }, null);
+          json(200, { liked: true, likes: (p.currentLikes||0) + 1 });
+        }
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
   // ── Serve HTML ──
   if (req.method === 'GET') {
     const file = path.join(__dirname, 'pinpoint.html');

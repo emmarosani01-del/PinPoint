@@ -1211,46 +1211,89 @@ function renderQaOptions(opts,city,cfg,dayLabel){
 function closeQa(){document.getElementById('qa-ovl').classList.remove('show');qaAiOptions=[];}
 
 // BLOG
-// ─── BLOG DATA ───────────────────────────────────────────────
-const POSTS = [
-  {id:0,emoji:'🏮',dest:'Chiang Mai',tagStyle:'background:rgba(255,76,106,.2);color:var(--ac)',heroTitle:'The North Thai Dream',title:'5 days in Chiang Mai on a shoestring — everything I wish I knew',author:'Alex Rivera',authorInitial:'A',authorColor:'linear-gradient(135deg,var(--ac),#FF2050)',date:'3 days ago',likes:142,tags:['nature','food','budget'],itin:'Chiang Mai, Thailand · 5 days',body:'Chiang Mai surprised me in the best possible way.\n\nDay one I made the rookie mistake of hiring a private tuktuk to Doi Suthep. On the way back I discovered the shared songthaew stops right outside for a third of the price.\n\nThe Sunday Night Market on Walking Street is non-negotiable. Get there by 7:30 before it gets crowded, eat pad kra pao from the stall near the east entrance ($1.50).\n\nThe real hidden gem is the early morning temple circuit before 8 AM. Wat Phra Singh, Wat Chedi Luang, Wat Phan Tao — all empty of tourists at dawn.\n\nFor accommodation, Nimman area beats the Old City. I paid $8/night with a rooftop pool.',comments:[{author:'Sara',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The temple circuit tip is gold! Going in March.'},{author:'Tom',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'Nimman vs Old City debate is real. Nimman wins for me too.'}]},
-  {id:1,emoji:'🏛',dest:'Lisbon',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'48 Hours in Lisboa',title:'48 hours in Lisbon — pastéis, fado, and getting wonderfully lost',author:'@marta',authorInitial:'M',authorColor:'linear-gradient(135deg,var(--pu),#7B4FFF)',date:'1 week ago',likes:287,tags:['culture','food','nightlife'],itin:'Lisbon, Portugal · 5 days',body:'Lisbon is a city that punishes planning.\n\nI gave up on my itinerary by hour three. Best decision I made.\n\nAlfama in the morning: climb up before the tour groups arrive. The streets are genuinely labyrinthine — narrow, cobbled, steep, lined with azulejo tiles.\n\nFor food: ignore every restaurant on the tourist drag. Duck one street back. A prato do dia costs €8–10 at a real tasca.\n\nNightlife: Bairro Alto gets chaotic and fun after midnight. Drinks are cheap, strangers share wine on the steps of churches.',comments:[{author:'Jake',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Alfama at sunrise is absolutely magical.'},{author:'Liu',color:'linear-gradient(135deg,var(--go),#E09000)',text:'What tasca do you recommend in Alfama?'}]},
-  {id:2,emoji:'🍷',dest:'Tbilisi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'Wine, Walls & Warmth',title:'Why Tbilisi is the most underrated backpacker city in Europe',author:'@jakub',authorInitial:'J',authorColor:'linear-gradient(135deg,var(--tl),#00B89A)',date:'2 weeks ago',likes:391,tags:['culture','food','nightlife','budget'],itin:'Tbilisi, Georgia · 7 days',body:'Georgia has a secret that backpackers keep not sharing.\n\nTbilisi has this impossible combination: ancient city walls, sulfur bath houses open 24 hours, the cheapest natural wine in the world sold out of clay jars.\n\nThe old town sits above the Mtkvari river, its balconied wooden houses leaning out over narrow lanes.\n\nFood: khinkali are the move. Never cut them — bite a small hole, drink the broth. A plate of 10 costs about $2.20.\n\nAn entire bottle of good amber wine costs $4 at Vino Underground.',comments:[{author:'Ana',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Adding Tbilisi to my list immediately!'},{author:'Mike',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The sulfur baths are a must. Go to Chreli Abano.'}]},
-  {id:3,emoji:'🌮',dest:'Oaxaca',tagStyle:'background:rgba(255,184,48,.15);color:var(--go)',heroTitle:'Mezcal & Mole',title:'Oaxaca in 6 days: eating my way through Mexico\'s most creative city',author:'@sofia',authorInitial:'S',authorColor:'linear-gradient(135deg,var(--go),#E09000)',date:'3 weeks ago',likes:214,tags:['food','culture','budget'],itin:'Oaxaca, Mexico · 6 days',body:'I came to Oaxaca for the ruins. Monte Albán is extraordinary — a Zapotec city on a flattened mountaintop, 500 BC.\n\nBut I stayed for the food. Oaxacan cuisine is one of the most complex in Mexico: seven mole sauces, tlayudas, chapulines.\n\nMarket strategy: Mercado 20 de Noviembre is where locals eat. A full lunch is 80–120 pesos.\n\nMezcal: go to a palenque outside the city. Taste eight varieties, buy a smoky bottle for $12.\n\nThe Zócalo at night: marimba bands, street food, the whole city mixing together.',comments:[{author:'Carla',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The chapulines are surprisingly good!'},{author:'Pedro',color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'Which palenque did you visit for mezcal?'}]},
-  {id:4,emoji:'🌏',dest:'Hanoi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'The Chaos of the Old Quarter',title:'First 72 hours in Hanoi — how to survive and fall in love',author:'@chris',authorInitial:'C',authorColor:'linear-gradient(135deg,var(--tl),#00B89A)',date:'4 days ago',likes:178,tags:['food','culture','solo'],itin:'Hanoi, Vietnam · 4 days',body:'Nothing prepares you for crossing the street in Hanoi. Just walk slowly, make eye contact, and trust the flow of motorbikes.\n\nThe Old Quarter is 36 streets, each historically named after the goods sold there. Hang Gai is silk, Hang Ma is paper goods.\n\nBun cha for breakfast at Bun Cha Huong Lien — this is where Obama ate with Anthony Bourdain. $2.50 for a full meal.\n\nEgg coffee at Cafe Giang. It sounds wrong but it tastes like a dessert-coffee hybrid that you will crave for years.\n\nFor the night: Bia Hoi Corner. Sit on a plastic stool, pay 50 cents for fresh beer, watch the city never sleep.',comments:[{author:'Nina',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'The egg coffee changed my life honestly.'},{author:'Ben',color:'linear-gradient(135deg,var(--go),#E09000)',text:'Bun cha for breakfast is the move!'}]},
-  {id:5,emoji:'🏔',dest:'Medellín',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'The City of Eternal Spring',title:'Medellín transformed: what no travel guide tells you',author:'@lucas',authorInitial:'L',authorColor:'linear-gradient(135deg,var(--pu),#7B4FFF)',date:'5 days ago',likes:309,tags:['culture','adventure','solo'],itin:'Medellín, Colombia · 7 days',body:'Medellín has the most dramatic urban transformation story of any city I\'ve visited.\n\nThe cable cars connecting hillside comunas to the metro were the turning point. They made the city accessible and safe.\n\nEl Poblado is where tourists stay. Laureles is where you should stay — cheaper, more local, better restaurants.\n\nThe flower festival in August is extraordinary — silleterxos carry arrangements of 50,000 flowers on their backs.\n\nNightlife: Parque Lleras on weekends. Get there by 11 PM before the queues.',comments:[{author:'Mia',color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Laureles tip is so right, Poblado is overrated!'},{author:'Diego',color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The cable cars are incredible engineering too.'}]},
+// ─── BLOG DATA & STATE ───────────────────────────────────────
+const SEED_POSTS = [
+  {id:'seed-0',emoji:'🏮',dest:'Chiang Mai',tagStyle:'background:rgba(255,76,106,.2);color:var(--ac)',heroTitle:'The North Thai Dream',title:'5 days in Chiang Mai on a shoestring — everything I wish I knew',author_name:'Alex Rivera',author_initial:'A',author_color:'linear-gradient(135deg,var(--ac),#FF2050)',created_at:'2025-04-12',likes:142,tags:['nature','food','budget'],itin:'Chiang Mai, Thailand · 5 days',body:'Chiang Mai surprised me in the best possible way.\n\nDay one I made the rookie mistake of hiring a private tuktuk to Doi Suthep. On the way back I discovered the shared songthaew stops right outside for a third of the price.\n\nThe Sunday Night Market on Walking Street is non-negotiable. Get there by 7:30 before it gets crowded, eat pad kra pao from the stall near the east entrance ($1.50).\n\nThe real hidden gem is the early morning temple circuit before 8 AM. Wat Phra Singh, Wat Chedi Luang, Wat Phan Tao — all empty of tourists at dawn.\n\nFor accommodation, Nimman area beats the Old City. I paid $8/night with a rooftop pool.',comments:[{author_name:'Sara',author_color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The temple circuit tip is gold! Going in March.'},{author_name:'Tom',author_color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'Nimman vs Old City debate is real. Nimman wins for me too.'}]},
+  {id:'seed-1',emoji:'🏛',dest:'Lisbon',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'48 Hours in Lisboa',title:'48 hours in Lisbon — pastéis, fado, and getting wonderfully lost',author_name:'@marta',author_initial:'M',author_color:'linear-gradient(135deg,var(--pu),#7B4FFF)',created_at:'2025-04-08',likes:287,tags:['culture','food','nightlife'],itin:'Lisbon, Portugal · 5 days',body:'Lisbon is a city that punishes planning.\n\nI gave up on my itinerary by hour three. Best decision I made.\n\nAlfama in the morning: climb up before the tour groups arrive. The streets are genuinely labyrinthine — narrow, cobbled, steep, lined with azulejo tiles.\n\nFor food: ignore every restaurant on the tourist drag. Duck one street back. A prato do dia costs €8–10 at a real tasca.\n\nNightlife: Bairro Alto gets chaotic and fun after midnight. Drinks are cheap, strangers share wine on the steps of churches.',comments:[{author_name:'Jake',author_color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Alfama at sunrise is absolutely magical.'},{author_name:'Liu',author_color:'linear-gradient(135deg,var(--go),#E09000)',text:'What tasca do you recommend in Alfama?'}]},
+  {id:'seed-2',emoji:'🍷',dest:'Tbilisi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'Wine, Walls & Warmth',title:'Why Tbilisi is the most underrated backpacker city in Europe',author_name:'@jakub',author_initial:'J',author_color:'linear-gradient(135deg,var(--tl),#00B89A)',created_at:'2025-04-01',likes:391,tags:['culture','food','nightlife','budget'],itin:'Tbilisi, Georgia · 7 days',body:'Georgia has a secret that backpackers keep not sharing.\n\nTbilisi has this impossible combination: ancient city walls, sulfur bath houses open 24 hours, the cheapest natural wine in the world sold out of clay jars.\n\nThe old town sits above the Mtkvari river, its balconied wooden houses leaning out over narrow lanes.\n\nFood: khinkali are the move. Never cut them — bite a small hole, drink the broth. A plate of 10 costs about $2.20.\n\nAn entire bottle of good amber wine costs $4 at Vino Underground.',comments:[{author_name:'Ana',author_color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Adding Tbilisi to my list immediately!'},{author_name:'Mike',author_color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'The sulfur baths are a must. Go to Chreli Abano.'}]},
+  {id:'seed-3',emoji:'🌮',dest:'Oaxaca',tagStyle:'background:rgba(255,184,48,.15);color:var(--go)',heroTitle:'Mezcal & Mole',title:"Oaxaca in 6 days: eating my way through Mexico's most creative city",author_name:'@sofia',author_initial:'S',author_color:'linear-gradient(135deg,var(--go),#E09000)',created_at:'2025-03-25',likes:214,tags:['food','culture','budget'],itin:'Oaxaca, Mexico · 6 days',body:'I came to Oaxaca for the ruins. Monte Albán is extraordinary — a Zapotec city on a flattened mountaintop, 500 BC.\n\nBut I stayed for the food. Oaxacan cuisine is one of the most complex in Mexico: seven mole sauces, tlayudas, chapulines.\n\nMarket strategy: Mercado 20 de Noviembre is where locals eat. A full lunch is 80–120 pesos.\n\nMezcal: go to a palenque outside the city. Taste eight varieties, buy a smoky bottle for $12.\n\nThe Zócalo at night: marimba bands, street food, the whole city mixing together.',comments:[{author_name:'Carla',author_color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The chapulines are surprisingly good!'},{author_name:'Pedro',author_color:'linear-gradient(135deg,var(--pu),#7B4FFF)',text:'Which palenque did you visit for mezcal?'}]},
+  {id:'seed-4',emoji:'🌏',dest:'Hanoi',tagStyle:'background:rgba(0,229,196,.15);color:var(--tl)',heroTitle:'The Chaos of the Old Quarter',title:'First 72 hours in Hanoi — how to survive and fall in love',author_name:'@chris',author_initial:'C',author_color:'linear-gradient(135deg,var(--tl),#00B89A)',created_at:'2025-04-11',likes:178,tags:['food','culture','solo'],itin:'Hanoi, Vietnam · 4 days',body:'Nothing prepares you for crossing the street in Hanoi. Just walk slowly, make eye contact, and trust the flow of motorbikes.\n\nThe Old Quarter is 36 streets, each historically named after the goods sold there. Hang Gai is silk, Hang Ma is paper goods.\n\nBun cha for breakfast at Bun Cha Huong Lien — this is where Obama ate with Anthony Bourdain. $2.50 for a full meal.\n\nEgg coffee at Cafe Giang. It sounds wrong but it tastes like a dessert-coffee hybrid that you will crave for years.\n\nFor the night: Bia Hoi Corner. Sit on a plastic stool, pay 50 cents for fresh beer, watch the city never sleep.',comments:[{author_name:'Nina',author_color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'The egg coffee changed my life honestly.'},{author_name:'Ben',author_color:'linear-gradient(135deg,var(--go),#E09000)',text:'Bun cha for breakfast is the move!'}]},
+  {id:'seed-5',emoji:'🏔',dest:'Medellín',tagStyle:'background:rgba(155,111,255,.2);color:var(--pu)',heroTitle:'The City of Eternal Spring',title:'Medellín transformed: what no travel guide tells you',author_name:'@lucas',author_initial:'L',author_color:'linear-gradient(135deg,var(--pu),#7B4FFF)',created_at:'2025-04-10',likes:309,tags:['culture','adventure','solo'],itin:'Medellín, Colombia · 7 days',body:"Medellín has the most dramatic urban transformation story of any city I've visited.\n\nThe cable cars connecting hillside comunas to the metro were the turning point. They made the city accessible and safe.\n\nEl Poblado is where tourists stay. Laureles is where you should stay — cheaper, more local, better restaurants.\n\nThe flower festival in August is extraordinary — silleterxos carry arrangements of 50,000 flowers on their backs.\n\nNightlife: Parque Lleras on weekends. Get there by 11 PM before the queues.",comments:[{author_name:'Mia',author_color:'linear-gradient(135deg,var(--ac),#FF2050)',text:'Laureles tip is so right, Poblado is overrated!'},{author_name:'Diego',author_color:'linear-gradient(135deg,var(--tl),#00B89A)',text:'The cable cars are incredible engineering too.'}]},
 ];
 
+let allBlogPosts   = [];
 let currentFilter  = 'all';
-let currentPostIdx = -1;
+let currentPostId  = null;
 let likedPosts     = new Set();
-let userPosts      = []; // posts added by user in this session
 let selectedEmoji  = '✈️';
 
-function renderBlogPosts() {
+function timeAgo(dateStr) {
+  const d = new Date(dateStr), now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff/86400) + 'd ago';
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+}
+
+async function initBlog() {
+  renderBlogPosts(allBlogPosts.length ? allBlogPosts : SEED_POSTS);
+  // Load real posts from DB in background
+  try {
+    const r = await fetch('/api/blog/posts');
+    const {posts} = await r.json();
+    if (posts && posts.length) {
+      // Merge: DB posts first, then seed posts not in DB
+      const normalized = posts.map(p => ({
+        ...p,
+        tagStyle: p.tag_style || 'background:rgba(255,76,106,.2);color:var(--ac)',
+        author_initial: p.author_initial || (p.author_name||'?')[0].toUpperCase(),
+      }));
+      allBlogPosts = [...normalized, ...SEED_POSTS];
+    } else {
+      allBlogPosts = [...SEED_POSTS];
+    }
+    renderBlogPosts(allBlogPosts);
+  } catch(e) {
+    allBlogPosts = [...SEED_POSTS];
+  }
+}
+
+function getBlogPosts() {
   const query  = (document.getElementById('blog-search')?.value||'').toLowerCase();
-  const allPosts = [...POSTS, ...userPosts];
-  const filtered = allPosts.filter(p => {
-    const matchFilter = currentFilter==='all' || p.tags.includes(currentFilter);
-    const matchSearch = !query || p.dest.toLowerCase().includes(query) || p.title.toLowerCase().includes(query) || (p.body||'').toLowerCase().includes(query);
+  const source = allBlogPosts.length ? allBlogPosts : SEED_POSTS;
+  return source.filter(p => {
+    const matchFilter = currentFilter==='all' || (p.tags||[]).includes(currentFilter);
+    const matchSearch = !query ||
+      (p.dest||'').toLowerCase().includes(query) ||
+      (p.title||'').toLowerCase().includes(query) ||
+      (p.body||'').toLowerCase().includes(query);
     return matchFilter && matchSearch;
   });
+}
+
+function renderBlogPosts(posts) {
   const container = document.getElementById('blog-posts-container');
   if (!container) return;
+  const filtered = posts || getBlogPosts();
   if (!filtered.length) {
-    container.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--t3);font-size:13px">No posts found for this filter</div>';
+    container.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--t3);font-size:13px">No posts found</div>';
     return;
   }
-  container.innerHTML = filtered.map((p,i) => {
-    const liked = likedPosts.has(p.id);
-    return `<div class="bp" onclick="openPost(${p.id})">
-      <div class="bp-img"><div class="bp-img-bg">${p.emoji}</div><div class="bp-img-grad"></div><span class="bp-tag" style="${p.tagStyle}">${p.dest}</span><div class="bp-dest">${p.heroTitle}</div></div>
+  container.innerHTML = filtered.map(p => {
+    const liked   = likedPosts.has(p.id);
+    const excerpt = (p.body||'').split('\n\n')[0].slice(0,120);
+    const date    = p.created_at ? timeAgo(p.created_at) : 'recently';
+    const commLen = (p.comments||[]).length;
+    return `<div class="bp" onclick="openPost('${p.id}')">
+      <div class="bp-img"><div class="bp-img-bg">${p.emoji||'✈️'}</div><div class="bp-img-grad"></div><span class="bp-tag" style="${p.tagStyle||p.tag_style||''}">${p.dest}</span><div class="bp-dest">${p.heroTitle||p.hero_title||p.dest}</div></div>
       <div class="bp-body">
         <div class="bp-title">${p.title}</div>
-        <div class="bp-excerpt">${(p.body||'').split('\n\n')[0].slice(0,120)}…</div>
+        <div class="bp-excerpt">${excerpt}…</div>
         <div class="bp-footer">
-          <div class="bp-author"><div class="bp-av" style="background:${p.authorColor}">${p.authorInitial}</div><div class="bp-name">${p.author} · ${p.date}</div></div>
-          <div class="bp-stats"><div class="bp-stat" style="${liked?'color:var(--ac)':''}">❤️ ${p.likes+(liked?1:0)}</div><div class="bp-stat">💬 ${(p.comments||[]).length}</div></div>
+          <div class="bp-author"><div class="bp-av" style="background:${p.author_color||'var(--ac)'}">${p.author_initial||'?'}</div><div class="bp-name">${p.author_name||'Anonymous'} · ${date}</div></div>
+          <div class="bp-stats"><div class="bp-stat" style="${liked?'color:var(--ac)':''}">❤️ ${(p.likes||0)+(liked?0:0)}</div><div class="bp-stat">💬 ${commLen}</div></div>
         </div>
       </div>
     </div>`;
@@ -1261,105 +1304,161 @@ function setBlogFilter(el, filter) {
   currentFilter = filter;
   document.querySelectorAll('[data-filter]').forEach(c => c.classList.remove('ons'));
   el.classList.add('ons');
-  renderBlogPosts();
+  renderBlogPosts(getBlogPosts());
 }
 
-function filterBlog() { renderBlogPosts(); }
+function filterBlog() { renderBlogPosts(getBlogPosts()); }
 
-function openPost(id) {
-  const p = [...POSTS, ...userPosts].find(x => x.id === id);
+async function openPost(id) {
+  const source = allBlogPosts.length ? allBlogPosts : SEED_POSTS;
+  const p = source.find(x => String(x.id) === String(id));
   if (!p) return;
-  currentPostIdx = id;
-  document.getElementById('post-hero-bg').textContent  = p.emoji;
+  currentPostId = id;
+
+  document.getElementById('post-hero-bg').textContent  = p.emoji||'✈️';
   document.getElementById('post-tag-hero').textContent = p.dest;
-  document.getElementById('post-tag-hero').setAttribute('style', p.tagStyle+';font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px');
-  document.getElementById('post-hero-title').textContent  = p.heroTitle;
-  document.getElementById('post-av').textContent = p.authorInitial;
-  document.getElementById('post-av').setAttribute('style','background:'+p.authorColor+';width:36px;height:36px;font-size:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff');
-  document.getElementById('post-author-name').textContent = p.author;
-  document.getElementById('post-author-meta').textContent = p.date;
+  document.getElementById('post-tag-hero').setAttribute('style',(p.tagStyle||p.tag_style||'')+';font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px');
+  document.getElementById('post-hero-title').textContent = p.heroTitle||p.hero_title||p.dest;
+  document.getElementById('post-av').textContent = p.author_initial||'?';
+  document.getElementById('post-av').setAttribute('style','background:'+(p.author_color||'var(--ac)')+';width:36px;height:36px;font-size:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0');
+  document.getElementById('post-author-name').textContent = p.author_name||'Anonymous';
+  document.getElementById('post-author-meta').textContent = p.created_at ? timeAgo(p.created_at) : 'recently';
   const liked = likedPosts.has(id);
-  document.getElementById('post-likes-count').textContent   = '❤️ '+(p.likes+(liked?1:0));
-  document.getElementById('post-likes-count').style.color   = liked?'var(--ac)':'var(--t2)';
-  document.getElementById('post-comments-count').textContent= '💬 '+(p.comments||[]).length;
-  document.getElementById('post-like-btn').style.opacity = liked?'1':'0.5';
-  document.getElementById('post-like-btn').style.color   = liked?'var(--ac)':'';
-  document.getElementById('post-full-title').textContent = p.title;
-  document.getElementById('post-body-text').innerHTML    = (p.body||'').split('\n\n').map(para=>'<p style="margin-bottom:14px">'+para+'</p>').join('');
-  document.getElementById('post-tags-row').innerHTML     = (p.tags||[]).map(t=>'<span style="font-size:11px;padding:3px 9px;border-radius:10px;background:var(--s2);color:var(--t2);border:.5px solid var(--b1);margin-right:6px;margin-bottom:6px;display:inline-block">'+t+'</span>').join('');
-  document.getElementById('post-itin-meta').textContent  = p.itin||'';
-  // Comments
-  renderComments(p.comments||[]);
-  // Comment avatar
-  const initials = currentUser ? (currentUser.email||'?')[0].toUpperCase() : '?';
+  document.getElementById('post-likes-count').textContent = '❤️ '+(p.likes||0);
+  document.getElementById('post-likes-count').style.color = liked?'var(--ac)':'var(--t2)';
+  document.getElementById('post-like-btn').style.opacity  = liked?'1':'0.5';
+  document.getElementById('post-like-btn').style.color    = liked?'var(--ac)':'';
+  document.getElementById('post-full-title').textContent  = p.title;
+  document.getElementById('post-body-text').innerHTML     = (p.body||'').split('\n\n').map(para=>'<p style="margin-bottom:14px">'+para+'</p>').join('');
+  document.getElementById('post-tags-row').innerHTML      = (p.tags||[]).map(t=>'<span style="font-size:11px;padding:3px 9px;border-radius:10px;background:var(--s2);color:var(--t2);border:.5px solid var(--b1);margin-right:6px;margin-bottom:6px;display:inline-block">'+t+'</span>').join('');
+  document.getElementById('post-itin-meta').textContent   = p.itin||p.dest||'';
+
+  // Load comments
+  document.getElementById('post-comments-count').textContent = '💬 loading…';
+  const initials = currentUser?(currentUser.email||'?')[0].toUpperCase():'?';
   document.getElementById('comment-av').textContent = initials;
   document.getElementById('comment-input').value = '';
+
   document.getElementById('blog-list').style.display      = 'none';
   document.getElementById('blog-compose').style.display   = 'none';
   document.getElementById('blog-post-view').style.display = 'flex';
   document.querySelector('#blog-post-view .scr')?.scrollTo(0,0);
+
+  // Load comments from DB (or use seed)
+  if (String(id).startsWith('seed-')) {
+    const seedComments = (p.comments||[]).map(c=>({author_name:c.author_name||c.author,author_color:c.author_color||c.color,text:c.text}));
+    renderComments(seedComments);
+    document.getElementById('post-comments-count').textContent = '💬 '+seedComments.length;
+  } else {
+    try {
+      const r = await fetch('/api/blog/comments/'+id);
+      const {comments} = await r.json();
+      renderComments(comments||[]);
+      document.getElementById('post-comments-count').textContent = '💬 '+(comments||[]).length;
+      // Update post comment count in allBlogPosts
+      const pp = allBlogPosts.find(x=>String(x.id)===String(id));
+      if (pp) pp.comments = comments||[];
+    } catch(e) { renderComments([]); }
+  }
 }
 
 function renderComments(comments) {
   const container = document.getElementById('post-comments-list');
-  if (!comments.length) {
-    container.innerHTML = '<div style="font-size:13px;color:var(--t3);margin-bottom:12px">No comments yet — be the first!</div>';
+  if (!comments||!comments.length) {
+    container.innerHTML='<div style="font-size:13px;color:var(--t3);margin-bottom:12px">No comments yet — be the first!</div>';
     return;
   }
-  container.innerHTML = comments.map(c => `
+  container.innerHTML = comments.map(c=>`
     <div style="display:flex;gap:10px;margin-bottom:12px">
-      <div style="width:30px;height:30px;border-radius:50%;background:${c.color||'var(--s3)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${(c.author||'?')[0].toUpperCase()}</div>
+      <div style="width:30px;height:30px;border-radius:50%;background:${c.author_color||c.color||'var(--s3)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${(c.author_name||c.author||'?')[0].toUpperCase()}</div>
       <div style="flex:1;background:var(--s2);border-radius:12px;padding:10px 12px;border:.5px solid var(--b1)">
-        <div style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px">${c.author}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px">${c.author_name||c.author}</div>
         <div style="font-size:12px;color:var(--t2);line-height:1.5">${c.text}</div>
       </div>
     </div>`).join('');
 }
 
-function submitComment() {
+async function submitComment() {
   const text = document.getElementById('comment-input').value.trim();
   if (!text) { showToast('⚠️ Write something first'); return; }
   if (!currentUser && !isGuest) { showToast('Sign in to comment'); return; }
-  const author = currentUser ? currentUser.email.split('@')[0] : 'Guest';
-  const colors = ['linear-gradient(135deg,var(--ac),#FF2050)','linear-gradient(135deg,var(--pu),#7B4FFF)','linear-gradient(135deg,var(--tl),#00B89A)','linear-gradient(135deg,var(--go),#E09000)'];
-  const color  = colors[Math.floor(Math.random()*colors.length)];
-  const post   = [...POSTS, ...userPosts].find(x => x.id === currentPostIdx);
-  if (post) {
-    post.comments = post.comments || [];
-    post.comments.push({ author, color, text });
-    document.getElementById('post-comments-count').textContent = '💬 ' + post.comments.length;
-    renderComments(post.comments);
-    document.getElementById('comment-input').value = '';
+
+  // Seed posts: local only
+  if (String(currentPostId).startsWith('seed-')) {
+    const post = (allBlogPosts.length?allBlogPosts:SEED_POSTS).find(x=>String(x.id)===String(currentPostId));
+    if (post) {
+      const author = currentUser?currentUser.email.split('@')[0]:'Guest';
+      if (!post.comments) post.comments=[];
+      post.comments.push({author_name:author,author_color:'linear-gradient(135deg,var(--ac),#FF2050)',text});
+      renderComments(post.comments);
+      document.getElementById('post-comments-count').textContent='💬 '+post.comments.length;
+      document.getElementById('comment-input').value='';
+      showToast('✓ Comment posted!');
+    }
+    return;
+  }
+
+  try {
+    const headers={'Content-Type':'application/json'};
+    if (authToken) headers['Authorization']='Bearer '+authToken;
+    const r = await fetch('/api/blog/comments',{method:'POST',headers,body:JSON.stringify({postId:currentPostId,text})});
+    const data = await r.json();
+    if (!r.ok){showToast('Could not post comment');return;}
+    document.getElementById('comment-input').value='';
     showToast('✓ Comment posted!');
-  }
+    // Reload comments
+    const cr = await fetch('/api/blog/comments/'+currentPostId);
+    const {comments} = await cr.json();
+    renderComments(comments||[]);
+    document.getElementById('post-comments-count').textContent='💬 '+(comments||[]).length;
+  } catch(e){showToast('Error posting comment');}
 }
 
-function closePost() {
-  document.getElementById('blog-list').style.display      = 'flex';
-  document.getElementById('blog-post-view').style.display = 'none';
-  renderBlogPosts();
-}
+async function toggleLike() {
+  if (!currentPostId) return;
+  if (!currentUser) { showToast('Sign in to like posts'); return; }
+  const source = allBlogPosts.length?allBlogPosts:SEED_POSTS;
+  const post = source.find(x=>String(x.id)===String(currentPostId));
+  if (!post) return;
 
-function toggleLike() {
-  if (currentPostIdx < 0) return;
-  const liked = likedPosts.has(currentPostIdx);
-  if (liked) { likedPosts.delete(currentPostIdx); }
-  else { likedPosts.add(currentPostIdx); }
-  const post = [...POSTS,...userPosts].find(x=>x.id===currentPostIdx);
-  if (post) {
-    const newLiked = likedPosts.has(currentPostIdx);
-    document.getElementById('post-likes-count').textContent = '❤️ '+(post.likes+(newLiked?1:0));
-    document.getElementById('post-likes-count').style.color = newLiked?'var(--ac)':'var(--t2)';
-    document.getElementById('post-like-btn').style.opacity  = newLiked?'1':'0.5';
-    document.getElementById('post-like-btn').style.color    = newLiked?'var(--ac)':'';
-    showToast(newLiked?'❤️ Added to favourites':'Removed from favourites');
+  if (String(currentPostId).startsWith('seed-')) {
+    const liked = likedPosts.has(currentPostId);
+    if (liked) likedPosts.delete(currentPostId); else likedPosts.add(currentPostId);
+    const newLikes = (post.likes||0)+(liked?-1:1);
+    post.likes = newLikes;
+    document.getElementById('post-likes-count').textContent = '❤️ '+newLikes;
+    document.getElementById('post-likes-count').style.color = !liked?'var(--ac)':'var(--t2)';
+    document.getElementById('post-like-btn').style.opacity  = !liked?'1':'0.5';
+    document.getElementById('post-like-btn').style.color    = !liked?'var(--ac)':'';
+    showToast(!liked?'❤️ Liked!':'Removed like');
+    return;
   }
+
+  try {
+    const headers={'Content-Type':'application/json','Authorization':'Bearer '+authToken};
+    const r = await fetch('/api/blog/like',{method:'POST',headers,body:JSON.stringify({postId:currentPostId,currentLikes:post.likes||0})});
+    const data = await r.json();
+    if (!r.ok){showToast(data.error||'Error');return;}
+    if (data.liked) likedPosts.add(currentPostId); else likedPosts.delete(currentPostId);
+    post.likes = data.likes;
+    document.getElementById('post-likes-count').textContent = '❤️ '+data.likes;
+    document.getElementById('post-likes-count').style.color = data.liked?'var(--ac)':'var(--t2)';
+    document.getElementById('post-like-btn').style.opacity  = data.liked?'1':'0.5';
+    document.getElementById('post-like-btn').style.color    = data.liked?'var(--ac)':'';
+    showToast(data.liked?'❤️ Liked!':'Removed like');
+  } catch(e){showToast('Error');}
 }
 
 function selectEmoji(el) {
   document.querySelectorAll('[data-emoji]').forEach(e=>e.classList.remove('ons'));
   el.classList.add('ons');
   selectedEmoji = el.dataset.emoji;
+}
+
+function closePost() {
+  document.getElementById('blog-list').style.display      = 'flex';
+  document.getElementById('blog-post-view').style.display = 'none';
+  renderBlogPosts(getBlogPosts());
 }
 
 function showCompose() {
@@ -1374,33 +1473,30 @@ function hideCompose() {
   document.getElementById('blog-compose').style.display = 'none';
 }
 
-function publishPost() {
+async function publishPost() {
   const title = document.getElementById('post-title-inp').value.trim();
   const dest  = document.getElementById('post-dest').value.trim();
   const body  = document.getElementById('post-body-inp').value.trim();
   if (!title||!dest) { showToast('⚠️ Fill in destination and title'); return; }
   if (body.length < 50) { showToast('⚠️ Write at least 50 characters'); return; }
   const tags = [...document.querySelectorAll('#post-tags .chip.on')].map(c=>c.dataset.v);
-  const author = currentUser ? currentUser.email.split('@')[0] : 'Guest';
-  const newPost = {
-    id: Date.now(), emoji: selectedEmoji, dest, heroTitle: dest,
-    tagStyle: 'background:var(--ac2);color:var(--ac)',
-    title, author, authorInitial: author[0].toUpperCase(),
-    authorColor: 'linear-gradient(135deg,var(--ac),#FF2050)',
-    date: 'just now', likes: 0, tags: tags.length?tags:['culture'],
-    itin: dest, body, comments: []
-  };
-  userPosts.unshift(newPost);
-  ['post-title-inp','post-dest','post-body-inp'].forEach(id=>{document.getElementById(id).value='';});
-  document.querySelectorAll('#post-tags .chip').forEach(c=>c.classList.remove('on'));
-  hideCompose();
-  renderBlogPosts();
-  showToast('✓ Post published! Your story is now live.');
+  try {
+    const headers={'Content-Type':'application/json'};
+    if (authToken) headers['Authorization']='Bearer '+authToken;
+    const r = await fetch('/api/blog/posts',{method:'POST',headers,body:JSON.stringify({dest,title,body,tags,emoji:selectedEmoji})});
+    if (!r.ok){showToast('Could not publish post');return;}
+    ['post-title-inp','post-dest','post-body-inp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.querySelectorAll('#post-tags .chip').forEach(c=>c.classList.remove('on'));
+    hideCompose();
+    showToast('✓ Post published! Visible to all users.');
+    // Reload blog posts
+    allBlogPosts = [];
+    await initBlog();
+  } catch(e){showToast('Error publishing post');}
 }
 
-// Init blog on first render
-function initBlog() { renderBlogPosts(); }
 
+// ─── PREMIUM SYSTEM ─────────────────────────────────────────
 
 // ─── PREMIUM SYSTEM ─────────────────────────────────────────
 let isPremium    = false;
