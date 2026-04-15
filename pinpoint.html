@@ -795,6 +795,23 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   </div>
 </div>
 
+<!-- SET DATE OVERLAY -->
+<div class="ovl" id="setdate-ovl" onclick="if(event.target===this)closeSetDate()">
+  <div class="sheet" style="padding-bottom:36px">
+    <div class="sh"></div>
+    <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div class="h2">Set trip dates</div>
+      <div class="ibt" onclick="closeSetDate()" style="width:32px;height:32px;font-size:13px">✕</div>
+    </div>
+    <div style="padding:0 24px">
+      <div style="font-size:13px;color:var(--t2);margin-bottom:16px" id="setdate-title"></div>
+      <div class="fg"><label class="fl">Start date</label><input class="inp" type="date" id="setdate-start"></div>
+      <div class="fg"><label class="fl">End date</label><input class="inp" type="date" id="setdate-end"></div>
+      <button class="btn" onclick="saveItineraryDates()">Save dates</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 </div>
 
@@ -957,22 +974,53 @@ async function loadSavedTrips() {
   try {
     const r = await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
     const data = await r.json();
-    console.log('loadSavedTrips response:', r.status, JSON.stringify(data).slice(0,200));
     if (!r.ok) return;
     const itineraries = data.itineraries;
     const container = document.getElementById('saved-trips-list');
-    if (!container) { console.log('loadSavedTrips: container not found'); return; }
+    if (!container) return;
     if (!itineraries||!itineraries.length){
       container.innerHTML='<div style="font-size:13px;color:var(--t3);padding:14px 0;text-align:center">No saved trips yet — generate one!</div>';
       return;
     }
-    container.innerHTML=itineraries.map(it=>`
-      <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="showToast('Loading trip…')">
-        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">${it.title||it.cities||'Trip'}</div>
-        <div style="font-size:11px;color:var(--t2)">${it.days_count||0} days · ${new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+    // Cache globally for calendar and other uses
+    window._savedItins = itineraries;
+    container.innerHTML=itineraries.map((it,idx)=>`
+      <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="loadSavedItinerary(${idx})">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx)">${it.title||it.cities||'Trip'}</div>
+          <div style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--ac2);color:var(--ac);font-weight:500">Open →</div>
+        </div>
+        <div style="font-size:11px;color:var(--t2)">${it.days_count||0} days · ${it.start_date?new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
       </div>`).join('');
-    console.log('loadSavedTrips: rendered', itineraries.length, 'trips');
   } catch(e){ console.error('loadSavedTrips error:', e.message); }
+}
+
+// Load a saved itinerary back into the app
+function loadSavedItinerary(idx) {
+  const it = (window._savedItins||[])[idx];
+  if (!it||!it.data) { showToast('Trip data not available'); return; }
+  try {
+    const days = Array.isArray(it.data) ? it.data : JSON.parse(it.data);
+    generatedDays = days;
+    currentCities = it.cities ? it.cities.split(',').map(c=>c.trim()) : [it.title||''];
+    budgetData    = calcBudget(days);
+    // Update header
+    document.getElementById('hc-ci').textContent = it.title||it.cities||'Trip';
+    document.getElementById('hc-co').textContent = '';
+    const s = it.start_date ? new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+    const e = it.end_date   ? new Date(it.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+    document.getElementById('hc-da').textContent = (s&&e?s+' – '+e+' · ':'')+it.days_count+' days';
+    document.getElementById('sc').textContent = budgetData.totalDisplay;
+    document.getElementById('sw').textContent = budgetData.perDayDisplay;
+    document.getElementById('sa').textContent = days.reduce((a,d)=>a+(d.items||[]).filter(i=>i.name).length,0);
+    document.getElementById('ipp').innerHTML = '';
+    buildDaysFromData(days);
+    goTab('itin');
+    showToast('✓ Loaded: '+(it.title||it.cities||'Trip'));
+  } catch(err) {
+    console.error('loadSavedItinerary error:', err);
+    showToast('Could not load trip');
+  }
 }
 
 // Save current itinerary to account
@@ -1001,28 +1049,24 @@ async function saveCurrentItinerary() {
 async function loadHomeTrips() {
   const container = document.getElementById('home-trips-list');
   if (!container) return;
-  if (!authToken) {
-    container.innerHTML = '<div style="background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:20px;text-align:center;cursor:pointer" onclick="goTab(\'plan\')"><div style="font-size:22px;margin-bottom:8px">🗺</div><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div><div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div></div>';
-    return;
-  }
+  const empty = '<div style="background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:20px;text-align:center;cursor:pointer" onclick="goTab(\'plan\')"><div style="font-size:22px;margin-bottom:8px">🗺</div><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div><div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div></div>';
+  if (!authToken) { container.innerHTML = empty; return; }
   try {
     const r = await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
-    if (!r.ok) return;
+    if (!r.ok) { container.innerHTML = empty; return; }
     const {itineraries} = await r.json();
-    if (!itineraries||!itineraries.length) {
-      container.innerHTML = '<div style="background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:20px;text-align:center;cursor:pointer" onclick="goTab(\'plan\')"><div style="font-size:22px;margin-bottom:8px">🗺</div><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">No trips yet</div><div style="font-size:12px;color:var(--t2)">Tap to plan your first adventure</div></div>';
-      return;
-    }
-    container.innerHTML = itineraries.slice(0,3).map(it =>
-      `<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;cursor:pointer;margin-bottom:10px" onclick="showToast('Opening trip…')">
+    window._savedItins = itineraries||[];
+    if (!itineraries||!itineraries.length) { container.innerHTML = empty; return; }
+    container.innerHTML = itineraries.slice(0,3).map((it,idx) =>
+      `<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px;cursor:pointer;margin-bottom:10px" onclick="loadSavedItinerary(${idx})">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
           <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--tx)">${it.title||it.cities||'Trip'}</div>
           <span class="badge bsav">Saved</span>
         </div>
-        <div style="font-size:12px;color:var(--t2)">${it.days_count||0} days · ${new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+        <div style="font-size:12px;color:var(--t2)">${it.days_count||0} days · ${it.start_date?new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
       </div>`
     ).join('');
-  } catch(e) {}
+  } catch(e) { container.innerHTML = empty; }
 }
 
 // Check auth on app load
@@ -1706,12 +1750,29 @@ async function loadCalendarTrips(){
 function renderUpcoming(itins){
   const container=document.getElementById('cal-upcoming-list');
   const today=new Date().toISOString().slice(0,10);
-  const upcoming=itins.filter(it=>it.start_date&&it.start_date>=today).sort((a,b)=>a.start_date.localeCompare(b.start_date)).slice(0,5);
-  if(!upcoming.length){container.innerHTML='<div style="font-size:13px;color:var(--t3);text-align:center;padding:16px 0">No upcoming trips — plan one!</div>';return;}
-  container.innerHTML=upcoming.map(it=>{
-    const s=it.start_date?new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
-    const e=it.end_date?new Date(it.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
-    return`<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--ac2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--ac);line-height:1">${it.start_date?new Date(it.start_date).getDate():''}</div><div style="font-size:9px;color:var(--ac);text-transform:uppercase">${it.start_date?MONTHS[new Date(it.start_date).getMonth()].slice(0,3):''}</div></div><div style="flex:1;min-width:0"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px">${it.title||it.cities||'Trip'}</div><div style="font-size:11px;color:var(--t2)">${s&&e?s+' – '+e:''} · ${it.days_count||0} days</div></div></div>`;
+  // Show trips with dates first, then undated trips
+  const withDates  = itins.filter(it=>it.start_date&&it.start_date>=today).sort((a,b)=>a.start_date.localeCompare(b.start_date));
+  const undated    = itins.filter(it=>!it.start_date).slice(0,3);
+  const upcoming   = [...withDates.slice(0,5), ...undated];
+  if(!upcoming.length){
+    container.innerHTML='<div style="font-size:13px;color:var(--t3);text-align:center;padding:16px 0">No trips planned yet</div>';
+    return;
+  }
+  container.innerHTML=upcoming.map((it,idx)=>{
+    const hasDate = !!it.start_date;
+    const s=hasDate?new Date(it.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'No date set';
+    const e=hasDate&&it.end_date?new Date(it.end_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
+    const allIdx = (window._savedItins||[]).findIndex(x=>x.id===it.id);
+    return`<div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="loadSavedItinerary(${allIdx})">
+      <div style="width:44px;height:44px;border-radius:12px;background:${hasDate?'var(--ac2)':'var(--s2)'};display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+        ${hasDate?`<div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--ac);line-height:1">${new Date(it.start_date).getDate()}</div><div style="font-size:9px;color:var(--ac);text-transform:uppercase">${MONTHS[new Date(it.start_date).getMonth()].slice(0,3)}</div>`:'<div style="font-size:18px">📅</div>'}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px">${it.title||it.cities||'Trip'}</div>
+        <div style="font-size:11px;color:var(--t2)">${s}${e?' – '+e:''} · ${it.days_count||0} days</div>
+      </div>
+      ${!hasDate?`<div onclick="event.stopPropagation();openSetDate('${it.id}',${allIdx})" style="font-size:10px;padding:4px 8px;border-radius:8px;background:var(--ac2);color:var(--ac);border:.5px solid rgba(255,76,106,.2);font-weight:500;white-space:nowrap;cursor:pointer">Set date</div>`:'<div style="font-size:16px;color:var(--t3)">›</div>'}
+    </div>`;
   }).join('');
 }
 function checkTodayTrip(itins){
@@ -1863,7 +1924,93 @@ function openLang(){
   document.getElementById('lang-ovl').classList.add('show');
 }
 function closeLang(){document.getElementById('lang-ovl').classList.remove('show');}
-function setLang(code,name){currentLang=code;document.getElementById('curr-lang-label').textContent=name;closeLang();showToast('Language set to '+name);}
+let _setDateId=null,_setDateIdx=null;
+function openSetDate(id,idx){
+  _setDateId=id;_setDateIdx=parseInt(idx);
+  const it=(window._savedItins||[])[_setDateIdx];
+  document.getElementById('setdate-title').textContent=it?it.title||it.cities||'Trip':'Trip';
+  document.getElementById('setdate-start').value=it?.start_date||'';
+  document.getElementById('setdate-end').value=it?.end_date||'';
+  document.getElementById('setdate-ovl').classList.add('show');
+}
+function closeSetDate(){document.getElementById('setdate-ovl').classList.remove('show');}
+async function saveItineraryDates(){
+  const start=document.getElementById('setdate-start').value;
+  const end=document.getElementById('setdate-end').value;
+  if(!start||!end){showToast('Please set both dates');return;}
+  if(end<start){showToast('End date must be after start date');return;}
+  try{
+    const headers={'Content-Type':'application/json','Authorization':'Bearer '+authToken};
+    const r=await fetch('/api/itineraries/dates',{method:'POST',headers,body:JSON.stringify({id:_setDateId,startDate:start,endDate:end})});
+    if(!r.ok){showToast('Could not save dates');return;}
+    // Update local cache
+    if(window._savedItins&&_setDateIdx>=0){
+      window._savedItins[_setDateIdx].start_date=start;
+      window._savedItins[_setDateIdx].end_date=end;
+    }
+    closeSetDate();showToast('✓ Dates saved!');
+    renderCalendar();renderUpcoming(window._savedItins||[]);checkTodayTrip(window._savedItins||[]);
+    // Jump calendar to that month
+    const d=new Date(start);calYear=d.getFullYear();calMonth=d.getMonth();renderCalendar();
+  }catch(e){showToast('Error saving dates');}
+}
+const I18N = {
+  en:{home_heading:'Where to<br>next?',plan_title:'New trip',gen_btn:'Generate itinerary →',interests_label:'Interests',pace_label:'Pace',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Must-do',quick_adj:'Quick adjustments',cheaper:'Cheaper options',closer:'Something closer',outdoors:'More outdoors',shorter:'Shorter day',extend:'Extend evening',alts:'Alternatives',save_trip:'Trip saved to your account',nav_home:'Home',nav_plan:'Plan',nav_trips:'Trips',nav_blog:'Blog',nav_profile:'Profile'},
+  it:{home_heading:'Dove vai<br>dopo?',plan_title:'Nuovo viaggio',gen_btn:'Genera itinerario →',interests_label:'Interessi',pace_label:'Ritmo',budget_label:'Budget',dates_label:'Date',destinations_label:'Destinazioni',mustdo_label:'Da fare',quick_adj:'Aggiustamenti rapidi',cheaper:'Più economico',closer:'Più vicino',outdoors:"All'aperto",shorter:'Giornata corta',extend:'Sera lunga',alts:'Alternative',save_trip:'Viaggio salvato!',nav_home:'Home',nav_plan:'Pianifica',nav_trips:'Viaggi',nav_blog:'Blog',nav_profile:'Profilo'},
+  es:{home_heading:'¿A dónde<br>vas?',plan_title:'Nuevo viaje',gen_btn:'Generar itinerario →',interests_label:'Intereses',pace_label:'Ritmo',budget_label:'Presupuesto',dates_label:'Fechas',destinations_label:'Destinos',mustdo_label:'Imprescindibles',quick_adj:'Ajustes rápidos',cheaper:'Más barato',closer:'Más cercano',outdoors:'Al aire libre',shorter:'Día corto',extend:'Alargar tarde',alts:'Alternativas',save_trip:'Viaje guardado',nav_home:'Inicio',nav_plan:'Planear',nav_trips:'Viajes',nav_blog:'Blog',nav_profile:'Perfil'},
+  fr:{home_heading:'Où vas-tu<br>ensuite?',plan_title:'Nouveau voyage',gen_btn:'Générer itinéraire →',interests_label:'Intérêts',pace_label:'Rythme',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Incontournables',quick_adj:'Ajustements rapides',cheaper:'Moins cher',closer:'Plus proche',outdoors:'En plein air',shorter:'Journée courte',extend:'Soirée longue',alts:'Alternatives',save_trip:'Voyage enregistré',nav_home:'Accueil',nav_plan:'Planifier',nav_trips:'Voyages',nav_blog:'Blog',nav_profile:'Profil'},
+  de:{home_heading:'Wohin<br>als nächstes?',plan_title:'Neue Reise',gen_btn:'Reiseplan erstellen →',interests_label:'Interessen',pace_label:'Tempo',budget_label:'Budget',dates_label:'Daten',destinations_label:'Ziele',mustdo_label:'Must-dos',quick_adj:'Schnellanpassungen',cheaper:'Günstiger',closer:'Näher',outdoors:'Draußen',shorter:'Kurzer Tag',extend:'Abend verlängern',alts:'Alternativen',save_trip:'Reise gespeichert',nav_home:'Start',nav_plan:'Planen',nav_trips:'Reisen',nav_blog:'Blog',nav_profile:'Profil'},
+  pt:{home_heading:'Para onde<br>ir a seguir?',plan_title:'Nova viagem',gen_btn:'Gerar itinerário →',interests_label:'Interesses',pace_label:'Ritmo',budget_label:'Orçamento',dates_label:'Datas',destinations_label:'Destinos',mustdo_label:'A fazer',quick_adj:'Ajustes rápidos',cheaper:'Mais barato',closer:'Mais perto',outdoors:'Ao ar livre',shorter:'Dia curto',extend:'Tarde longa',alts:'Alternativas',save_trip:'Viagem guardada',nav_home:'Início',nav_plan:'Planear',nav_trips:'Viagens',nav_blog:'Blog',nav_profile:'Perfil'},
+  ja:{home_heading:'次はどこへ？',plan_title:'新しい旅',gen_btn:'旅程を生成 →',interests_label:'興味',pace_label:'ペース',budget_label:'予算',dates_label:'日付',destinations_label:'目的地',mustdo_label:'必須',quick_adj:'クイック調整',cheaper:'もっと安く',closer:'近くで',outdoors:'アウトドア',shorter:'短い一日',extend:'夜を延ばす',alts:'代替案',save_trip:'旅行を保存しました',nav_home:'ホーム',nav_plan:'計画',nav_trips:'旅行',nav_blog:'ブログ',nav_profile:'プロフィール'},
+  zh:{home_heading:'下一站<br>去哪里？',plan_title:'新旅行',gen_btn:'生成行程 →',interests_label:'兴趣',pace_label:'节奏',budget_label:'预算',dates_label:'日期',destinations_label:'目的地',mustdo_label:'必去',quick_adj:'快速调整',cheaper:'更便宜',closer:'更近的',outdoors:'户外',shorter:'短程一天',extend:'延长夜晚',alts:'替代方案',save_trip:'旅行已保存',nav_home:'首页',nav_plan:'计划',nav_trips:'旅行',nav_blog:'博客',nav_profile:'我的'},
+  ko:{home_heading:'다음 여행지는<br>어디인가요?',plan_title:'새 여행',gen_btn:'여정 생성 →',interests_label:'관심사',pace_label:'속도',budget_label:'예산',dates_label:'날짜',destinations_label:'목적지',mustdo_label:'필수',quick_adj:'빠른 조정',cheaper:'더 저렴하게',closer:'더 가까이',outdoors:'야외',shorter:'짧은 하루',extend:'저녁 연장',alts:'대안',save_trip:'여행 저장됨',nav_home:'홈',nav_plan:'계획',nav_trips:'여행',nav_blog:'블로그',nav_profile:'프로필'},
+  ar:{home_heading:'إلى أين<br>ستذهب؟',plan_title:'رحلة جديدة',gen_btn:'إنشاء مسار →',interests_label:'الاهتمامات',pace_label:'الوتيرة',budget_label:'الميزانية',dates_label:'التواريخ',destinations_label:'الوجهات',mustdo_label:'لا يُفوَّت',quick_adj:'تعديلات سريعة',cheaper:'أرخص',closer:'أقرب',outdoors:'في الهواء الطلق',shorter:'يوم قصير',extend:'إطالة المساء',alts:'بدائل',save_trip:'تم حفظ الرحلة',nav_home:'الرئيسية',nav_plan:'خطط',nav_trips:'رحلات',nav_blog:'مدونة',nav_profile:'الملف'},
+  hi:{home_heading:'अगली यात्रा<br>कहाँ?',plan_title:'नई यात्रा',gen_btn:'यात्रा कार्यक्रम बनाएं →',interests_label:'रुचियां',pace_label:'गति',budget_label:'बजट',dates_label:'तारीखें',destinations_label:'गंतव्य',mustdo_label:'जरूर करें',quick_adj:'त्वरित समायोजन',cheaper:'सस्ता',closer:'करीब',outdoors:'बाहर',shorter:'छोटा दिन',extend:'शाम बढ़ाएं',alts:'विकल्प',save_trip:'यात्रा सहेजी गई',nav_home:'होम',nav_plan:'योजना',nav_trips:'यात्राएं',nav_blog:'ब्लॉग',nav_profile:'प्रोफ़ाइल'},
+  ru:{home_heading:'Куда<br>дальше?',plan_title:'Новое путешествие',gen_btn:'Создать маршрут →',interests_label:'Интересы',pace_label:'Темп',budget_label:'Бюджет',dates_label:'Даты',destinations_label:'Направления',mustdo_label:'Обязательно',quick_adj:'Быстрые изменения',cheaper:'Дешевле',closer:'Поближе',outdoors:'На природе',shorter:'Короткий день',extend:'Продлить вечер',alts:'Альтернативы',save_trip:'Поездка сохранена',nav_home:'Главная',nav_plan:'Планировать',nav_trips:'Поездки',nav_blog:'Блог',nav_profile:'Профиль'},
+};
+
+function setLang(code, name) {
+  currentLang = code;
+  document.getElementById('curr-lang-label').textContent = name;
+  closeLang();
+  applyI18n(code);
+  showToast('Language set to ' + name);
+}
+
+function applyI18n(code) {
+  const t = I18N[code] || I18N['en'];
+  // Home heading
+  const heading = document.querySelector('#s-home [style*="font-size:34px"], #s-home .disp');
+  if (heading) heading.innerHTML = t.home_heading;
+  // Plan screen
+  const planH2 = document.querySelector('#s-plan .h2');
+  if (planH2) planH2.textContent = t.plan_title;
+  const genBtn = document.querySelector('#s-plan .btn');
+  if (genBtn) genBtn.textContent = t.gen_btn;
+  // Field labels
+  [['#s-plan [for="d1"]','dates_label'],['#s-plan #ic','interests_label'],['#s-plan #pc','pace_label'],['#s-plan #bc','budget_label']].forEach(([sel,key])=>{
+    const el=document.querySelector(sel);
+    if(el&&el.previousElementSibling){el.previousElementSibling.textContent=t[key]||'';}
+  });
+  // Quick adjustment buttons
+  const qaMap={cheaper:'cheaper',closer:'closer',outdoors:'outdoors',shorter:'shorter',extend:'extend',alts:'alts'};
+  document.querySelectorAll('.ql').forEach(el=>{
+    const qa=el.closest('.qa');if(!qa)return;
+    const type=qa.getAttribute('onclick')?.match(/qaOpen\('(\w+)'\)/)?.[1];
+    if(type&&t[type])el.textContent=t[type];
+  });
+  // QA section label
+  const qaLb=document.querySelector('.qa-lb');
+  if(qaLb)qaLb.textContent=t.quick_adj;
+  // Nav labels
+  const navMap={home:'nav_home',plan:'nav_plan',trips:'nav_trips',blog:'nav_blog',account:'nav_profile'};
+  document.querySelectorAll('.ni').forEach(ni=>{
+    const lbl=ni.querySelector('.ni-lbl');if(!lbl)return;
+    const onclick=ni.getAttribute('onclick')||'';
+    const match=onclick.match(/goTab\('(\w+)'\)/);
+    if(match&&navMap[match[1]]&&t[navMap[match[1]]])lbl.textContent=t[navMap[match[1]]];
+  });
+}
 function openCurr(){
   document.getElementById('curr-list').innerHTML=CURRENCIES.map(c=>`<div class="curr-row${c.code===currentCurrency?' sel':''}" onclick="setCurrency('${c.code}','${c.symbol}','${c.name}')"><div><div class="lang-name">${c.code} — ${c.name}</div><div class="lang-native">${c.symbol} · 1 USD = ${c.code==='USD'?'1.00':(FX[c.code]||1).toFixed(c.code==='JPY'||c.code==='KRW'||c.code==='IDR'?0:2)} ${c.code}</div></div><div class="lang-check">✓</div></div>`).join('');
   document.getElementById('curr-ovl').classList.add('show');

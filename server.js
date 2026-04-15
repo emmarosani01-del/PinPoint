@@ -386,6 +386,23 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── Update itinerary dates ──
+  if (req.method === 'POST' && req.url === '/api/itineraries/dates') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Not authenticated' }); return; }
+      try {
+        const r = await supabase('PATCH',
+          '/rest/v1/itineraries?id=eq.' + p.id + '&user_id=eq.' + user.id,
+          { start_date: p.startDate, end_date: p.endDate }, token);
+        json(r.status < 300 ? 200 : r.status, r.status < 300 ? { ok: true } : r.body);
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
   // ── Get bucket list ──
   if (req.method === 'GET' && req.url === '/api/bucket') {
     const token = getToken(req);
