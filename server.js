@@ -217,7 +217,7 @@ function askClaude(message, maxTokens, res) {
   const body = JSON.stringify({
     model:      'claude-sonnet-4-20250514',
     max_tokens: maxTokens,
-    system:     'You are an expert local travel guide. Respond ONLY with valid JSON. No markdown. No backticks. No text outside the JSON object. First character is { and last is }.',
+    system:     'You are an expert local travel guide. Respond ONLY with valid JSON on a SINGLE LINE. No markdown. No backticks. No newlines inside the JSON. No text outside the JSON object. First character is { and last is }.',
     messages:   [{ role: 'user', content: message }]
   });
 

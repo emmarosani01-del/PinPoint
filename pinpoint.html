@@ -860,8 +860,17 @@ function callEndpoint(endpoint,params){
       const raw=data.content.map(b=>b.text||'').join('');
       const s=raw.indexOf('{'),e=raw.lastIndexOf('}');
       if(s<0)throw new Error('No JSON in response');
-      const c=raw.slice(s,e+1);
-      try{return JSON.parse(c);}catch(e2){try{return JSON.parse(c.replace(/[\x00-\x1F\x7F]/g,' '));}catch(e3){throw new Error('JSON parse failed');}}
+      // Clean: remove control chars, fix newlines
+      let c=raw.slice(s,e+1)
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g,' ')
+        .replace(/\n/g,' ').replace(/\r/g,' ').replace(/\t/g,' ');
+      try{return JSON.parse(c);}
+      catch(e2){
+        // Try fixing trailing commas and other common issues
+        c=c.replace(/,\s*}/g,'}').replace(/,\s*]/g,']');
+        try{return JSON.parse(c);}
+        catch(e3){throw new Error('JSON parse failed: '+e3.message);}
+      }
     });
 }
 
