@@ -766,12 +766,15 @@ async function loadProfile() {
 }
 
 async function loadSavedTrips() {
-  if (!authToken) return;
+  if (!authToken) { console.log('loadSavedTrips: no token'); return; }
   try {
     const r = await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
+    const data = await r.json();
+    console.log('loadSavedTrips response:', r.status, JSON.stringify(data).slice(0,200));
     if (!r.ok) return;
-    const {itineraries} = await r.json();
+    const itineraries = data.itineraries;
     const container = document.getElementById('saved-trips-list');
+    if (!container) { console.log('loadSavedTrips: container not found'); return; }
     if (!itineraries||!itineraries.length){
       container.innerHTML='<div style="font-size:13px;color:var(--t3);padding:14px 0;text-align:center">No saved trips yet — generate one!</div>';
       return;
@@ -781,7 +784,8 @@ async function loadSavedTrips() {
         <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">${it.title||it.cities||'Trip'}</div>
         <div style="font-size:11px;color:var(--t2)">${it.days_count||0} days · ${new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
       </div>`).join('');
-  } catch(e){}
+    console.log('loadSavedTrips: rendered', itineraries.length, 'trips');
+  } catch(e){ console.error('loadSavedTrips error:', e.message); }
 }
 
 // Save current itinerary to account
