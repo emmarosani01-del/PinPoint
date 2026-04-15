@@ -92,7 +92,21 @@ async function saveItinerary(userId, title, cities, daysCount, data, startDate, 
   } catch(e) { console.error('Save itinerary error:', e.message); }
 }
 
+// Update user preferences
+async function updatePreferences(userId, lang, currency) {
+  try {
+    await supabase('PATCH', '/rest/v1/profiles?id=eq.' + userId,
+      { preferred_language: lang, preferred_currency: currency }, null);
+  } catch(e) {}
+}
+
 // ─── Prompt builders ────────────────────────────────────────
+
+const LANG_NAMES = {
+  en:'English',es:'Spanish',it:'Italian',fr:'French',de:'German',
+  pt:'Portuguese',ja:'Japanese',zh:'Chinese',ko:'Korean',
+  ar:'Arabic',hi:'Hindi',ru:'Russian',nl:'Dutch',tr:'Turkish',pl:'Polish'
+};
 
 function itineraryPrompt(p) {
   const budget = {
@@ -109,6 +123,11 @@ function itineraryPrompt(p) {
 
   const n    = parseInt(p.nDays) || 3;
   const city = p.city || 'Rome';
+  const lang = p.language || 'en';
+  const langName = LANG_NAMES[lang] || 'English';
+  const langInstruction = lang !== 'en'
+    ? `\nIMPORTANT: Write ALL text fields (meta, cityNote, fact, transport) in ${langName}. Keep place names in their original language.`
+    : '';
 
   return `Create a ${n}-day travel itinerary for ${city}.
 
@@ -116,7 +135,7 @@ Days: ${p.dateStr || 'Day 1, Day 2, Day 3'}
 Budget: ${budget}
 Pace: ${pace}
 Interests: ${p.interests || 'general sightseeing'}
-${p.mustdo ? 'Must include: ' + p.mustdo : ''}
+${p.mustdo ? 'Must include: ' + p.mustdo : ''}${langInstruction}
 
 Respond with ONLY valid JSON. No markdown. No backticks. Start with { end with }.
 
@@ -178,6 +197,10 @@ function qaPrompt(p) {
   const ex   = (p.existingActivities || []).length
     ? ' Current activities: ' + p.existingActivities.join(', ') + '.' : '';
   const ctx  = 'I am in ' + city + (p.dayDate ? ' on ' + p.dayDate : '') + '.';
+  const lang = p.language || 'en';
+  const langName = LANG_NAMES[lang] || 'English';
+  const langInstruction = lang !== 'en'
+    ? ` Write the "sub" field in ${langName}.` : '';
 
   const q = {
     cheaper:  ctx + ex + ' Give me 4 real cheaper/free alternatives in ' + city + '.',
@@ -188,7 +211,7 @@ function qaPrompt(p) {
     alts:     ctx + ex + ' Give me 4 real backup options in ' + city + ' for rain or closures.'
   }[p.type] || ctx + ' Give me 4 things to do in ' + city + '.';
 
-  return q + `
+  return q + langInstruction + `
 
 Respond with ONLY valid JSON. Start with { end with }.
 {
@@ -382,6 +405,19 @@ const server = http.createServer(async (req, res) => {
       if (err) { json(400, { error: err.message }); return; }
       console.log('[/api/qa]', p.type, 'in', p.city);
       askClaude(qaPrompt(p), 1400, res);
+    });
+    return;
+  }
+
+  // ── Save preferences ──
+  if (req.method === 'POST' && req.url === '/api/preferences') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Not authenticated' }); return; }
+      await updatePreferences(user.id, p.language || 'en', p.currency || 'USD');
+      json(200, { ok: true });
     });
     return;
   }

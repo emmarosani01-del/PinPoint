@@ -229,11 +229,11 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
     <div class="cta" onclick="goTab('plan')">
       <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.8px;margin-bottom:6px">AI-POWERED PLANNER</div>
       <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:18px;position:relative;z-index:1">Plan your next<br>adventure</div>
-      <div style="background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:40px;font-size:13px;font-weight:700;display:inline-block;position:relative;z-index:1">Start planning →</div>
+      <div style="background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:40px;font-size:13px;font-weight:700;display:inline-block;position:relative;z-index:1" data-i18n="start_planning">Start planning →</div>
     </div>
     <div style="padding:20px 24px 8px;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)">Recent trips</div>
-      <div onclick="goTab('plan')" style="font-size:12px;color:var(--ac);font-weight:500;cursor:pointer">+ New trip</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2)" data-i18n="recent_trips">Recent trips</div>
+      <div onclick="goTab('plan')" style="font-size:12px;color:var(--ac);font-weight:500;cursor:pointer" data-i18n="new_trip_btn">+ New trip</div>
     </div>
     <div id="home-trips-list" style="padding:0 24px">
       <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b2);border-style:dashed;padding:20px;text-align:center;cursor:pointer" onclick="goTab('plan')">
@@ -244,7 +244,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
     </div>
     <!-- Partner links -->
     <div style="padding:16px 24px 0">
-      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Find & book</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px" data-i18n="find_book">Find & book</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <a href="https://www.skyscanner.com" target="_blank" rel="noopener" style="text-decoration:none;background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseenter="this.style.borderColor='rgba(0,110,255,.35)'" onmouseleave="this.style.borderColor='var(--b1)'">
           <div style="width:44px;height:44px;border-radius:12px;background:rgba(0,110,255,.12);display:flex;align-items:center;justify-content:center">
@@ -313,14 +313,14 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 <div class="screen" id="s-gen">
   <div class="gen">
     <div class="orb"><div class="orb-in"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="white"/><circle cx="12" cy="9" r="2.5" fill="#FF4C6A"/></svg></div></div>
-    <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--tx);margin-bottom:4px" id="gen-title">Building your trip</div>
+    <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--tx);margin-bottom:4px" id="gen-title" data-i18n="gen_building">Building your trip</div>
     <div style="font-size:13px;color:var(--t2);margin-bottom:36px" id="gen-sub">Hang tight…</div>
     <div style="width:100%">
-      <div class="gs" id="gs-0"><div class="gd"></div><div class="gt">Researching destination</div><div class="gck">✓</div></div>
-      <div class="gs" id="gs-1"><div class="gd"></div><div class="gt">Finding real local spots</div><div class="gck">✓</div></div>
-      <div class="gs" id="gs-2"><div class="gd"></div><div class="gt">Calculating costs & bookings</div><div class="gck">✓</div></div>
-      <div class="gs" id="gs-3"><div class="gd"></div><div class="gt">Optimizing routes</div><div class="gck">✓</div></div>
-      <div class="gs" id="gs-4"><div class="gd"></div><div class="gt">Adding links & curiosities</div><div class="gck">✓</div></div>
+      <div class="gs" id="gs-0"><div class="gd"></div><div class="gt" data-i18n="gen_step1">Researching destination</div><div class="gck">✓</div></div>
+      <div class="gs" id="gs-1"><div class="gd"></div><div class="gt" data-i18n="gen_step2">Finding real local spots</div><div class="gck">✓</div></div>
+      <div class="gs" id="gs-2"><div class="gd"></div><div class="gt" data-i18n="gen_step3">Calculating costs & bookings</div><div class="gck">✓</div></div>
+      <div class="gs" id="gs-3"><div class="gd"></div><div class="gt" data-i18n="gen_step4">Optimizing routes</div><div class="gck">✓</div></div>
+      <div class="gs" id="gs-4"><div class="gd"></div><div class="gt" data-i18n="gen_step5">Adding links & curiosities</div><div class="gck">✓</div></div>
     </div>
   </div>
 </div>
@@ -334,9 +334,9 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <div class="hc-ci" id="hc-ci">Destination</div>
       <div class="hc-da" id="hc-da"></div>
       <div class="stats">
-        <div class="stat tap" onclick="openBudgetDetail()"><div class="sv" id="sc">–</div><div class="sl2">Budget 📊</div></div>
-        <div class="stat"><div class="sv" id="sw">–</div><div class="sl2">Per day</div></div>
-        <div class="stat"><div class="sv" id="sa">–</div><div class="sl2">Activities</div></div>
+        <div class="stat tap" onclick="openBudgetDetail()"><div class="sv" id="sc">–</div><div class="sl2" data-i18n="budget_stat">Budget 📊</div></div>
+        <div class="stat"><div class="sv" id="sw">–</div><div class="sl2" data-i18n="per_day">Per day</div></div>
+        <div class="stat"><div class="sv" id="sa">–</div><div class="sl2" data-i18n="activities_label">Activities</div></div>
       </div>
       <div class="ipp" id="ipp"></div>
     </div>
@@ -364,7 +364,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 <!-- TRIPS CALENDAR -->
 <div class="screen" id="s-trips">
   <div style="padding:20px 24px 12px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
-    <div><div class="h2" id="cal-month-title">April 2026</div><div style="font-size:12px;color:var(--t2)" id="cal-subtitle">Your travel calendar</div></div>
+    <div><div class="h2" id="cal-month-title">April 2026</div><div style="font-size:12px;color:var(--t2)" id="cal-subtitle" data-i18n="travel_calendar">Your travel calendar</div></div>
     <div style="display:flex;gap:8px">
       <div class="ibt" onclick="calPrev()" style="font-size:16px">‹</div>
       <div class="ibt" onclick="calNext()" style="font-size:16px">›</div>
@@ -386,19 +386,19 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="scr" style="padding:12px 16px 100px">
     <!-- Today's trip highlight -->
     <div id="cal-today-trip" style="display:none;background:linear-gradient(135deg,var(--ac2),rgba(155,111,255,.08));border-radius:var(--rl);border:.5px solid rgba(255,76,106,.2);padding:14px 16px;margin-bottom:14px;cursor:pointer" onclick="goTab('itin')">
-      <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ac);margin-bottom:6px">TODAY'S TRIP</div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ac);margin-bottom:6px" data-i18n="todays_trip">TODAY'S TRIP</div>
       <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:3px" id="cal-today-city"></div>
       <div style="font-size:12px;color:var(--t2)" id="cal-today-meta"></div>
     </div>
     <!-- Upcoming trips -->
-    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Upcoming trips</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px" data-i18n="upcoming_trips">Upcoming trips</div>
     <div id="cal-upcoming-list">
       <div style="font-size:13px;color:var(--t3);text-align:center;padding:20px 0">No trips scheduled yet</div>
     </div>
     <!-- Bucket list promo -->
     <div onclick="goTab('bucket')" style="margin-top:14px;background:var(--s1);border-radius:var(--rl);border:.5px dashed var(--b2);padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(155,111,255,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🌍</div>
-      <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px">Bucket List</div><div style="font-size:12px;color:var(--t2)">Destinations you want to visit</div></div>
+      <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:2px" data-i18n="bucket_list_title">Bucket List</div><div style="font-size:12px;color:var(--t2)" data-i18n="bucket_list_sub">Destinations you want to visit</div></div>
       <div style="margin-left:auto;color:var(--t3);font-size:16px">›</div>
     </div>
   </div>
@@ -407,7 +407,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
 <!-- BUCKET LIST -->
 <div class="screen" id="s-bucket">
-  <div class="ph"><div class="ibt" onclick="goTab('trips')">←</div><div class="h2">Bucket List 🌍</div><div class="ibt" onclick="openAddBucket()" style="font-size:18px;background:var(--ac);color:#fff;border:none">+</div></div>
+  <div class="ph"><div class="ibt" onclick="goTab('trips')">←</div><div class="h2" data-i18n="bucket_list_h">Bucket List 🌍</div><div class="ibt" onclick="openAddBucket()" style="font-size:18px;background:var(--ac);color:#fff;border:none">+</div></div>
   <div class="scr" style="padding:0 16px 100px">
     <!-- Premium gate -->
     <div id="bucket-premium-gate" style="display:none;margin-bottom:16px;background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:20px;text-align:center;cursor:pointer" onclick="openPremium()">
@@ -423,7 +423,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
         <div style="font-size:40px;margin-bottom:12px">🗺</div>
         <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px">Start your bucket list</div>
         <div style="font-size:13px;color:var(--t2);margin-bottom:20px">Add destinations and experiences you want to explore</div>
-        <button class="btn" style="width:auto;padding:11px 24px" onclick="openAddBucket()">Add first destination</button>
+        <button class="btn" style="width:auto;padding:11px 24px" onclick="openAddBucket()" data-i18n="add_first_dest">Add first destination</button>
       </div>
     </div>
   </div>
@@ -434,7 +434,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="sheet" style="padding-bottom:36px">
     <div class="sh"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div class="h2">Add to bucket list</div>
+      <div class="h2" data-i18n="add_to_bucket">Add to bucket list</div>
       <div class="ibt" onclick="closeBucket()" style="width:32px;height:32px;font-size:13px">✕</div>
     </div>
     <div style="padding:0 24px">
@@ -476,7 +476,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="sheet" style="padding-bottom:36px">
     <div class="sh"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div class="h2">Language</div>
+      <div class="h2" data-i18n="language_label">Language</div>
       <div class="ibt" onclick="closeLang()" style="width:32px;height:32px;font-size:13px">✕</div>
     </div>
     <div id="lang-list"></div>
@@ -488,7 +488,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="sheet" style="padding-bottom:36px">
     <div class="sh"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div class="h2">Currency</div>
+      <div class="h2" data-i18n="currency_label">Currency</div>
       <div class="ibt" onclick="closeCurr()" style="width:32px;height:32px;font-size:13px">✕</div>
     </div>
     <div id="curr-list"></div>
@@ -500,7 +500,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div id="blog-list" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
     <div style="padding:20px 24px 12px;flex-shrink:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div><div class="h2" style="margin-bottom:2px">Travel Blog</div><div style="font-size:12px;color:var(--t2)">Stories from the community</div></div>
+        <div><div class="h2" style="margin-bottom:2px" data-i18n="travel_blog">Travel Blog</div><div style="font-size:12px;color:var(--t2)" data-i18n="blog_sub">Stories from the community</div></div>
         <div class="ibt" onclick="showCompose()" style="font-size:14px" title="Write a post">✏️</div>
       </div>
       <!-- Search bar -->
@@ -575,7 +575,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
   <!-- Compose -->
   <div id="blog-compose" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-    <div class="ph"><div class="ibt" onclick="hideCompose()">←</div><div class="h2">New post</div><button class="btn" style="width:auto;padding:9px 18px;font-size:13px" onclick="publishPost()">Publish</button></div>
+    <div class="ph"><div class="ibt" onclick="hideCompose()">←</div><div class="h2" data-i18n="new_post">New post</div><button class="btn" style="width:auto;padding:9px 18px;font-size:13px" onclick="publishPost()" data-i18n="publish_btn">Publish</button></div>
     <div class="scr" style="padding:0 24px 40px">
       <div class="fg"><label class="fl">Destination</label><input class="inp" id="post-dest" type="text" placeholder="e.g. Chiang Mai, Thailand"></div>
       <div class="fg"><label class="fl">Title</label><input class="inp" id="post-title-inp" type="text" placeholder="e.g. 5 days in the mountains…"></div>
@@ -610,8 +610,8 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
     <!-- Tabs -->
     <div style="display:flex;background:var(--s2);border-radius:12px;padding:4px;margin-bottom:24px">
-      <div id="tab-signin" onclick="switchAuthTab('signin')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff">Sign in</div>
-      <div id="tab-signup" onclick="switchAuthTab('signup')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2)">Sign up</div>
+      <div id="tab-signin" onclick="switchAuthTab('signin')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff" data-i18n="sign_in">Sign in</div>
+      <div id="tab-signup" onclick="switchAuthTab('signup')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2)" data-i18n="sign_up">Sign up</div>
     </div>
 
     <!-- Sign in form -->
@@ -619,7 +619,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <div class="fg"><label class="fl">Email</label><input class="inp" id="si-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
       <div class="fg"><label class="fl">Password</label><input class="inp" id="si-password" type="password" placeholder="••••••••" autocomplete="current-password"></div>
       <div id="auth-error-si" style="font-size:12px;color:var(--ac);margin-bottom:12px;display:none"></div>
-      <button class="btn" onclick="signIn()">Sign in</button>
+      <button class="btn" onclick="signIn()" data-i18n="sign_in">Sign in</button>
       <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--t2)">No account? <span onclick="switchAuthTab('signup')" style="color:var(--ac);cursor:pointer;font-weight:500">Sign up free</span></div>
     </div>
 
@@ -628,17 +628,17 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <div class="fg"><label class="fl">Email</label><input class="inp" id="su-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
       <div class="fg"><label class="fl">Password</label><input class="inp" id="su-password" type="password" placeholder="Min 6 characters" autocomplete="new-password"></div>
       <div id="auth-error-su" style="font-size:12px;color:var(--ac);margin-bottom:12px;display:none"></div>
-      <button class="btn" onclick="signUp()">Create free account</button>
+      <button class="btn" onclick="signUp()" data-i18n="create_account">Create free account</button>
       <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--t2)">Already have an account? <span onclick="switchAuthTab('signin')" style="color:var(--ac);cursor:pointer;font-weight:500">Sign in</span></div>
     </div>
 
     <!-- Divider -->
     <div style="display:flex;align-items:center;gap:12px;margin:20px 0">
       <div style="flex:1;height:.5px;background:var(--b1)"></div>
-      <div style="font-size:11px;color:var(--t3)">or continue as</div>
+      <div style="font-size:11px;color:var(--t3)" data-i18n="or_continue">or continue as</div>
       <div style="flex:1;height:.5px;background:var(--b1)"></div>
     </div>
-    <button onclick="continueAsGuest()" style="width:100%;padding:13px;background:transparent;border:.5px solid var(--b2);border-radius:var(--rxl);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--t2);cursor:pointer">Guest (2 trips, no saving)</button>
+    <button onclick="continueAsGuest()" style="width:100%;padding:13px;background:transparent;border:.5px solid var(--b2);border-radius:var(--rxl);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--t2);cursor:pointer" data-i18n="guest_btn">Guest (2 trips, no saving)</button>
 
     <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--t3);line-height:1.6">By signing up you agree to our<br>Terms of Service and Privacy Policy</div>
   </div>
@@ -646,7 +646,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
 <!-- ACCOUNT SCREEN (shown when logged in) -->
 <div class="screen" id="s-account">
-  <div style="padding:20px 24px 14px;flex-shrink:0"><div class="h2">Profile</div></div>
+  <div style="padding:20px 24px 14px;flex-shrink:0"><div class="h2" data-i18n="profile_title">Profile</div></div>
   <div class="scr" style="padding:0 24px 100px">
     <div class="p-hero">
       <div class="av" id="profile-av">?</div>
@@ -670,19 +670,19 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       </div>
     </div>
     <!-- Saved trips -->
-    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Saved trips</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px" data-i18n="saved_trips">Saved trips</div>
     <div id="saved-trips-list" style="margin-bottom:20px">
       <div style="font-size:13px;color:var(--t3);padding:14px 0;text-align:center">No saved trips yet — generate one!</div>
     </div>
     <!-- App settings -->
-    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">App settings</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px" data-i18n="app_settings">App settings</div>
     <div class="pcard" style="margin-bottom:20px">
       <div class="prow" onclick="openLang()"><div class="pr-l"><div class="pr-ic">🌐</div><div><div class="pr-lb">Language</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="curr-lang-label">English</div><div class="pr-a">›</div></div></div>
       <div class="prow" onclick="openCurr()"><div class="pr-l"><div class="pr-ic">💱</div><div><div class="pr-lb">Currency</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="curr-currency-label">USD</div><div class="pr-a">›</div></div></div>
       <div class="prow" onclick="goTab('bucket')"><div class="pr-l"><div class="pr-ic">🌍</div><div><div class="pr-lb">Bucket List</div><div class="pr-sub">Premium feature</div></div></div><div class="pr-a">›</div></div>
       <div class="prow" onclick="showToast('Thanks for the feedback!')"><div class="pr-l"><div class="pr-ic">⭐</div><div><div class="pr-lb">Rate PinPoint</div></div></div><div class="pr-a">›</div></div>
     </div>
-    <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="signOut()">Sign out</button>
+    <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="signOut()" data-i18n="sign_out">Sign out</button>
     <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--t3)">PinPoint v3.0 · Built for backpackers</div>
     <div class="gap"></div>
   </div>
@@ -694,7 +694,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   <div class="sheet">
     <div class="sh"></div>
     <div style="padding:0 24px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div class="h2">Budget breakdown</div>
+      <div class="h2" data-i18n="budget_breakdown">Budget breakdown</div>
       <div class="ibt" onclick="closeBudget()" style="width:32px;height:32px;font-size:13px">✕</div>
     </div>
     <div id="budget-rows"></div>
@@ -946,12 +946,11 @@ async function loadProfile() {
     if (!r.ok) return;
     const data = await r.json();
     currentProfile = data.profile;
-    // Update UI
-    const email  = currentUser.email||'';
+    const email    = currentUser.email||'';
     const initials = email ? email[0].toUpperCase() : '?';
-    const plan   = currentProfile?.plan||'free';
-    isPremium    = plan==='premium';
-    tripCount    = currentProfile?.trip_count||0;
+    const plan     = currentProfile?.plan||'free';
+    isPremium      = plan==='premium';
+    tripCount      = currentProfile?.trip_count||0;
     document.getElementById('profile-av').textContent    = initials;
     document.getElementById('profile-name').textContent  = email.split('@')[0];
     document.getElementById('profile-email').textContent = email;
@@ -965,8 +964,33 @@ async function loadProfile() {
       planBadge.style.border='.5px solid rgba(155,111,255,.3)';
       document.getElementById('premium-profile-banner').style.display='none';
     }
-    // Load saved trips
+    // Restore language preference
+    const savedLang = currentProfile?.preferred_language||'en';
+    if (savedLang !== currentLang) {
+      const langObj = LANGUAGES.find(l=>l.code===savedLang);
+      if (langObj) {
+        currentLang = savedLang;
+        document.getElementById('curr-lang-label').textContent = langObj.name;
+        applyI18n(savedLang);
+      }
+    }
+    // Restore currency preference
+    const savedCurr = currentProfile?.preferred_currency||'USD';
+    if (savedCurr !== currentCurrency) {
+      const currObj = CURRENCIES.find(c=>c.code===savedCurr);
+      if (currObj) {
+        currentCurrency = savedCurr;
+        document.getElementById('curr-currency-label').textContent = savedCurr;
+      }
+    }
     loadSavedTrips();
+  } catch(e){}
+}
+
+async function savePreferences() {
+  if (!authToken) return;
+  try {
+    await fetch('/api/preferences',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({language:currentLang,currency:currentCurrency})});
   } catch(e){}
 }
 
@@ -1194,7 +1218,7 @@ function openBudgetDetail(){
   ];
   document.getElementById('budget-rows').innerHTML=
     items.filter(i=>i.val>0).map(i=>'<div class="brow"><div class="bcat"><span style="font-size:16px">'+i.icon+'</span>'+i.label+'</div><div class="bval">$'+Math.round(i.val)+'</div></div>').join('')+
-    '<div class="btotal"><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx)">Total estimate</div><div style="font-family:\'Syne\',sans-serif;font-size:20px;font-weight:800;color:var(--ac)">$'+Math.round(total)+'</div></div>'+
+    '<div class="btotal"><div style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:600;color:var(--tx)" data-i18n="total_estimate" data-i18n="total_estimate">Total estimate</div><div style="font-family:\'Syne\',sans-serif;font-size:20px;font-weight:800;color:var(--ac)">$'+Math.round(total)+'</div></div>'+
     (estAcc>0?'<div style="padding:10px 24px 0;font-size:11px;color:var(--t3)">* Accommodation estimated at $22/night.</div>':'')+
     '<div style="padding:8px 24px 0;font-size:11px;color:var(--t3)">Based on activity costs in your itinerary.</div>';
   document.getElementById('budget-ovl').classList.add('show');
@@ -1254,7 +1278,7 @@ async function startGen(){
         mustdo:mustdo||'',startPt:'',
         firstDate:dl(cityDays[0].globalIdx),
         firstDayNum:cityDays[0].globalIdx+1,
-        dateStr
+        dateStr, language:currentLang
       });
       if(!result.days||!result.days.length)throw new Error('No days returned for '+city);
       result.days.forEach((day,i)=>{
@@ -1357,7 +1381,7 @@ async function qaOpen(type){
   document.getElementById('qa-apply-btn').style.display='none';
   document.getElementById('qa-ovl').classList.add('show');
   try{
-    const result=await callEndpoint('/api/qa',{type,city,dayLabel,dayDate,existingActivities});
+    const result=await callEndpoint('/api/qa',{type,city,dayLabel,dayDate,existingActivities,language:currentLang});
     if(!result.options||!result.options.length)throw new Error('No options');
     qaAiOptions=result.options.slice(0,4);
     document.getElementById('qa-apply-btn').style.display='block';
@@ -1862,7 +1886,7 @@ async function getBucketAI(id,destination){
   document.getElementById('bucket-plan-btn').dataset.dest=destination;
   document.getElementById('bucket-ai-ovl').classList.add('show');
   try{
-    const result=await callEndpoint('/api/itinerary',{city:destination,nDays:5,budget:'medium',pace:'balanced',interests:'culture, food, nature',mustdo:'',startPt:'',firstDate:'Day 1',firstDayNum:1,dateStr:'Day 1, Day 2, Day 3, Day 4, Day 5'});
+    const result=await callEndpoint('/api/itinerary',{city:destination,nDays:5,budget:'medium',pace:'balanced',interests:'culture, food, nature',mustdo:'',startPt:'',firstDate:'Day 1',firstDayNum:1,dateStr:'Day 1, Day 2, Day 3, Day 4, Day 5',language:currentLang});
     if(!result.days?.length)throw new Error('No days');
     document.getElementById('bucket-ai-subtitle').textContent='5-day preview · no dates set';
     document.getElementById('bucket-ai-content').innerHTML=
@@ -1956,49 +1980,41 @@ async function saveItineraryDates(){
   }catch(e){showToast('Error saving dates');}
 }
 const I18N = {
-  en:{home_heading:'Where to<br>next?',plan_title:'New trip',gen_btn:'Generate itinerary →',interests_label:'Interests',pace_label:'Pace',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Must-do',quick_adj:'Quick adjustments',cheaper:'Cheaper options',closer:'Something closer',outdoors:'More outdoors',shorter:'Shorter day',extend:'Extend evening',alts:'Alternatives',save_trip:'Trip saved to your account',nav_home:'Home',nav_plan:'Plan',nav_trips:'Trips',nav_blog:'Blog',nav_profile:'Profile'},
-  it:{home_heading:'Dove vai<br>dopo?',plan_title:'Nuovo viaggio',gen_btn:'Genera itinerario →',interests_label:'Interessi',pace_label:'Ritmo',budget_label:'Budget',dates_label:'Date',destinations_label:'Destinazioni',mustdo_label:'Da fare',quick_adj:'Aggiustamenti rapidi',cheaper:'Più economico',closer:'Più vicino',outdoors:"All'aperto",shorter:'Giornata corta',extend:'Sera lunga',alts:'Alternative',save_trip:'Viaggio salvato!',nav_home:'Home',nav_plan:'Pianifica',nav_trips:'Viaggi',nav_blog:'Blog',nav_profile:'Profilo'},
-  es:{home_heading:'¿A dónde<br>vas?',plan_title:'Nuevo viaje',gen_btn:'Generar itinerario →',interests_label:'Intereses',pace_label:'Ritmo',budget_label:'Presupuesto',dates_label:'Fechas',destinations_label:'Destinos',mustdo_label:'Imprescindibles',quick_adj:'Ajustes rápidos',cheaper:'Más barato',closer:'Más cercano',outdoors:'Al aire libre',shorter:'Día corto',extend:'Alargar tarde',alts:'Alternativas',save_trip:'Viaje guardado',nav_home:'Inicio',nav_plan:'Planear',nav_trips:'Viajes',nav_blog:'Blog',nav_profile:'Perfil'},
-  fr:{home_heading:'Où vas-tu<br>ensuite?',plan_title:'Nouveau voyage',gen_btn:'Générer itinéraire →',interests_label:'Intérêts',pace_label:'Rythme',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Incontournables',quick_adj:'Ajustements rapides',cheaper:'Moins cher',closer:'Plus proche',outdoors:'En plein air',shorter:'Journée courte',extend:'Soirée longue',alts:'Alternatives',save_trip:'Voyage enregistré',nav_home:'Accueil',nav_plan:'Planifier',nav_trips:'Voyages',nav_blog:'Blog',nav_profile:'Profil'},
-  de:{home_heading:'Wohin<br>als nächstes?',plan_title:'Neue Reise',gen_btn:'Reiseplan erstellen →',interests_label:'Interessen',pace_label:'Tempo',budget_label:'Budget',dates_label:'Daten',destinations_label:'Ziele',mustdo_label:'Must-dos',quick_adj:'Schnellanpassungen',cheaper:'Günstiger',closer:'Näher',outdoors:'Draußen',shorter:'Kurzer Tag',extend:'Abend verlängern',alts:'Alternativen',save_trip:'Reise gespeichert',nav_home:'Start',nav_plan:'Planen',nav_trips:'Reisen',nav_blog:'Blog',nav_profile:'Profil'},
-  pt:{home_heading:'Para onde<br>ir a seguir?',plan_title:'Nova viagem',gen_btn:'Gerar itinerário →',interests_label:'Interesses',pace_label:'Ritmo',budget_label:'Orçamento',dates_label:'Datas',destinations_label:'Destinos',mustdo_label:'A fazer',quick_adj:'Ajustes rápidos',cheaper:'Mais barato',closer:'Mais perto',outdoors:'Ao ar livre',shorter:'Dia curto',extend:'Tarde longa',alts:'Alternativas',save_trip:'Viagem guardada',nav_home:'Início',nav_plan:'Planear',nav_trips:'Viagens',nav_blog:'Blog',nav_profile:'Perfil'},
-  ja:{home_heading:'次はどこへ？',plan_title:'新しい旅',gen_btn:'旅程を生成 →',interests_label:'興味',pace_label:'ペース',budget_label:'予算',dates_label:'日付',destinations_label:'目的地',mustdo_label:'必須',quick_adj:'クイック調整',cheaper:'もっと安く',closer:'近くで',outdoors:'アウトドア',shorter:'短い一日',extend:'夜を延ばす',alts:'代替案',save_trip:'旅行を保存しました',nav_home:'ホーム',nav_plan:'計画',nav_trips:'旅行',nav_blog:'ブログ',nav_profile:'プロフィール'},
-  zh:{home_heading:'下一站<br>去哪里？',plan_title:'新旅行',gen_btn:'生成行程 →',interests_label:'兴趣',pace_label:'节奏',budget_label:'预算',dates_label:'日期',destinations_label:'目的地',mustdo_label:'必去',quick_adj:'快速调整',cheaper:'更便宜',closer:'更近的',outdoors:'户外',shorter:'短程一天',extend:'延长夜晚',alts:'替代方案',save_trip:'旅行已保存',nav_home:'首页',nav_plan:'计划',nav_trips:'旅行',nav_blog:'博客',nav_profile:'我的'},
-  ko:{home_heading:'다음 여행지는<br>어디인가요?',plan_title:'새 여행',gen_btn:'여정 생성 →',interests_label:'관심사',pace_label:'속도',budget_label:'예산',dates_label:'날짜',destinations_label:'목적지',mustdo_label:'필수',quick_adj:'빠른 조정',cheaper:'더 저렴하게',closer:'더 가까이',outdoors:'야외',shorter:'짧은 하루',extend:'저녁 연장',alts:'대안',save_trip:'여행 저장됨',nav_home:'홈',nav_plan:'계획',nav_trips:'여행',nav_blog:'블로그',nav_profile:'프로필'},
-  ar:{home_heading:'إلى أين<br>ستذهب؟',plan_title:'رحلة جديدة',gen_btn:'إنشاء مسار →',interests_label:'الاهتمامات',pace_label:'الوتيرة',budget_label:'الميزانية',dates_label:'التواريخ',destinations_label:'الوجهات',mustdo_label:'لا يُفوَّت',quick_adj:'تعديلات سريعة',cheaper:'أرخص',closer:'أقرب',outdoors:'في الهواء الطلق',shorter:'يوم قصير',extend:'إطالة المساء',alts:'بدائل',save_trip:'تم حفظ الرحلة',nav_home:'الرئيسية',nav_plan:'خطط',nav_trips:'رحلات',nav_blog:'مدونة',nav_profile:'الملف'},
-  hi:{home_heading:'अगली यात्रा<br>कहाँ?',plan_title:'नई यात्रा',gen_btn:'यात्रा कार्यक्रम बनाएं →',interests_label:'रुचियां',pace_label:'गति',budget_label:'बजट',dates_label:'तारीखें',destinations_label:'गंतव्य',mustdo_label:'जरूर करें',quick_adj:'त्वरित समायोजन',cheaper:'सस्ता',closer:'करीब',outdoors:'बाहर',shorter:'छोटा दिन',extend:'शाम बढ़ाएं',alts:'विकल्प',save_trip:'यात्रा सहेजी गई',nav_home:'होम',nav_plan:'योजना',nav_trips:'यात्राएं',nav_blog:'ब्लॉग',nav_profile:'प्रोफ़ाइल'},
-  ru:{home_heading:'Куда<br>дальше?',plan_title:'Новое путешествие',gen_btn:'Создать маршрут →',interests_label:'Интересы',pace_label:'Темп',budget_label:'Бюджет',dates_label:'Даты',destinations_label:'Направления',mustdo_label:'Обязательно',quick_adj:'Быстрые изменения',cheaper:'Дешевле',closer:'Поближе',outdoors:'На природе',shorter:'Короткий день',extend:'Продлить вечер',alts:'Альтернативы',save_trip:'Поездка сохранена',nav_home:'Главная',nav_plan:'Планировать',nav_trips:'Поездки',nav_blog:'Блог',nav_profile:'Профиль'},
+  en:{home_heading:'Where to<br>next?',plan_title:'New trip',gen_btn:'Generate itinerary →',interests_label:'Interests',pace_label:'Pace',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Must-do',quick_adj:'Quick adjustments',cheaper:'Cheaper options',closer:'Something closer',outdoors:'More outdoors',shorter:'Shorter day',extend:'Extend evening',alts:'Alternatives',save_trip:'Trip saved to your account',nav_home:'Home',nav_plan:'Plan',nav_trips:'Trips',nav_blog:'Blog',nav_profile:'Profile',upcoming_trips:'Upcoming trips',todays_trip:"TODAY'S TRIP",bucket_list_title:'Bucket List',bucket_list_sub:'Destinations you want to visit',travel_calendar:'Your travel calendar',bucket_list_h:'Bucket List 🌍',add_to_bucket:'Add to bucket list',add_first_dest:'Add first destination',start_planning:'Start planning →',recent_trips:'Recent trips',new_trip_btn:'+ New trip',find_book:'Find & book',sign_in:'Sign in',sign_up:'Sign up',create_account:'Create free account',guest_btn:'Guest (2 trips, no saving)',travel_blog:'Travel Blog',blog_sub:'Stories from the community',new_post:'New post',publish_btn:'Publish',profile_title:'Profile',saved_trips:'Saved trips',app_settings:'App settings',sign_out:'Sign out',language_label:'Language',currency_label:'Currency',budget_breakdown:'Budget breakdown',per_day:'Per day',activities_label:'Activities',budget_stat:'Budget 📊',total_estimate:'Total estimate',gen_step1:'Researching destination',gen_step2:'Finding real local spots',gen_step3:'Calculating costs & bookings',gen_step4:'Optimizing routes',gen_step5:'Adding links & curiosities',gen_building:'Building your trip',or_continue:'or continue as'},
+  it:{home_heading:'Dove vai<br>dopo?',plan_title:'Nuovo viaggio',gen_btn:'Genera itinerario →',interests_label:'Interessi',pace_label:'Ritmo',budget_label:'Budget',dates_label:'Date',destinations_label:'Destinazioni',mustdo_label:'Da fare',quick_adj:'Aggiustamenti rapidi',cheaper:'Più economico',closer:'Più vicino',outdoors:"All'aperto",shorter:'Giornata corta',extend:'Sera lunga',alts:'Alternative',save_trip:'Viaggio salvato!',nav_home:'Home',nav_plan:'Pianifica',nav_trips:'Viaggi',nav_blog:'Blog',nav_profile:'Profilo',upcoming_trips:'Prossimi viaggi',todays_trip:'VIAGGIO DI OGGI',bucket_list_title:'Bucket List',bucket_list_sub:'Destinazioni che vuoi visitare',travel_calendar:'Il tuo calendario viaggi',bucket_list_h:'Bucket List 🌍',add_to_bucket:'Aggiungi alla bucket list',add_first_dest:'Aggiungi prima destinazione',start_planning:'Inizia a pianificare →',recent_trips:'Viaggi recenti',new_trip_btn:'+ Nuovo viaggio',find_book:'Trova & prenota',sign_in:'Accedi',sign_up:'Registrati',create_account:'Crea account gratuito',guest_btn:'Ospite (2 viaggi, senza salvataggio)',travel_blog:'Travel Blog',blog_sub:'Storie dalla community',new_post:'Nuovo post',publish_btn:'Pubblica',profile_title:'Profilo',saved_trips:'Viaggi salvati',app_settings:'Impostazioni app',sign_out:'Esci',language_label:'Lingua',currency_label:'Valuta',budget_breakdown:'Dettaglio budget',per_day:'Al giorno',activities_label:'Attività',budget_stat:'Budget 📊',total_estimate:'Totale stimato',gen_step1:'Ricercando la destinazione',gen_step2:'Trovando luoghi locali reali',gen_step3:'Calcolando costi e prenotazioni',gen_step4:'Ottimizzando percorsi',gen_step5:'Aggiungendo link e curiosità',gen_building:'Costruendo il viaggio',or_continue:'o continua come'},
+  es:{home_heading:'¿A dónde<br>vas?',plan_title:'Nuevo viaje',gen_btn:'Generar itinerario →',interests_label:'Intereses',pace_label:'Ritmo',budget_label:'Presupuesto',dates_label:'Fechas',destinations_label:'Destinos',mustdo_label:'Imprescindibles',quick_adj:'Ajustes rápidos',cheaper:'Más barato',closer:'Más cercano',outdoors:'Al aire libre',shorter:'Día corto',extend:'Alargar tarde',alts:'Alternativas',save_trip:'Viaje guardado',nav_home:'Inicio',nav_plan:'Planear',nav_trips:'Viajes',nav_blog:'Blog',nav_profile:'Perfil',upcoming_trips:'Próximos viajes',todays_trip:'VIAJE DE HOY',bucket_list_title:'Lista de deseos',bucket_list_sub:'Destinos que quieres visitar',travel_calendar:'Tu calendario de viajes',bucket_list_h:'Lista de deseos 🌍',add_to_bucket:'Añadir a la lista',add_first_dest:'Añadir primer destino',start_planning:'Empezar a planear →',recent_trips:'Viajes recientes',new_trip_btn:'+ Nuevo viaje',find_book:'Buscar & reservar',sign_in:'Iniciar sesión',sign_up:'Registrarse',create_account:'Crear cuenta gratis',guest_btn:'Invitado (2 viajes, sin guardar)',travel_blog:'Blog de viajes',blog_sub:'Historias de la comunidad',new_post:'Nueva publicación',publish_btn:'Publicar',profile_title:'Perfil',saved_trips:'Viajes guardados',app_settings:'Configuración',sign_out:'Cerrar sesión',language_label:'Idioma',currency_label:'Moneda',budget_breakdown:'Desglose del presupuesto',per_day:'Por día',activities_label:'Actividades',budget_stat:'Presupuesto 📊',total_estimate:'Estimado total',gen_step1:'Investigando destino',gen_step2:'Encontrando lugares locales',gen_step3:'Calculando costos y reservas',gen_step4:'Optimizando rutas',gen_step5:'Añadiendo enlaces y curiosidades',gen_building:'Construyendo tu viaje',or_continue:'o continuar como'},
+  fr:{home_heading:'Où vas-tu<br>ensuite?',plan_title:'Nouveau voyage',gen_btn:'Générer itinéraire →',interests_label:'Intérêts',pace_label:'Rythme',budget_label:'Budget',dates_label:'Dates',destinations_label:'Destinations',mustdo_label:'Incontournables',quick_adj:'Ajustements rapides',cheaper:'Moins cher',closer:'Plus proche',outdoors:'En plein air',shorter:'Journée courte',extend:'Soirée longue',alts:'Alternatives',save_trip:'Voyage enregistré',nav_home:'Accueil',nav_plan:'Planifier',nav_trips:'Voyages',nav_blog:'Blog',nav_profile:'Profil',upcoming_trips:'Prochains voyages',todays_trip:"VOYAGE D'AUJOURD'HUI",bucket_list_title:'Liste de souhaits',bucket_list_sub:'Destinations à visiter',travel_calendar:'Votre calendrier de voyages',bucket_list_h:'Liste de souhaits 🌍',add_to_bucket:'Ajouter à la liste',add_first_dest:'Ajouter première destination',start_planning:'Commencer →',recent_trips:'Voyages récents',new_trip_btn:'+ Nouveau voyage',find_book:'Trouver & réserver',sign_in:'Se connecter',sign_up:"S'inscrire",create_account:'Créer un compte gratuit',guest_btn:'Invité (2 voyages, sans sauvegarde)',travel_blog:'Blog de voyage',blog_sub:'Histoires de la communauté',new_post:'Nouveau post',publish_btn:'Publier',profile_title:'Profil',saved_trips:'Voyages sauvegardés',app_settings:'Paramètres',sign_out:'Se déconnecter',language_label:'Langue',currency_label:'Devise',budget_breakdown:'Détail du budget',per_day:'Par jour',activities_label:'Activités',budget_stat:'Budget 📊',total_estimate:'Estimation totale',gen_step1:'Recherche de la destination',gen_step2:'Découverte des lieux locaux',gen_step3:'Calcul des coûts et réservations',gen_step4:'Optimisation des itinéraires',gen_step5:'Ajout de liens et curiosités',gen_building:'Construction de votre voyage',or_continue:'ou continuer en tant que'},
+  de:{home_heading:'Wohin<br>als nächstes?',plan_title:'Neue Reise',gen_btn:'Reiseplan erstellen →',interests_label:'Interessen',pace_label:'Tempo',budget_label:'Budget',dates_label:'Daten',destinations_label:'Ziele',mustdo_label:'Must-dos',quick_adj:'Schnellanpassungen',cheaper:'Günstiger',closer:'Näher',outdoors:'Draußen',shorter:'Kurzer Tag',extend:'Abend verlängern',alts:'Alternativen',save_trip:'Reise gespeichert',nav_home:'Start',nav_plan:'Planen',nav_trips:'Reisen',nav_blog:'Blog',nav_profile:'Profil',upcoming_trips:'Bevorstehende Reisen',todays_trip:'HEUTIGE REISE',bucket_list_title:'Wunschliste',bucket_list_sub:'Ziele, die du besuchen möchtest',travel_calendar:'Dein Reisekalender',bucket_list_h:'Wunschliste 🌍',add_to_bucket:'Zur Wunschliste hinzufügen',add_first_dest:'Erstes Ziel hinzufügen',start_planning:'Jetzt planen →',recent_trips:'Letzte Reisen',new_trip_btn:'+ Neue Reise',find_book:'Suchen & buchen',sign_in:'Anmelden',sign_up:'Registrieren',create_account:'Kostenloses Konto erstellen',guest_btn:'Gast (2 Reisen, kein Speichern)',travel_blog:'Reiseblog',blog_sub:'Geschichten der Community',new_post:'Neuer Beitrag',publish_btn:'Veröffentlichen',profile_title:'Profil',saved_trips:'Gespeicherte Reisen',app_settings:'Einstellungen',sign_out:'Abmelden',language_label:'Sprache',currency_label:'Währung',budget_breakdown:'Budgetaufschlüsselung',per_day:'Pro Tag',activities_label:'Aktivitäten',budget_stat:'Budget 📊',total_estimate:'Gesamtschätzung',gen_step1:'Ziel wird recherchiert',gen_step2:'Lokale Orte werden gefunden',gen_step3:'Kosten & Buchungen werden berechnet',gen_step4:'Routen werden optimiert',gen_step5:'Links & Wissenswertes werden hinzugefügt',gen_building:'Reise wird erstellt',or_continue:'oder fortfahren als'},
+  pt:{home_heading:'Para onde<br>ir a seguir?',plan_title:'Nova viagem',gen_btn:'Gerar itinerário →',interests_label:'Interesses',pace_label:'Ritmo',budget_label:'Orçamento',dates_label:'Datas',destinations_label:'Destinos',mustdo_label:'A fazer',quick_adj:'Ajustes rápidos',cheaper:'Mais barato',closer:'Mais perto',outdoors:'Ao ar livre',shorter:'Dia curto',extend:'Tarde longa',alts:'Alternativas',save_trip:'Viagem guardada',nav_home:'Início',nav_plan:'Planear',nav_trips:'Viagens',nav_blog:'Blog',nav_profile:'Perfil',upcoming_trips:'Próximas viagens',todays_trip:'VIAGEM DE HOJE',bucket_list_title:'Lista de desejos',bucket_list_sub:'Destinos que queres visitar',travel_calendar:'O teu calendário de viagens',bucket_list_h:'Lista de desejos 🌍',add_to_bucket:'Adicionar à lista',add_first_dest:'Adicionar primeiro destino',start_planning:'Começar a planear →',recent_trips:'Viagens recentes',new_trip_btn:'+ Nova viagem',find_book:'Encontrar & reservar',sign_in:'Entrar',sign_up:'Registar',create_account:'Criar conta grátis',guest_btn:'Convidado (2 viagens, sem guardar)',travel_blog:'Blog de viagens',blog_sub:'Histórias da comunidade',new_post:'Nova publicação',publish_btn:'Publicar',profile_title:'Perfil',saved_trips:'Viagens guardadas',app_settings:'Definições',sign_out:'Sair',language_label:'Idioma',currency_label:'Moeda',budget_breakdown:'Detalhe do orçamento',per_day:'Por dia',activities_label:'Atividades',budget_stat:'Orçamento 📊',total_estimate:'Total estimado',gen_step1:'A pesquisar destino',gen_step2:'A encontrar locais reais',gen_step3:'A calcular custos e reservas',gen_step4:'A otimizar rotas',gen_step5:'A adicionar links e curiosidades',gen_building:'A construir a viagem',or_continue:'ou continuar como'},
+  ja:{home_heading:'次はどこへ？',plan_title:'新しい旅',gen_btn:'旅程を生成 →',interests_label:'興味',pace_label:'ペース',budget_label:'予算',dates_label:'日付',destinations_label:'目的地',mustdo_label:'必須',quick_adj:'クイック調整',cheaper:'もっと安く',closer:'近くで',outdoors:'アウトドア',shorter:'短い一日',extend:'夜を延ばす',alts:'代替案',save_trip:'旅行を保存しました',nav_home:'ホーム',nav_plan:'計画',nav_trips:'旅行',nav_blog:'ブログ',nav_profile:'プロフィール',upcoming_trips:'予定の旅行',todays_trip:'今日の旅行',bucket_list_title:'バケットリスト',bucket_list_sub:'訪れたい目的地',travel_calendar:'旅行カレンダー',bucket_list_h:'バケットリスト 🌍',add_to_bucket:'リストに追加',add_first_dest:'最初の目的地を追加',start_planning:'プランニング開始 →',recent_trips:'最近の旅行',new_trip_btn:'+ 新しい旅',find_book:'検索 & 予約',sign_in:'サインイン',sign_up:'登録',create_account:'無料アカウント作成',guest_btn:'ゲスト（旅行2件、保存なし）',travel_blog:'トラベルブログ',blog_sub:'コミュニティのストーリー',new_post:'新しい投稿',publish_btn:'公開',profile_title:'プロフィール',saved_trips:'保存した旅行',app_settings:'アプリ設定',sign_out:'サインアウト',language_label:'言語',currency_label:'通貨',budget_breakdown:'予算内訳',per_day:'1日あたり',activities_label:'アクティビティ',budget_stat:'予算 📊',total_estimate:'合計見積もり',gen_step1:'目的地を調査中',gen_step2:'地元スポットを検索中',gen_step3:'費用と予約を計算中',gen_step4:'ルートを最適化中',gen_step5:'リンクと豆知識を追加中',gen_building:'旅行を作成中',or_continue:'または続行'},
+  zh:{home_heading:'下一站<br>去哪里？',plan_title:'新旅行',gen_btn:'生成行程 →',interests_label:'兴趣',pace_label:'节奏',budget_label:'预算',dates_label:'日期',destinations_label:'目的地',mustdo_label:'必去',quick_adj:'快速调整',cheaper:'更便宜',closer:'更近的',outdoors:'户外',shorter:'短程一天',extend:'延长夜晚',alts:'替代方案',save_trip:'旅行已保存',nav_home:'首页',nav_plan:'计划',nav_trips:'旅行',nav_blog:'博客',nav_profile:'我的',upcoming_trips:'即将到来的旅行',todays_trip:'今日行程',bucket_list_title:'愿望清单',bucket_list_sub:'想要访问的目的地',travel_calendar:'旅行日历',bucket_list_h:'愿望清单 🌍',add_to_bucket:'添加到清单',add_first_dest:'添加第一个目的地',start_planning:'开始规划 →',recent_trips:'最近旅行',new_trip_btn:'+ 新旅行',find_book:'查找 & 预订',sign_in:'登录',sign_up:'注册',create_account:'创建免费账号',guest_btn:'访客（2次旅行，不保存）',travel_blog:'旅行博客',blog_sub:'社区故事',new_post:'新帖子',publish_btn:'发布',profile_title:'个人资料',saved_trips:'已保存旅行',app_settings:'应用设置',sign_out:'退出',language_label:'语言',currency_label:'货币',budget_breakdown:'预算明细',per_day:'每天',activities_label:'活动',budget_stat:'预算 📊',total_estimate:'总估算',gen_step1:'正在研究目的地',gen_step2:'寻找真实地点',gen_step3:'计算费用和预订',gen_step4:'优化路线',gen_step5:'添加链接和趣事',gen_building:'正在构建您的旅行',or_continue:'或以访客继续'},
+  ko:{home_heading:'다음 여행지는<br>어디인가요?',plan_title:'새 여행',gen_btn:'여정 생성 →',interests_label:'관심사',pace_label:'속도',budget_label:'예산',dates_label:'날짜',destinations_label:'목적지',mustdo_label:'필수',quick_adj:'빠른 조정',cheaper:'더 저렴하게',closer:'더 가까이',outdoors:'야외',shorter:'짧은 하루',extend:'저녁 연장',alts:'대안',save_trip:'여행 저장됨',nav_home:'홈',nav_plan:'계획',nav_trips:'여행',nav_blog:'블로그',nav_profile:'프로필',upcoming_trips:'예정된 여행',todays_trip:'오늘의 여행',bucket_list_title:'버킷 리스트',bucket_list_sub:'방문하고 싶은 목적지',travel_calendar:'여행 캘린더',bucket_list_h:'버킷 리스트 🌍',add_to_bucket:'목록에 추가',add_first_dest:'첫 번째 목적지 추가',start_planning:'계획 시작 →',recent_trips:'최근 여행',new_trip_btn:'+ 새 여행',find_book:'찾기 & 예약',sign_in:'로그인',sign_up:'회원가입',create_account:'무료 계정 만들기',guest_btn:'게스트 (여행 2개, 저장 불가)',travel_blog:'여행 블로그',blog_sub:'커뮤니티 이야기',new_post:'새 게시물',publish_btn:'게시',profile_title:'프로필',saved_trips:'저장된 여행',app_settings:'앱 설정',sign_out:'로그아웃',language_label:'언어',currency_label:'통화',budget_breakdown:'예산 내역',per_day:'하루당',activities_label:'활동',budget_stat:'예산 📊',total_estimate:'총 예상 금액',gen_step1:'목적지 조사 중',gen_step2:'실제 현지 장소 찾는 중',gen_step3:'비용 및 예약 계산 중',gen_step4:'경로 최적화 중',gen_step5:'링크 및 정보 추가 중',gen_building:'여행 계획 중',or_continue:'또는 계속하기'},
+  ar:{home_heading:'إلى أين<br>ستذهب؟',plan_title:'رحلة جديدة',gen_btn:'إنشاء مسار →',interests_label:'الاهتمامات',pace_label:'الوتيرة',budget_label:'الميزانية',dates_label:'التواريخ',destinations_label:'الوجهات',mustdo_label:'لا يُفوَّت',quick_adj:'تعديلات سريعة',cheaper:'أرخص',closer:'أقرب',outdoors:'في الهواء الطلق',shorter:'يوم قصير',extend:'إطالة المساء',alts:'بدائل',save_trip:'تم حفظ الرحلة',nav_home:'الرئيسية',nav_plan:'خطط',nav_trips:'رحلات',nav_blog:'مدونة',nav_profile:'الملف',upcoming_trips:'رحلات قادمة',todays_trip:'رحلة اليوم',bucket_list_title:'قائمة الأماني',bucket_list_sub:'وجهات تريد زيارتها',travel_calendar:'تقويم سفرك',bucket_list_h:'قائمة الأماني 🌍',add_to_bucket:'أضف إلى القائمة',add_first_dest:'أضف أول وجهة',start_planning:'ابدأ التخطيط →',recent_trips:'رحلات أخيرة',new_trip_btn:'+ رحلة جديدة',find_book:'ابحث واحجز',sign_in:'تسجيل الدخول',sign_up:'إنشاء حساب',create_account:'إنشاء حساب مجاني',guest_btn:'زائر (رحلتان، بدون حفظ)',travel_blog:'مدونة السفر',blog_sub:'قصص من المجتمع',new_post:'منشور جديد',publish_btn:'نشر',profile_title:'الملف الشخصي',saved_trips:'رحلات محفوظة',app_settings:'إعدادات التطبيق',sign_out:'تسجيل الخروج',language_label:'اللغة',currency_label:'العملة',budget_breakdown:'تفاصيل الميزانية',per_day:'في اليوم',activities_label:'أنشطة',budget_stat:'الميزانية 📊',total_estimate:'الإجمالي المقدر',gen_step1:'جارٍ البحث عن الوجهة',gen_step2:'البحث عن أماكن محلية حقيقية',gen_step3:'حساب التكاليف والحجوزات',gen_step4:'تحسين المسارات',gen_step5:'إضافة روابط ومعلومات',gen_building:'بناء رحلتك',or_continue:'أو المتابعة كـ'},
+  hi:{home_heading:'अगली यात्रा<br>कहाँ?',plan_title:'नई यात्रा',gen_btn:'यात्रा कार्यक्रम बनाएं →',interests_label:'रुचियां',pace_label:'गति',budget_label:'बजट',dates_label:'तारीखें',destinations_label:'गंतव्य',mustdo_label:'जरूर करें',quick_adj:'त्वरित समायोजन',cheaper:'सस्ता',closer:'करीब',outdoors:'बाहर',shorter:'छोटा दिन',extend:'शाम बढ़ाएं',alts:'विकल्प',save_trip:'यात्रा सहेजी गई',nav_home:'होम',nav_plan:'योजना',nav_trips:'यात्राएं',nav_blog:'ब्लॉग',nav_profile:'प्रोफ़ाइल',upcoming_trips:'आगामी यात्राएं',todays_trip:'आज की यात्रा',bucket_list_title:'बकेट लिस्ट',bucket_list_sub:'गंतव्य जो आप देखना चाहते हैं',travel_calendar:'आपका यात्रा कैलेंडर',bucket_list_h:'बकेट लिस्ट 🌍',add_to_bucket:'सूची में जोड़ें',add_first_dest:'पहला गंतव्य जोड़ें',start_planning:'योजना शुरू करें →',recent_trips:'हाल की यात्राएं',new_trip_btn:'+ नई यात्रा',find_book:'खोजें और बुक करें',sign_in:'साइन इन',sign_up:'साइन अप',create_account:'मुफ्त खाता बनाएं',guest_btn:'अतिथि (2 यात्राएं, बिना सहेजे)',travel_blog:'ट्रैवल ब्लॉग',blog_sub:'समुदाय की कहानियां',new_post:'नई पोस्ट',publish_btn:'प्रकाशित करें',profile_title:'प्रोफ़ाइल',saved_trips:'सहेजी गई यात्राएं',app_settings:'ऐप सेटिंग्स',sign_out:'साइन आउट',language_label:'भाषा',currency_label:'मुद्रा',budget_breakdown:'बजट विवरण',per_day:'प्रति दिन',activities_label:'गतिविधियां',budget_stat:'बजट 📊',total_estimate:'कुल अनुमान',gen_step1:'गंतव्य की खोज',gen_step2:'स्थानीय स्थान ढूंढना',gen_step3:'लागत और बुकिंग की गणना',gen_step4:'मार्ग अनुकूलन',gen_step5:'लिंक और जिज्ञासाएं जोड़ना',gen_building:'यात्रा बना रहे हैं',or_continue:'या जारी रखें'},
+  ru:{home_heading:'Куда<br>дальше?',plan_title:'Новое путешествие',gen_btn:'Создать маршрут →',interests_label:'Интересы',pace_label:'Темп',budget_label:'Бюджет',dates_label:'Даты',destinations_label:'Направления',mustdo_label:'Обязательно',quick_adj:'Быстрые изменения',cheaper:'Дешевле',closer:'Поближе',outdoors:'На природе',shorter:'Короткий день',extend:'Продлить вечер',alts:'Альтернативы',save_trip:'Поездка сохранена',nav_home:'Главная',nav_plan:'Планировать',nav_trips:'Поездки',nav_blog:'Блог',nav_profile:'Профиль',upcoming_trips:'Предстоящие поездки',todays_trip:'СЕГОДНЯШНЯЯ ПОЕЗДКА',bucket_list_title:'Список желаний',bucket_list_sub:'Места, которые хочется посетить',travel_calendar:'Ваш календарь путешествий',bucket_list_h:'Список желаний 🌍',add_to_bucket:'Добавить в список',add_first_dest:'Добавить первое направление',start_planning:'Начать планировать →',recent_trips:'Последние поездки',new_trip_btn:'+ Новая поездка',find_book:'Найти & забронировать',sign_in:'Войти',sign_up:'Регистрация',create_account:'Создать бесплатный аккаунт',guest_btn:'Гость (2 поездки, без сохранения)',travel_blog:'Тревел-блог',blog_sub:'Истории сообщества',new_post:'Новый пост',publish_btn:'Опубликовать',profile_title:'Профиль',saved_trips:'Сохранённые поездки',app_settings:'Настройки приложения',sign_out:'Выйти',language_label:'Язык',currency_label:'Валюта',budget_breakdown:'Детализация бюджета',per_day:'В день',activities_label:'Активности',budget_stat:'Бюджет 📊',total_estimate:'Общая оценка',gen_step1:'Исследование направления',gen_step2:'Поиск реальных местных мест',gen_step3:'Расчёт стоимости и бронирований',gen_step4:'Оптимизация маршрутов',gen_step5:'Добавление ссылок и фактов',gen_building:'Составляем маршрут',or_continue:'или продолжить как'},
 };
 
 function setLang(code, name) {
   currentLang = code;
   document.getElementById('curr-lang-label').textContent = name;
   closeLang();
-  console.log('[i18n] Setting language to', code, name);
   applyI18n(code);
+  savePreferences();
   showToast('Language set to ' + name);
 }
 
 function applyI18n(code) {
   const t = I18N[code] || I18N['en'];
-  console.log('[i18n] applyI18n called, code='+code+', t keys='+Object.keys(t).length);
-  const els = document.querySelectorAll('[data-i18n]');
-  console.log('[i18n] Found '+els.length+' data-i18n elements');
-  els.forEach(el => {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (t[key] !== undefined) {
-      console.log('[i18n] Updating', key, '->', t[key].slice(0,30));
-      el.innerHTML = t[key];
-    }
+    if (t[key] !== undefined) el.innerHTML = t[key];
   });
-  // Nav labels
-  const navMap = {home:'nav_home',plan:'nav_plan',trips:'nav_trips',blog:'nav_blog',account:'nav_profile'};
-  document.querySelectorAll('.ni').forEach(ni => {
-    const lbl = ni.querySelector('.ni-lbl'); if (!lbl) return;
-    const m = (ni.getAttribute('onclick')||'').match(/goTab\('(\w+)'\)/);
-    if (m && navMap[m[1]] && t[navMap[m[1]]]) lbl.textContent = t[navMap[m[1]]];
+  // Nav labels (built dynamically, also have data-i18n now)
+  document.querySelectorAll('.ni-lbl[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
   });
-  // Update QA modal titles
+  // QA modal titles
   if (t.cheaper) QA_TYPES.cheaper.title = t.cheaper;
   if (t.closer)  QA_TYPES.closer.title  = t.closer;
   if (t.outdoors)QA_TYPES.outdoors.title = t.outdoors;
@@ -2014,7 +2030,9 @@ function closeCurr(){document.getElementById('curr-ovl').classList.remove('show'
 function setCurrency(code,symbol,name){
   currentCurrency=code;
   document.getElementById('curr-currency-label').textContent=code;
-  closeCurr();showToast('Currency set to '+code);
+  closeCurr();
+  savePreferences();
+  showToast('Currency set to '+code);
   if(generatedDays.length&&budgetData){
     const rate=FX[code]||1;
     const total=Math.round(budgetData.total*rate);
