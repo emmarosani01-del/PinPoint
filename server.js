@@ -73,20 +73,20 @@ async function incrementTripCount(userId, currentCount) {
   } catch(e) {}
 }
 
-// Save itinerary to DB
-async function saveItinerary(userId, title, cities, daysCount, data) {
-  try {
-    await supabase('POST', '/rest/v1/itineraries', { user_id: userId, title, cities, days_count: daysCount, data }, null);
-  } catch(e) {}
-}
-
 // Get saved itineraries for user
-async function getUserItineraries(userId) {
+async function getUserItineraries(userId, userToken) {
   try {
-    const r = await supabase('GET', '/rest/v1/itineraries?user_id=eq.' + userId + '&select=*&order=created_at.desc', null, null);
+    const r = await supabase('GET', '/rest/v1/itineraries?user_id=eq.' + userId + '&select=*&order=created_at.desc', null, userToken || null);
     if (r.status === 200) return r.body;
     return [];
   } catch(e) { return []; }
+}
+
+// Save itinerary to DB
+async function saveItinerary(userId, title, cities, daysCount, data, userToken) {
+  try {
+    await supabase('POST', '/rest/v1/itineraries', { user_id: userId, title, cities, days_count: daysCount, data }, userToken || null);
+  } catch(e) { console.error('Save itinerary error:', e.message); }
 }
 
 // ─── Prompt builders ────────────────────────────────────────
@@ -329,7 +329,7 @@ const server = http.createServer(async (req, res) => {
     const token = getToken(req);
     const user  = await getUser(token);
     if (!user) { json(401, { error: 'Not authenticated' }); return; }
-    const itins = await getUserItineraries(user.id);
+    const itins = await getUserItineraries(user.id, token);
     json(200, { itineraries: itins });
     return;
   }
@@ -367,7 +367,7 @@ const server = http.createServer(async (req, res) => {
       const token = getToken(req);
       const user  = await getUser(token);
       if (!user) { json(401, { error: 'Not authenticated' }); return; }
-      await saveItinerary(user.id, p.title, p.cities, p.daysCount, p.data);
+      await saveItinerary(user.id, p.title, p.cities, p.daysCount, p.data, token);
       json(200, { ok: true });
     });
     return;
