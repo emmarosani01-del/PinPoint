@@ -226,9 +226,27 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
         <div style="font-size:12px;color:var(--t2)">Jun 3–10 · Japan · 7 days</div>
       </div>
     </div>
+    <!-- Partner links -->
+    <div style="padding:16px 24px 0">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Find & book</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <a href="https://www.skyscanner.com" target="_blank" rel="noopener" style="text-decoration:none;background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseenter="this.style.borderColor='rgba(0,110,255,.35)'" onmouseleave="this.style.borderColor='var(--b1)'">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(0,110,255,.12);display:flex;align-items:center;justify-content:center">
+            <svg width="26" height="26" viewBox="0 0 48 48" fill="none"><path d="M24 6C14.06 6 6 14.06 6 24s8.06 18 18 18 18-8.06 18-18S33.94 6 24 6z" fill="#0770E3"/><path d="M34 20l-10 4-4-10 14 6z" fill="white"/><path d="M14 28l10-4 4 10-14-6z" fill="white" opacity=".6"/></svg>
+          </div>
+          <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:2px">Skyscanner</div><div style="font-size:10px;color:var(--t2)">Find cheap flights</div></div>
+        </a>
+        <a href="https://www.booking.com" target="_blank" rel="noopener" style="text-decoration:none;background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseenter="this.style.borderColor='rgba(0,115,230,.35)'" onmouseleave="this.style.borderColor='var(--b1)'">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(0,115,230,.12);display:flex;align-items:center;justify-content:center">
+            <svg width="26" height="26" viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="4" fill="#0073E6"/><text x="24" y="30" font-family="Arial" font-weight="900" font-size="20" fill="white" text-anchor="middle">B.</text></svg>
+          </div>
+          <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:2px">Booking.com</div><div style="font-size:10px;color:var(--t2)">Hotels & stays</div></div>
+        </a>
+      </div>
+    </div>
     <!-- Premium CTA -->
     <div style="padding:16px 24px 0">
-      <div onclick="showToast('✦ Premium coming soon!')" style="background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:18px 20px;cursor:pointer;position:relative;overflow:hidden">
+      <div onclick="openPremium()" style="background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:18px 20px;cursor:pointer;position:relative;overflow:hidden">
         <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(155,111,255,.18) 0%,transparent 70%)"></div>
         <div style="position:absolute;bottom:-20px;left:20px;width:80px;height:80px;background:radial-gradient(circle,rgba(255,184,48,.08) 0%,transparent 70%)"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
@@ -269,7 +287,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
     <div class="fg"><label class="fl">Interests</label><div class="chips" id="ic"><div class="chip on" data-v="food">🍜 Food</div><div class="chip" data-v="culture">🏛 Culture</div><div class="chip on" data-v="nature">🌿 Nature</div><div class="chip" data-v="nightlife">🌙 Nightlife</div><div class="chip on" data-v="photography">📷 Photography</div><div class="chip" data-v="adventure">⛰ Adventure</div></div></div>
     <div class="fg"><label class="fl">Pace</label><div class="chips" id="pc"><div class="chip" data-v="chill">🌊 Chill</div><div class="chip ons" data-v="balanced">⚖️ Balanced</div><div class="chip" data-v="intense">🔥 Intense</div></div></div>
     <div class="fg"><label class="fl">Must-do <span style="text-transform:none;font-weight:400;opacity:.5">(optional)</span></label><textarea class="inp" id="md" placeholder="Specific places or activities…"></textarea></div>
-    <button class="btn" onclick="startGen()">Generate itinerary →</button>
+    <button class="btn" onclick="tryStartGen()">Generate itinerary →</button>
     <div class="gap"></div>
   </div>
   <div id="nav-plan"></div>
@@ -294,7 +312,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 <!-- ITINERARY -->
 <div class="screen" id="s-itin">
   <div class="ih">
-    <div class="itr"><div class="ibt" onclick="goTab('plan')">←</div><div class="ibt" onclick="showToast('📤 Share coming soon!')">↑</div></div>
+    <div class="itr"><div class="ibt" onclick="goTab('plan')">←</div><div style="display:flex;gap:8px"><div class="ibt" onclick="downloadPDF()" style="font-size:14px" title="Download PDF">📄</div><div class="ibt" onclick="saveCurrentItinerary()" title="Save trip">🔖</div></div></div>
     <div class="hc">
       <div class="hc-co" id="hc-co"></div>
       <div class="hc-ci" id="hc-ci">Destination</div>
@@ -400,56 +418,88 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 </div>
 
 <!-- ACCOUNT -->
+<!-- AUTH SCREEN (shown when not logged in) -->
+<div class="screen" id="s-auth">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/></svg>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--tx)">Pin<span style="color:var(--ac)">Point</span></div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;background:var(--s2);border-radius:12px;padding:4px;margin-bottom:24px">
+      <div id="tab-signin" onclick="switchAuthTab('signin')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--ac);color:#fff">Sign in</div>
+      <div id="tab-signup" onclick="switchAuthTab('signup')" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2)">Sign up</div>
+    </div>
+
+    <!-- Sign in form -->
+    <div id="form-signin">
+      <div class="fg"><label class="fl">Email</label><input class="inp" id="si-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="fg"><label class="fl">Password</label><input class="inp" id="si-password" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+      <div id="auth-error-si" style="font-size:12px;color:var(--ac);margin-bottom:12px;display:none"></div>
+      <button class="btn" onclick="signIn()">Sign in</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--t2)">No account? <span onclick="switchAuthTab('signup')" style="color:var(--ac);cursor:pointer;font-weight:500">Sign up free</span></div>
+    </div>
+
+    <!-- Sign up form -->
+    <div id="form-signup" style="display:none">
+      <div class="fg"><label class="fl">Email</label><input class="inp" id="su-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="fg"><label class="fl">Password</label><input class="inp" id="su-password" type="password" placeholder="Min 6 characters" autocomplete="new-password"></div>
+      <div id="auth-error-su" style="font-size:12px;color:var(--ac);margin-bottom:12px;display:none"></div>
+      <button class="btn" onclick="signUp()">Create free account</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--t2)">Already have an account? <span onclick="switchAuthTab('signin')" style="color:var(--ac);cursor:pointer;font-weight:500">Sign in</span></div>
+    </div>
+
+    <!-- Divider -->
+    <div style="display:flex;align-items:center;gap:12px;margin:20px 0">
+      <div style="flex:1;height:.5px;background:var(--b1)"></div>
+      <div style="font-size:11px;color:var(--t3)">or continue as</div>
+      <div style="flex:1;height:.5px;background:var(--b1)"></div>
+    </div>
+    <button onclick="continueAsGuest()" style="width:100%;padding:13px;background:transparent;border:.5px solid var(--b2);border-radius:var(--rxl);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--t2);cursor:pointer">Guest (2 trips, no saving)</button>
+
+    <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--t3);line-height:1.6">By signing up you agree to our<br>Terms of Service and Privacy Policy</div>
+  </div>
+</div>
+
+<!-- ACCOUNT SCREEN (shown when logged in) -->
 <div class="screen" id="s-account">
   <div style="padding:20px 24px 14px;flex-shrink:0"><div class="h2">Profile</div></div>
   <div class="scr" style="padding:0 24px 100px">
     <div class="p-hero">
-      <div class="av">A</div>
-      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--tx);margin-bottom:4px">Alex Rivera</div>
-      <div style="font-size:13px;color:var(--t2);margin-bottom:16px">alex.rivera@email.com</div>
+      <div class="av" id="profile-av">?</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--tx);margin-bottom:4px" id="profile-name">Loading…</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:16px" id="profile-email"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-        <div style="font-size:11px;padding:4px 11px;border-radius:12px;background:var(--ac2);color:var(--ac);border:.5px solid rgba(255,76,106,.2)">🌿 Nature</div>
-        <div style="font-size:11px;padding:4px 11px;border-radius:12px;background:var(--ac2);color:var(--ac);border:.5px solid rgba(255,76,106,.2)">🍜 Food</div>
-        <div style="font-size:11px;padding:4px 11px;border-radius:12px;background:var(--s3);color:var(--t2);border:.5px solid var(--b1)">Backpacker</div>
+        <div id="profile-plan-badge" style="font-size:11px;padding:4px 11px;border-radius:12px;background:var(--s3);color:var(--t2);border:.5px solid var(--b1)">Free plan</div>
       </div>
     </div>
     <div class="p-stats">
-      <div class="pst"><div class="psv">12</div><div class="psl">Trips</div></div>
-      <div class="pst"><div class="psv">34</div><div class="psl">Countries</div></div>
-      <div class="pst"><div class="psv">218</div><div class="psl">Days abroad</div></div>
+      <div class="pst"><div class="psv" id="profile-trips">0</div><div class="psl">Trips planned</div></div>
+      <div class="pst"><div class="psv" id="profile-limit">2</div><div class="psl">Trip limit</div></div>
+      <div class="pst"><div class="psv">0</div><div class="psl">Days abroad</div></div>
     </div>
     <!-- Premium banner -->
-    <div onclick="showToast('✦ Premium coming soon!')" style="background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:18px 20px;margin-bottom:20px;cursor:pointer;position:relative;overflow:hidden">
+    <div id="premium-profile-banner" onclick="openPremium()" style="background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:var(--rxl);border:.5px solid rgba(155,111,255,.35);padding:18px 20px;margin-bottom:20px;cursor:pointer;position:relative;overflow:hidden">
       <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(155,111,255,.18) 0%,transparent 70%)"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
-        <div><div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><span style="font-size:16px">✦</span><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff">PinPoint Premium</span><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:linear-gradient(135deg,var(--pu),var(--go));color:#fff">PRO</span></div><div style="font-size:12px;color:rgba(155,111,255,.8)">Offline maps · AI concierge · No ads</div></div>
+        <div><div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><span style="font-size:16px">✦</span><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff">PinPoint Premium</span><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:linear-gradient(135deg,var(--pu),var(--go));color:#fff">PRO</span></div><div style="font-size:12px;color:rgba(155,111,255,.8)">Unlimited trips · Offline · No ads</div></div>
         <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--pu);white-space:nowrap;margin-left:12px">$4.99/mo →</div>
       </div>
     </div>
-    <!-- Travel preferences -->
-    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Travel preferences</div>
-    <div class="pcard" style="margin-bottom:20px">
-      <div class="prow" onclick="showToast('Budget preference saved')"><div class="pr-l"><div class="pr-ic">🪙</div><div><div class="pr-lb">Default budget</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">Low</div><div class="pr-a">›</div></div></div>
-      <div class="prow" onclick="showToast('Pace preference saved')"><div class="pr-l"><div class="pr-ic">⚖️</div><div><div class="pr-lb">Travel pace</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">Balanced</div><div class="pr-a">›</div></div></div>
-      <div class="prow" onclick="showToast('Interests saved')"><div class="pr-l"><div class="pr-ic">🌿</div><div><div class="pr-lb">Top interests</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">Nature, Food</div><div class="pr-a">›</div></div></div>
-      <div class="prow" onclick="showToast('Home base saved')"><div class="pr-l"><div class="pr-ic">🌍</div><div><div class="pr-lb">Home base</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">Vancouver, CA</div><div class="pr-a">›</div></div></div>
+    <!-- Saved trips -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Saved trips</div>
+    <div id="saved-trips-list" style="margin-bottom:20px">
+      <div style="font-size:13px;color:var(--t3);padding:14px 0;text-align:center">No saved trips yet — generate one!</div>
     </div>
     <!-- App settings -->
     <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">App settings</div>
     <div class="pcard" style="margin-bottom:20px">
-      <div class="prow"><div class="pr-l"><div class="pr-ic">📵</div><div><div class="pr-lb">Offline mode</div><div class="pr-sub">Auto-save itineraries</div></div></div><label class="tog"><input type="checkbox" checked><span class="tsl"></span></label></div>
-      <div class="prow"><div class="pr-l"><div class="pr-ic">🔔</div><div><div class="pr-lb">Notifications</div></div></div><label class="tog"><input type="checkbox" checked><span class="tsl"></span></label></div>
       <div class="prow" onclick="showToast('Language setting')"><div class="pr-l"><div class="pr-ic">🌐</div><div><div class="pr-lb">Language</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">English</div><div class="pr-a">›</div></div></div>
       <div class="prow" onclick="showToast('Currency setting')"><div class="pr-l"><div class="pr-ic">💱</div><div><div class="pr-lb">Currency</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v">USD</div><div class="pr-a">›</div></div></div>
-    </div>
-    <!-- Account -->
-    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Account</div>
-    <div class="pcard" style="margin-bottom:20px">
-      <div class="prow" onclick="showToast('Change password')"><div class="pr-l"><div class="pr-ic">🔒</div><div><div class="pr-lb">Change password</div></div></div><div class="pr-a">›</div></div>
-      <div class="prow" onclick="showToast('Exporting data…')"><div class="pr-l"><div class="pr-ic">📤</div><div><div class="pr-lb">Export my data</div></div></div><div class="pr-a">›</div></div>
       <div class="prow" onclick="showToast('Thanks for the feedback!')"><div class="pr-l"><div class="pr-ic">⭐</div><div><div class="pr-lb">Rate PinPoint</div></div></div><div class="pr-a">›</div></div>
     </div>
-    <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="showToast('Signed out')">Sign out</button>
+    <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="signOut()">Sign out</button>
     <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--t3)">PinPoint v3.0 · Built for backpackers</div>
     <div class="gap"></div>
   </div>
@@ -482,6 +532,86 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
   </div>
 </div>
 
+<!-- PREMIUM OVERLAY -->
+<div class="ovl" id="premium-ovl" onclick="if(event.target===this)closePremium()">
+  <div class="sheet" style="padding-bottom:40px">
+    <div class="sh"></div>
+    <!-- Header gradient -->
+    <div style="margin:0 16px 20px;background:linear-gradient(135deg,#1A1220,#2A1535);border-radius:20px;padding:28px 24px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(155,111,255,.2) 0%,transparent 65%)"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:20px">✦</span>
+        <span style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px">PinPoint</span>
+        <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;background:linear-gradient(135deg,var(--pu),var(--go));color:#fff">PREMIUM</span>
+      </div>
+      <div style="font-size:13px;color:rgba(200,180,255,.8);line-height:1.5">Upgrade to unlock every feature and travel smarter</div>
+    </div>
+    <!-- Free vs Premium comparison -->
+    <div style="padding:0 24px;margin-bottom:16px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t2);margin-bottom:10px">What you get</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)">
+          <div style="width:34px;height:34px;border-radius:10px;background:rgba(155,111,255,.15);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🗺</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:1px">Offline itineraries</div><div style="font-size:11px;color:var(--t2)">Save & access trips without internet</div></div>
+          <div style="font-size:11px;font-weight:600;color:var(--tl);background:rgba(0,229,196,.1);padding:2px 8px;border-radius:8px;white-space:nowrap">PRO</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)">
+          <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,76,106,.1);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">∞</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:1px">Unlimited trips</div><div style="font-size:11px;color:var(--t2)">Free plan is limited to 2 planned trips</div></div>
+          <div style="font-size:11px;font-weight:600;color:var(--tl);background:rgba(0,229,196,.1);padding:2px 8px;border-radius:8px;white-space:nowrap">PRO</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)">
+          <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,184,48,.12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📄</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:1px">Download PDF itinerary</div><div style="font-size:11px;color:var(--t2)">Export your trip as a printable PDF</div></div>
+          <div style="font-size:11px;font-weight:600;color:var(--tl);background:rgba(0,229,196,.1);padding:2px 8px;border-radius:8px;white-space:nowrap">PRO</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)">
+          <div style="width:34px;height:34px;border-radius:10px;background:rgba(155,111,255,.12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🚫</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:1px">Ad-free experience</div><div style="font-size:11px;color:var(--t2)">No banners, no interruptions</div></div>
+          <div style="font-size:11px;font-weight:600;color:var(--tl);background:rgba(0,229,196,.1);padding:2px 8px;border-radius:8px;white-space:nowrap">PRO</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1)">
+          <div style="width:34px;height:34px;border-radius:10px;background:rgba(0,229,196,.1);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">⚡</div>
+          <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--tx);margin-bottom:1px">Priority AI generation</div><div style="font-size:11px;color:var(--t2)">Faster itineraries, no queuing</div></div>
+          <div style="font-size:11px;font-weight:600;color:var(--tl);background:rgba(0,229,196,.1);padding:2px 8px;border-radius:8px;white-space:nowrap">PRO</div>
+        </div>
+      </div>
+    </div>
+    <!-- Plan picker -->
+    <div style="padding:0 24px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div id="plan-monthly" onclick="selectPlan('monthly')" style="background:var(--s2);border:.5px solid var(--b1);border-radius:var(--rl);padding:14px 12px;text-align:center;cursor:pointer">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px">Monthly</div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--pu)">$4.99</div>
+          <div style="font-size:11px;color:var(--t2)">per month</div>
+        </div>
+        <div id="plan-yearly" onclick="selectPlan('yearly')" style="background:rgba(155,111,255,.1);border:1.5px solid var(--pu);border-radius:var(--rl);padding:14px 12px;text-align:center;cursor:pointer;position:relative">
+          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--pu);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap">BEST VALUE</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px">Yearly</div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--pu)">$2.99</div>
+          <div style="font-size:11px;color:var(--t2)">per month · billed $35.88/yr</div>
+        </div>
+      </div>
+      <button onclick="subscribePremium()" class="btn" style="background:linear-gradient(135deg,var(--pu),#7B4FFF);box-shadow:0 8px 28px rgba(155,111,255,.3)">Start free 7-day trial →</button>
+      <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:10px">Cancel anytime · No charge until trial ends</div>
+    </div>
+  </div>
+</div>
+
+<!-- AD BANNER (shown to free users) -->
+<div id="ad-banner" style="position:absolute;bottom:82px;left:0;right:0;z-index:400;padding:0 16px;display:none">
+  <div style="background:var(--s2);border:.5px solid var(--b2);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+    <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+      <div style="width:40px;height:40px;border-radius:8px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✈️</div>
+      <div style="min-width:0"><div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Find cheap flights with Skyscanner</div><div style="font-size:10px;color:var(--t3)">Ad · Remove with Premium</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <a href="https://www.skyscanner.com" target="_blank" rel="noopener" style="font-size:11px;font-weight:600;padding:5px 10px;background:var(--ac2);color:var(--ac);border-radius:8px;text-decoration:none;white-space:nowrap">Open</a>
+      <div onclick="dismissAd()" style="font-size:14px;color:var(--t3);cursor:pointer;padding:4px">✕</div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 </div>
 
@@ -495,7 +625,7 @@ document.getElementById('d1').value=td.toISOString().slice(0,10);
 document.getElementById('d2').value=td2.toISOString().slice(0,10);
 
 // NAV — 5 tabs
-const TABS={home:'s-home',plan:'s-plan',gen:'s-gen',itin:'s-itin',blog:'s-blog',account:'s-account'};
+const TABS={home:'s-home',plan:'s-plan',gen:'s-gen',itin:'s-itin',blog:'s-blog',account:'s-account',auth:'s-auth'};
 const NAV_SLOTS={home:'nav-home',plan:'nav-plan',itin:'nav-itin',blog:'nav-blog',account:'nav-account'};
 const NAV_KEY={home:'home',plan:'plan',itin:'itin',blog:'blog',account:'account'};
 const NAV_ITEMS=[
@@ -519,6 +649,8 @@ Object.keys(NAV_SLOTS).forEach(k=>buildNav(NAV_SLOTS[k],NAV_KEY[k]));
 
 function goTab(tab){
   Object.values(TABS).forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
+  // If going to account and not logged in → show auth
+  if(tab==='account' && !currentUser && !isGuest){tab='auth';}
   if(tab==='blog'){
     document.getElementById('blog-list').style.display='flex';
     document.getElementById('blog-compose').style.display='none';
@@ -526,7 +658,166 @@ function goTab(tab){
   }
   const s=document.getElementById(TABS[tab]);if(s)s.classList.add('active');
   if(tab==='itin'&&generatedDays.length)buildDaysFromData(generatedDays);
+  if(tab==='account'&&currentUser)loadProfile();
 }
+
+// ─── AUTH STATE ──────────────────────────────────────────────
+let currentUser    = null;
+let currentProfile = null;
+let authToken      = null;
+let isGuest        = false;
+
+function switchAuthTab(tab) {
+  document.getElementById('form-signin').style.display = tab==='signin'?'block':'none';
+  document.getElementById('form-signup').style.display = tab==='signup'?'block':'none';
+  document.getElementById('tab-signin').style.background = tab==='signin'?'var(--ac)':'transparent';
+  document.getElementById('tab-signin').style.color      = tab==='signin'?'#fff':'var(--t2)';
+  document.getElementById('tab-signup').style.background = tab==='signup'?'var(--ac)':'transparent';
+  document.getElementById('tab-signup').style.color      = tab==='signup'?'#fff':'var(--t2)';
+  document.getElementById('auth-error-si').style.display='none';
+  document.getElementById('auth-error-su').style.display='none';
+}
+
+async function signIn() {
+  const email    = document.getElementById('si-email').value.trim();
+  const password = document.getElementById('si-password').value;
+  const errEl    = document.getElementById('auth-error-si');
+  if (!email||!password){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
+  showToast('Signing in…');
+  try {
+    const r = await fetch('/api/auth/signin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data = await r.json();
+    if (!r.ok||data.error){errEl.textContent=data.error_description||data.message||'Sign in failed.';errEl.style.display='block';return;}
+    authToken   = data.access_token;
+    currentUser = data.user;
+    isGuest     = false;
+    errEl.style.display='none';
+    showToast('Welcome back!');
+    await loadProfile();
+    goTab('home');
+  } catch(e){errEl.textContent='Connection error.';errEl.style.display='block';}
+}
+
+async function signUp() {
+  const email    = document.getElementById('su-email').value.trim();
+  const password = document.getElementById('su-password').value;
+  const errEl    = document.getElementById('auth-error-su');
+  if (!email||!password){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
+  if (password.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  showToast('Creating account…');
+  try {
+    const r = await fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data = await r.json();
+    if (!r.ok||data.error){errEl.textContent=data.error_description||data.message||'Sign up failed.';errEl.style.display='block';return;}
+    // Auto sign in after signup
+    if (data.access_token){
+      authToken=data.access_token;currentUser=data.user;isGuest=false;
+      await loadProfile();goTab('home');showToast('Account created! Welcome to PinPoint 🎉');
+    } else {
+      showToast('Check your email to confirm your account, then sign in.');
+      switchAuthTab('signin');
+    }
+  } catch(e){errEl.textContent='Connection error.';errEl.style.display='block';}
+}
+
+function continueAsGuest() {
+  isGuest=true;currentUser=null;authToken=null;
+  isPremium=false;tripCount=0;
+  goTab('home');
+  showToast('Continuing as guest · 2 trip limit');
+}
+
+async function signOut() {
+  currentUser=null;authToken=null;currentProfile=null;isGuest=false;
+  isPremium=false;tripCount=0;
+  showToast('Signed out');
+  goTab('auth');
+}
+
+async function loadProfile() {
+  if (!currentUser||!authToken) return;
+  try {
+    const r = await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+authToken}});
+    if (!r.ok) return;
+    const data = await r.json();
+    currentProfile = data.profile;
+    // Update UI
+    const email  = currentUser.email||'';
+    const initials = email ? email[0].toUpperCase() : '?';
+    const plan   = currentProfile?.plan||'free';
+    isPremium    = plan==='premium';
+    tripCount    = currentProfile?.trip_count||0;
+    document.getElementById('profile-av').textContent    = initials;
+    document.getElementById('profile-name').textContent  = email.split('@')[0];
+    document.getElementById('profile-email').textContent = email;
+    document.getElementById('profile-trips').textContent = tripCount;
+    document.getElementById('profile-limit').textContent = isPremium?'∞':'2';
+    const planBadge = document.getElementById('profile-plan-badge');
+    if (isPremium){
+      planBadge.textContent='✦ Premium';
+      planBadge.style.background='rgba(155,111,255,.15)';
+      planBadge.style.color='var(--pu)';
+      planBadge.style.border='.5px solid rgba(155,111,255,.3)';
+      document.getElementById('premium-profile-banner').style.display='none';
+    }
+    // Load saved trips
+    loadSavedTrips();
+  } catch(e){}
+}
+
+async function loadSavedTrips() {
+  if (!authToken) return;
+  try {
+    const r = await fetch('/api/itineraries',{headers:{'Authorization':'Bearer '+authToken}});
+    if (!r.ok) return;
+    const {itineraries} = await r.json();
+    const container = document.getElementById('saved-trips-list');
+    if (!itineraries||!itineraries.length){
+      container.innerHTML='<div style="font-size:13px;color:var(--t3);padding:14px 0;text-align:center">No saved trips yet — generate one!</div>';
+      return;
+    }
+    container.innerHTML=itineraries.map(it=>`
+      <div style="background:var(--s1);border-radius:var(--rl);border:.5px solid var(--b1);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="showToast('Loading trip…')">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px">${it.title||it.cities||'Trip'}</div>
+        <div style="font-size:11px;color:var(--t2)">${it.days_count||0} days · ${new Date(it.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>`).join('');
+  } catch(e){}
+}
+
+// Save current itinerary to account
+async function saveCurrentItinerary() {
+  if (!currentUser||!authToken){showToast('Sign in to save trips');return;}
+  if (!generatedDays.length){showToast('No itinerary to save');return;}
+  const title  = document.getElementById('hc-ci').textContent;
+  const cities = currentCities.join(', ');
+  try {
+    await fetch('/api/itineraries/save',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({title,cities,daysCount:generatedDays.length,data:generatedDays})});
+    showToast('✓ Trip saved to your account');
+  } catch(e){showToast('Could not save trip');}
+}
+
+// Check auth on app load
+async function initAuth() {
+  // Check if token in sessionStorage
+  const saved = sessionStorage.getItem('pp_token');
+  if (saved) {
+    authToken = saved;
+    try {
+      const r = await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+saved}});
+      if (r.ok){
+        const data = await r.json();
+        currentUser=data.user;currentProfile=data.profile;
+        isPremium=(currentProfile?.plan==='premium');
+        tripCount=currentProfile?.trip_count||0;
+        goTab('home');return;
+      }
+    } catch(e){}
+    sessionStorage.removeItem('pp_token');
+  }
+  // Show auth screen
+  goTab('auth');
+}
+
 
 // Chips
 document.querySelectorAll('#bc .chip,#pc .chip').forEach(c=>{c.onclick=()=>{c.closest('.chips').querySelectorAll('.chip').forEach(x=>x.classList.remove('ons'));c.classList.add('ons');};});
@@ -556,8 +847,14 @@ function dateLabel(d){return WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()]
 
 // API call
 function callEndpoint(endpoint,params){
-  return fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(params)})
-    .then(r=>{if(!r.ok)return r.json().then(e=>{throw new Error(e.error||'HTTP '+r.status);});return r.json();})
+  const headers={'Content-Type':'application/json'};
+  if(authToken)headers['Authorization']='Bearer '+authToken;
+  return fetch(endpoint,{method:'POST',headers,body:JSON.stringify(params)})
+    .then(r=>{
+      if(r.status===403)return r.json().then(e=>{if(e.error==='FREE_LIMIT_REACHED'){openPremium();}throw new Error(e.message||'Limit reached');});
+      if(!r.ok)return r.json().then(e=>{throw new Error(e.error||'HTTP '+r.status);});
+      return r.json();
+    })
     .then(data=>{
       if(data.error)throw new Error(typeof data.error==='string'?data.error:data.error.message||JSON.stringify(data.error));
       const raw=data.content.map(b=>b.text||'').join('');
@@ -893,6 +1190,80 @@ function publishPost(){
   if(!title||!dest){showToast('⚠️ Fill in destination and title first');return;}
   hideCompose();showToast('✓ Post published! Your story is now live.');
 }
+
+// ─── PREMIUM SYSTEM ─────────────────────────────────────────
+let isPremium    = false;
+let tripCount    = 0;
+const FREE_TRIP_LIMIT = 2;
+let selectedPlan = 'yearly';
+let adDismissed  = false;
+
+function openPremium() { document.getElementById('premium-ovl').classList.add('show'); }
+function closePremium(){ document.getElementById('premium-ovl').classList.remove('show'); }
+
+function selectPlan(p) {
+  selectedPlan = p;
+  const mo = document.getElementById('plan-monthly');
+  const yr = document.getElementById('plan-yearly');
+  if (p === 'yearly') {
+    yr.style.border = '1.5px solid var(--pu)'; yr.style.background = 'rgba(155,111,255,.1)';
+    mo.style.border = '.5px solid var(--b1)';  mo.style.background = 'var(--s2)';
+  } else {
+    mo.style.border = '1.5px solid var(--pu)'; mo.style.background = 'rgba(155,111,255,.1)';
+    yr.style.border = '.5px solid var(--b1)';  yr.style.background = 'var(--s2)';
+  }
+}
+
+function subscribePremium() {
+  isPremium = true;
+  closePremium();
+  hideAd();
+  showToast('✦ Welcome to Premium! All features unlocked.');
+  // Update both premium banners
+  document.querySelectorAll('[onclick="openPremium()"]').forEach(b => {
+    b.style.background   = 'linear-gradient(135deg,#0F1A0F,#1A2E1A)';
+    b.style.borderColor  = 'rgba(0,229,196,.35)';
+    const arrow = b.querySelector('div[style*="4.99"]') || b.querySelector('div:last-child');
+    if (arrow) { arrow.textContent = 'Active ✓'; arrow.style.color = 'var(--tl)'; }
+  });
+}
+
+// Called by the Generate button — checks free limit first
+async function tryStartGen() {
+  // Guest or logged-in user — check local limit for guests
+  if (isGuest && !isPremium && tripCount >= FREE_TRIP_LIMIT) {
+    openPremium();
+    showToast('⚠️ Free limit: ' + FREE_TRIP_LIMIT + ' trips. Sign up or upgrade.');
+    return;
+  }
+  tripCount++;
+  await startGen();
+  if (!isPremium && !adDismissed) showAd();
+  if (!isPremium && tripCount >= FREE_TRIP_LIMIT) {
+    setTimeout(() => showToast('Free trips used: ' + tripCount + '/' + FREE_TRIP_LIMIT + ' — upgrade for more'), 1500);
+  }
+}
+
+// Download PDF (premium only)
+function downloadPDF() {
+  if (!isPremium) { openPremium(); showToast('⚠️ PDF export requires Premium'); return; }
+  showToast('📄 Generating PDF… (coming soon)');
+}
+
+// Ad management
+function showAd() {
+  if (adDismissed || isPremium) return;
+  document.getElementById('ad-banner').style.display = 'block';
+  setTimeout(hideAd, 8000);
+}
+function hideAd()       { document.getElementById('ad-banner').style.display = 'none'; }
+function dismissAd()    { adDismissed = true; hideAd(); }
+
+// Show ad 3s after load for free users
+setTimeout(() => { if (!isPremium) showAd(); }, 3000);
+
+// Init — check auth on load
+initAuth();
 
 // TOAST
 function showToast(msg){
