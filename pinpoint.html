@@ -681,6 +681,7 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       <div class="prow" onclick="openCurr()"><div class="pr-l"><div class="pr-ic">💱</div><div><div class="pr-lb">Currency</div></div></div><div style="display:flex;align-items:center;gap:6px"><div class="pr-v" id="curr-currency-label">USD</div><div class="pr-a">›</div></div></div>
       <div class="prow" onclick="goTab('bucket')"><div class="pr-l"><div class="pr-ic">🌍</div><div><div class="pr-lb">Bucket List</div><div class="pr-sub">Premium feature</div></div></div><div class="pr-a">›</div></div>
       <div class="prow" onclick="showToast('Thanks for the feedback!')"><div class="pr-l"><div class="pr-ic">⭐</div><div><div class="pr-lb">Rate PinPoint</div></div></div><div class="pr-a">›</div></div>
+      <div id="cancel-sub-row" class="prow" style="display:none" onclick="cancelSubscription()"><div class="pr-l"><div class="pr-ic">❌</div><div><div class="pr-lb" style="color:var(--ac)">Cancel subscription</div><div class="pr-sub">Downgrades to free plan</div></div></div><div class="pr-a">›</div></div>
     </div>
     <button style="width:100%;padding:14px;background:rgba(255,76,106,.1);color:var(--ac);border:.5px solid rgba(255,76,106,.2);border-radius:var(--rl);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer" onclick="signOut()" data-i18n="sign_out">Sign out</button>
     <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--t3)">PinPoint v3.0 · Built for backpackers</div>
@@ -963,6 +964,9 @@ async function loadProfile() {
       planBadge.style.color='var(--pu)';
       planBadge.style.border='.5px solid rgba(155,111,255,.3)';
       document.getElementById('premium-profile-banner').style.display='none';
+      const cancelRow = document.getElementById('cancel-sub-row');
+      if (cancelRow) cancelRow.style.display='flex';
+      activatePremiumUI();
     }
     // Restore language preference
     const savedLang = currentProfile?.preferred_language||'en';
@@ -1096,6 +1100,7 @@ async function loadHomeTrips() {
 
 // Check auth on app load
 async function initAuth() {
+  handleStripeReturn(); // Check if returning from Stripe
   // Check if token in sessionStorage
   const saved = sessionStorage.getItem('pp_token');
   if (saved) {
@@ -2066,21 +2071,96 @@ function selectPlan(p) {
   }
 }
 
-function subscribePremium() {
-  isPremium = true;
-  closePremium();
-  hideAd();
-  showToast('✦ Welcome to Premium! All features unlocked.');
-  // Update both premium banners
-  document.querySelectorAll('[onclick="openPremium()"]').forEach(b => {
-    b.style.background   = 'linear-gradient(135deg,#0F1A0F,#1A2E1A)';
-    b.style.borderColor  = 'rgba(0,229,196,.35)';
-    const arrow = b.querySelector('div[style*="4.99"]') || b.querySelector('div:last-child');
-    if (arrow) { arrow.textContent = 'Active ✓'; arrow.style.color = 'var(--tl)'; }
-  });
+async function subscribePremium() {
+  if (!currentUser) {
+    closePremium();
+    showToast('Sign in first to upgrade');
+    goTab('account');
+    return;
+  }
+  const btn = document.querySelector('#premium-ovl .btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to Stripe…'; }
+  try {
+    const appUrl = window.location.origin;
+    const r = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ plan: selectedPlan, appUrl })
+    });
+    const data = await r.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast('⚠️ ' + (data.error || 'Could not start checkout'));
+      if (btn) { btn.disabled = false; btn.textContent = 'Start free 7-day trial →'; }
+    }
+  } catch(e) {
+    showToast('⚠️ Connection error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Start free 7-day trial →'; }
+  }
 }
 
-// Called by the Generate button — checks free limit first
+// Called after Stripe redirects back to app
+async function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  if (!payment) return;
+  // Clean URL
+  window.history.replaceState({}, '', window.location.pathname);
+  if (payment === 'success') {
+    showToast('✦ Payment successful! Activating Premium…');
+    // Reload profile to get updated plan from DB
+    setTimeout(async () => {
+      await loadProfile();
+      if (isPremium) {
+        showToast('✦ Premium activated! All features unlocked.');
+        activatePremiumUI();
+      } else {
+        // DB might not have updated yet — retry once
+        setTimeout(async () => {
+          await loadProfile();
+          if (isPremium) { showToast('✦ Premium activated!'); activatePremiumUI(); }
+        }, 3000);
+      }
+    }, 1500);
+  } else if (payment === 'cancelled') {
+    showToast('Payment cancelled — you can upgrade anytime.');
+  }
+}
+
+function activatePremiumUI() {
+  hideAd();
+  closePremium();
+  document.querySelectorAll('[onclick="openPremium()"]').forEach(b => {
+    b.style.background  = 'linear-gradient(135deg,#0F1A0F,#1A2E1A)';
+    b.style.borderColor = 'rgba(0,229,196,.35)';
+    const priceEl = b.querySelector('[style*="4.99"]') || b.querySelector('[style*="color:var(--pu)"]');
+    if (priceEl) { priceEl.textContent = '✓ Active'; priceEl.style.color = 'var(--tl)'; }
+  });
+  const premBanner = document.getElementById('premium-profile-banner');
+  if (premBanner) premBanner.style.display = 'none';
+}
+
+
+async function cancelSubscription() {
+  if (!confirm('Cancel your Premium subscription? You will keep access until the end of the current billing period.')) return;
+  try {
+    const r = await fetch('/api/stripe/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }
+    });
+    const data = await r.json();
+    if (r.ok) {
+      isPremium = false;
+      showToast('Subscription cancelled. You\'ll keep Premium until period ends.');
+      document.getElementById('cancel-sub-row').style.display = 'none';
+      await loadProfile();
+    } else {
+      showToast('⚠️ ' + (data.error || 'Could not cancel'));
+    }
+  } catch(e) { showToast('⚠️ Connection error'); }
+}
+
 async function tryStartGen() {
   // Guest or logged-in user — check local limit for guests
   if (isGuest && !isPremium && tripCount >= FREE_TRIP_LIMIT) {

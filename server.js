@@ -3,16 +3,20 @@ const https = require('https');
 const fs    = require('fs');
 const path  = require('path');
 
-const PORT         = process.env.PORT || 3000;
-const API_KEY      = process.env.ANTHROPIC_API_KEY || '';
-const SUPABASE_URL = process.env.SUPABASE_URL || '';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
+const PORT              = process.env.PORT || 3000;
+const API_KEY           = process.env.ANTHROPIC_API_KEY || '';
+const SUPABASE_URL      = process.env.SUPABASE_URL || '';
+const SUPABASE_KEY      = process.env.SUPABASE_SERVICE_KEY || '';
+const STRIPE_SECRET     = process.env.STRIPE_SECRET_KEY || '';
+const STRIPE_PRICE_MON  = process.env.STRIPE_PRICE_MONTHLY || '';
+const STRIPE_PRICE_YEAR = process.env.STRIPE_PRICE_YEARLY || '';
 
 console.log('=== PinPoint starting ===');
 console.log('PORT:', PORT);
 console.log('API_KEY:', API_KEY ? 'SET' : 'MISSING');
 console.log('SUPABASE_URL:', SUPABASE_URL ? 'SET' : 'MISSING');
 console.log('SUPABASE_KEY:', SUPABASE_KEY ? 'SET' : 'MISSING');
+console.log('STRIPE:', STRIPE_SECRET ? 'SET' : 'MISSING');
 console.log('HTML:', fs.existsSync(path.join(__dirname,'pinpoint.html')) ? 'FOUND' : 'NOT FOUND');
 
 // ─── Supabase helpers ────────────────────────────────────────
@@ -90,6 +94,58 @@ async function saveItinerary(userId, title, cities, daysCount, data, startDate, 
       start_date: startDate || null, end_date: endDate || null
     }, userToken || null);
   } catch(e) { console.error('Save itinerary error:', e.message); }
+}
+
+// ─── Stripe helper ───────────────────────────────────────────
+function stripeRequest(method, endpoint, body) {
+  return new Promise((resolve, reject) => {
+    const auth = 'Basic ' + Buffer.from(STRIPE_SECRET + ':').toString('base64');
+    const headers = {
+      'Authorization': auth,
+      'Content-Type':  'application/x-www-form-urlencoded',
+    };
+    let payload = null;
+    if (body && method !== 'GET') {
+      // Convert JSON to URL-encoded for Stripe API
+      try {
+        const obj = typeof body === 'string' ? JSON.parse(body) : body;
+        payload = flattenStripeParams(obj);
+        headers['Content-Length'] = Buffer.byteLength(payload);
+      } catch(e) { payload = body; }
+    }
+    const req = https.request({
+      hostname: 'api.stripe.com',
+      path:     endpoint,
+      method,
+      headers
+    }, res => {
+      let data = '';
+      res.on('data', c => { data += c; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch(e) { resolve({ error: { message: data } }); }
+      });
+    });
+    req.on('error', reject);
+    if (payload) req.write(payload);
+    req.end();
+  });
+}
+
+function flattenStripeParams(obj, prefix) {
+  return Object.keys(obj).map(key => {
+    const val = obj[key];
+    const fullKey = prefix ? prefix + '[' + key + ']' : key;
+    if (val !== null && typeof val === 'object' && !Array.isArray(val)) {
+      return flattenStripeParams(val, fullKey);
+    } else if (Array.isArray(val)) {
+      return val.map((item, i) => {
+        if (typeof item === 'object') return flattenStripeParams(item, fullKey + '[' + i + ']');
+        return encodeURIComponent(fullKey + '[' + i + ']') + '=' + encodeURIComponent(item);
+      }).join('&');
+    }
+    return encodeURIComponent(fullKey) + '=' + encodeURIComponent(val);
+  }).join('&');
 }
 
 // Update user preferences
@@ -308,7 +364,7 @@ const server = http.createServer(async (req, res) => {
 
   // Health check
   if (req.method === 'GET' && req.url === '/health') {
-    json(200, { ok: true, apiKey: !!API_KEY, supabase: !!SUPABASE_URL, port: PORT });
+    json(200, { ok: true, apiKey: !!API_KEY, supabase: !!SUPABASE_URL, stripe: !!STRIPE_SECRET, port: PORT });
     return;
   }
 
@@ -591,6 +647,105 @@ const server = http.createServer(async (req, res) => {
             { likes: (p.currentLikes||0) + 1 }, null);
           json(200, { liked: true, likes: (p.currentLikes||0) + 1 });
         }
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
+  // ── Stripe: Create checkout session ──
+  if (req.method === 'POST' && req.url === '/api/stripe/checkout') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Not authenticated' }); return; }
+      if (!STRIPE_SECRET) { json(500, { error: 'Stripe not configured' }); return; }
+
+      const priceId = p.plan === 'yearly' ? STRIPE_PRICE_YEAR : STRIPE_PRICE_MON;
+      const appUrl  = p.appUrl || 'https://pinpoint.onrender.com';
+
+      const stripeBody = JSON.stringify({
+        mode: 'subscription',
+        line_items: [{ price: priceId, quantity: 1 }],
+        success_url: appUrl + '?payment=success&session_id={CHECKOUT_SESSION_ID}',
+        cancel_url:  appUrl + '?payment=cancelled',
+        client_reference_id: user.id,
+        customer_email: user.email,
+        subscription_data: {
+          trial_period_days: 7,
+          metadata: { user_id: user.id }
+        }
+      });
+
+      try {
+        const stripeRes = await stripeRequest('POST', '/v1/checkout/sessions', stripeBody);
+        if (stripeRes.url) {
+          json(200, { url: stripeRes.url, sessionId: stripeRes.id });
+        } else {
+          console.error('[Stripe] checkout error:', JSON.stringify(stripeRes));
+          json(500, { error: stripeRes.error?.message || 'Stripe error' });
+        }
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
+  // ── Stripe: Webhook (payment confirmed) ──
+  if (req.method === 'POST' && req.url === '/api/stripe/webhook') {
+    let body = '';
+    req.on('data', c => { body += c; });
+    req.on('end', async () => {
+      try {
+        const event = JSON.parse(body);
+        console.log('[Stripe webhook]', event.type);
+        if (event.type === 'checkout.session.completed' ||
+            event.type === 'invoice.payment_succeeded') {
+          const userId = event.data.object.client_reference_id ||
+                         event.data.object.subscription_data?.metadata?.user_id;
+          if (userId) {
+            await supabase('PATCH', '/rest/v1/profiles?id=eq.' + userId,
+              { plan: 'premium' }, null);
+            console.log('[Stripe] Upgraded user', userId, 'to premium');
+          }
+        }
+        if (event.type === 'customer.subscription.deleted') {
+          const userId = event.data.object.metadata?.user_id;
+          if (userId) {
+            await supabase('PATCH', '/rest/v1/profiles?id=eq.' + userId,
+              { plan: 'free' }, null);
+            console.log('[Stripe] Downgraded user', userId, 'to free');
+          }
+        }
+        res.writeHead(200); res.end('ok');
+      } catch(e) {
+        console.error('[Stripe webhook error]', e.message);
+        res.writeHead(400); res.end('error');
+      }
+    });
+    return;
+  }
+
+  // ── Stripe: Cancel subscription ──
+  if (req.method === 'POST' && req.url === '/api/stripe/cancel') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      const token = getToken(req);
+      const user  = await getUser(token);
+      if (!user) { json(401, { error: 'Not authenticated' }); return; }
+      // Find subscription via customer email
+      try {
+        const customers = await stripeRequest('GET',
+          '/v1/customers?email=' + encodeURIComponent(user.email) + '&limit=1', null);
+        const customerId = customers.data?.[0]?.id;
+        if (!customerId) { json(404, { error: 'No subscription found' }); return; }
+        const subs = await stripeRequest('GET',
+          '/v1/subscriptions?customer=' + customerId + '&status=active&limit=1', null);
+        const subId = subs.data?.[0]?.id;
+        if (!subId) { json(404, { error: 'No active subscription' }); return; }
+        await stripeRequest('DELETE', '/v1/subscriptions/' + subId, null);
+        await supabase('PATCH', '/rest/v1/profiles?id=eq.' + user.id,
+          { plan: 'free' }, null);
+        json(200, { ok: true });
       } catch(e) { json(500, { error: e.message }); }
     });
     return;
