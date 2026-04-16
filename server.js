@@ -7,16 +7,18 @@ const PORT              = process.env.PORT || 3000;
 const API_KEY           = process.env.ANTHROPIC_API_KEY || '';
 const SUPABASE_URL      = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY      = process.env.SUPABASE_SERVICE_KEY || '';
-const STRIPE_SECRET     = process.env.STRIPE_SECRET_KEY || '';
-const STRIPE_PRICE_MON  = process.env.STRIPE_PRICE_MONTHLY || '';
-const STRIPE_PRICE_YEAR = process.env.STRIPE_PRICE_YEARLY || '';
+// STRIPE (disabled) — uncomment to enable:
+// const STRIPE_SECRET     = process.env.STRIPE_SECRET_KEY || '';
+// const STRIPE_PRICE_MON  = process.env.STRIPE_PRICE_MONTHLY || '';
+// const STRIPE_PRICE_YEAR = process.env.STRIPE_PRICE_YEARLY || '';
+const STRIPE_SECRET = ''; const STRIPE_PRICE_MON = ''; const STRIPE_PRICE_YEAR = '';
 
 console.log('=== PinPoint starting ===');
 console.log('PORT:', PORT);
 console.log('API_KEY:', API_KEY ? 'SET' : 'MISSING');
 console.log('SUPABASE_URL:', SUPABASE_URL ? 'SET' : 'MISSING');
 console.log('SUPABASE_KEY:', SUPABASE_KEY ? 'SET' : 'MISSING');
-console.log('STRIPE:', STRIPE_SECRET ? 'SET' : 'MISSING');
+// console.log('STRIPE:', STRIPE_SECRET ? 'SET' : 'MISSING');
 console.log('HTML:', fs.existsSync(path.join(__dirname,'pinpoint.html')) ? 'FOUND' : 'NOT FOUND');
 
 // ─── Supabase helpers ────────────────────────────────────────
@@ -96,6 +98,7 @@ async function saveItinerary(userId, title, cities, daysCount, data, startDate, 
   } catch(e) { console.error('Save itinerary error:', e.message); }
 }
 
+/* STRIPE HELPERS — uncomment to enable:
 // ─── Stripe helper ───────────────────────────────────────────
 function stripeRequest(method, endpoint, body) {
   return new Promise((resolve, reject) => {
@@ -147,6 +150,8 @@ function flattenStripeParams(obj, prefix) {
     return encodeURIComponent(fullKey) + '=' + encodeURIComponent(val);
   }).join('&');
 }
+
+*/
 
 // Update user preferences
 async function updatePreferences(userId, lang, currency) {
@@ -364,7 +369,7 @@ const server = http.createServer(async (req, res) => {
 
   // Health check
   if (req.method === 'GET' && req.url === '/health') {
-    json(200, { ok: true, apiKey: !!API_KEY, supabase: !!SUPABASE_URL, stripe: !!STRIPE_SECRET, port: PORT });
+    json(200, { ok: true, apiKey: !!API_KEY, supabase: !!SUPABASE_URL, port: PORT });
     return;
   }
 
@@ -652,6 +657,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  /* STRIPE ENDPOINTS — uncomment to enable:
   // ── Stripe: Create checkout session ──
   if (req.method === 'POST' && req.url === '/api/stripe/checkout') {
     readBody(req, async (err, p) => {
@@ -751,7 +757,9 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── Serve HTML ──
+  */
+
+    // ── Serve HTML ──
   if (req.method === 'GET') {
     const file = path.join(__dirname, 'pinpoint.html');
     if (!fs.existsSync(file)) {
