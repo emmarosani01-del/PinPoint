@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>PinPoint</title>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wespdxdfaa");</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -761,23 +763,22 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
         </div>
       </div>
     </div>
-    <!-- Plan picker -->
+    <!-- Waitlist form -->
     <div style="padding:0 24px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <div id="plan-monthly" onclick="selectPlan('monthly')" style="background:var(--s2);border:.5px solid var(--b1);border-radius:var(--rl);padding:14px 12px;text-align:center;cursor:pointer">
-          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px">Monthly</div>
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--pu)">$4.99</div>
-          <div style="font-size:11px;color:var(--t2)">per month</div>
-        </div>
-        <div id="plan-yearly" onclick="selectPlan('yearly')" style="background:rgba(155,111,255,.1);border:1.5px solid var(--pu);border-radius:var(--rl);padding:14px 12px;text-align:center;cursor:pointer;position:relative">
-          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--pu);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap">BEST VALUE</div>
-          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px">Yearly</div>
-          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--pu)">$2.99</div>
-          <div style="font-size:11px;color:var(--t2)">per month · billed $35.88/yr</div>
-        </div>
+      <div style="background:rgba(155,111,255,.08);border:.5px solid rgba(155,111,255,.25);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px">🚀 Launching soon</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.5">Premium is in development. Join the waitlist and be the first to know — early adopters get a special discount.</div>
       </div>
-      <button onclick="subscribePremium()" class="btn" style="background:linear-gradient(135deg,var(--pu),#7B4FFF);box-shadow:0 8px 28px rgba(155,111,255,.3)">Start free 7-day trial →</button>
-      <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:10px">Cancel anytime · No charge until trial ends</div>
+      <div id="waitlist-form">
+        <input class="inp" id="waitlist-email" type="email" placeholder="Your email address" style="margin-bottom:10px">
+        <button onclick="joinWaitlist()" class="btn" style="background:linear-gradient(135deg,var(--pu),#7B4FFF);box-shadow:0 8px 28px rgba(155,111,255,.3)">Join Premium waitlist →</button>
+        <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:10px">No spam · Unsubscribe anytime</div>
+      </div>
+      <div id="waitlist-success" style="display:none;text-align:center;padding:20px 0">
+        <div style="font-size:28px;margin-bottom:10px">🎉</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px">You're on the list!</div>
+        <div style="font-size:13px;color:var(--t2)">We'll email you as soon as Premium launches with your early adopter discount.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -2055,8 +2056,34 @@ const FREE_TRIP_LIMIT = 2;
 let selectedPlan = 'yearly';
 let adDismissed  = false;
 
-function openPremium() { document.getElementById('premium-ovl').classList.add('show'); }
+function openPremium() { document.getElementById('premium-ovl').classList.add('show'); document.getElementById('waitlist-success').style.display='none'; document.getElementById('waitlist-form').style.display='block'; }
 function closePremium(){ document.getElementById('premium-ovl').classList.remove('show'); }
+
+async function joinWaitlist() {
+  const email = document.getElementById('waitlist-email').value.trim();
+  if (!email || !email.includes('@')) { showToast('⚠️ Enter a valid email'); return; }
+  const btn = document.querySelector('#waitlist-form .btn');
+  if (btn) { btn.disabled=true; btn.textContent='Saving…'; }
+  try {
+    const r = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, lang: currentLang })
+    });
+    if (r.ok) {
+      document.getElementById('waitlist-form').style.display = 'none';
+      document.getElementById('waitlist-success').style.display = 'block';
+      // Track with Clarity
+      if (window.clarity) clarity('event', 'waitlist_signup');
+    } else {
+      showToast('Could not save — try again');
+      if (btn) { btn.disabled=false; btn.textContent='Join Premium waitlist →'; }
+    }
+  } catch(e) {
+    showToast('Connection error');
+    if (btn) { btn.disabled=false; btn.textContent='Join Premium waitlist →'; }
+  }
+}
 
 function selectPlan(p) {
   selectedPlan = p;

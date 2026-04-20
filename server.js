@@ -470,6 +470,24 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── Waitlist signup ──
+  if (req.method === 'POST' && req.url === '/api/waitlist') {
+    readBody(req, async (err, p) => {
+      if (err) { json(400, { error: err.message }); return; }
+      if (!p.email || !p.email.includes('@')) { json(400, { error: 'Invalid email' }); return; }
+      try {
+        await supabase('POST', '/rest/v1/waitlist', {
+          email: p.email.toLowerCase().trim(),
+          lang: p.lang || 'en',
+          source: 'premium_modal'
+        }, null);
+        console.log('[waitlist] New signup:', p.email);
+        json(200, { ok: true });
+      } catch(e) { json(500, { error: e.message }); }
+    });
+    return;
+  }
+
   // ── Save preferences ──
   if (req.method === 'POST' && req.url === '/api/preferences') {
     readBody(req, async (err, p) => {
