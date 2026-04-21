@@ -19,19 +19,60 @@
   --sidebar-w:220px;--sidebar-w-sm:64px;
 }
 html{background:#000}
-/* Landing page global styles */
+/* Landing page */
 #landing{background:#0B0B0E;min-height:100vh;color:#fff}
-/* App wrapper — full screen on all devices */
-#app-wrapper{width:100%;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px 48px;background:#000}
-@media(max-width:430px){#app-wrapper{padding:0}}
-/* Landing page smooth scroll */
 html{scroll-behavior:smooth}
 
-/* ─── MOBILE layout (default) ─────────────────────────── */
+/* ─── MOBILE / default app wrapper ────────────────────────── */
 body{font-family:'Instrument Sans',sans-serif;background:#000;margin:0;padding:0}
+#app-wrapper{width:100%;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px 48px;background:#000}
 .shell{width:390px;min-height:844px;background:var(--bg);border-radius:50px;box-shadow:0 50px 140px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.07);overflow:hidden;position:relative;display:flex;flex-direction:column}
 .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:36px;background:#000;border-radius:0 0 22px 22px;z-index:200}
 @media(max-width:430px){#app-wrapper{padding:0}.shell{width:100vw;min-height:100dvh;border-radius:0;box-shadow:none}.notch{display:none}}
+
+/* ─── DESKTOP APP layout (≥900px, logged in) ──────────────── */
+#desktop-app{display:none;width:100%;min-height:100vh;background:var(--bg)}
+#desktop-app.active{display:flex}
+
+/* Sidebar */
+#ds-sidebar{width:220px;min-height:100vh;background:var(--s1);border-right:.5px solid var(--b1);display:flex;flex-direction:column;padding:20px 12px;flex-shrink:0;position:sticky;top:0;height:100vh}
+#ds-sidebar .ds-logo{display:flex;align-items:center;gap:9px;padding:6px 8px 24px}
+#ds-sidebar .ds-logo-text{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--tx)}
+#ds-sidebar .ds-logo-text span{color:var(--ac)}
+.ds-nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;color:var(--t2);font-size:14px;font-weight:500;transition:all .15s;margin-bottom:2px;white-space:nowrap}
+.ds-nav-item:hover{background:var(--s2);color:var(--tx)}
+.ds-nav-item.active{background:var(--ac2);color:var(--ac)}
+.ds-nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.6}
+.ds-nav-item.active svg{opacity:1}
+.ds-divider{height:.5px;background:var(--b1);margin:10px 0}
+.ds-user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;margin-top:auto}
+.ds-user-row:hover{background:var(--s2)}
+.ds-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#FF2050);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.ds-username{font-size:13px;color:var(--tx);overflow:hidden;text-overflow:ellipsis}
+
+/* Main content area */
+#ds-main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100vh}
+#ds-topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px 18px;border-bottom:.5px solid var(--b1);flex-shrink:0}
+#ds-topbar-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--tx)}
+#ds-topbar-sub{font-size:13px;color:var(--t2);margin-top:2px}
+#ds-screen-area{flex:1;overflow:hidden;position:relative}
+
+/* Screens inside desktop — full width, no shell constraints */
+#desktop-app .screen{border-radius:0!important;width:100%!important}
+#desktop-app .screen.active{display:flex;height:100%}
+#desktop-app .bnav{display:none!important}
+#desktop-app .scr{scrollbar-width:thin;scrollbar-color:var(--s4) transparent;padding-bottom:40px!important}
+#desktop-app .scr::-webkit-scrollbar{width:5px}
+#desktop-app .scr::-webkit-scrollbar-thumb{background:var(--s4);border-radius:4px}
+#desktop-app .notch{display:none}
+#desktop-app .sb{display:none}
+/* Wider padding in desktop */
+#desktop-app .scr > *{max-width:860px}
+#desktop-app #blog-posts-container{display:grid!important;grid-template-columns:repeat(2,1fr);gap:16px;padding:0 32px 40px!important}
+#desktop-app #blog-posts-container .bp{margin-bottom:0}
+/* Overlays full-screen on desktop */
+#desktop-app .ovl{position:fixed!important}
+#desktop-app #toast{position:fixed!important;bottom:40px;left:50%;transform:translateX(-50%)}
 
 .sb{display:flex;align-items:center;justify-content:space-between;padding:14px 26px 0;flex-shrink:0}
 .sb-time{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:var(--tx)}
@@ -412,6 +453,34 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
       </div>
     </div>
   </footer>
+</div>
+
+<!-- ═══ DESKTOP APP (logged in, ≥900px) ════════════════════ -->
+<div id="desktop-app">
+  <!-- Sidebar -->
+  <div id="ds-sidebar">
+    <div class="ds-logo">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/></svg>
+      <div class="ds-logo-text">Pin<span>Point</span></div>
+    </div>
+    <div id="ds-nav-items"></div>
+    <div class="ds-divider"></div>
+    <div class="ds-user-row" onclick="goTabDesktop('account')">
+      <div class="ds-avatar" id="ds-avatar">?</div>
+      <div class="ds-username" id="ds-username">Profile</div>
+    </div>
+  </div>
+  <!-- Main content -->
+  <div id="ds-main">
+    <div id="ds-topbar">
+      <div>
+        <div id="ds-topbar-title">PinPoint</div>
+        <div id="ds-topbar-sub"></div>
+      </div>
+      <div id="ds-topbar-actions" style="display:flex;gap:8px"></div>
+    </div>
+    <div id="ds-screen-area"></div>
+  </div>
 </div>
 
 <!-- ═══ MOBILE / LOGGED-IN APP ═════════════════════════════ -->
@@ -1029,19 +1098,117 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 // ─── LANDING vs APP ──────────────────────────────────────────
 const IS_DESKTOP = () => window.innerWidth >= 900;
 
+const DS_NAV_DEF = [
+  {k:'home',   lbl:'Home',        i18n:'nav_home',    ic:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'},
+  {k:'plan',   lbl:'Plan',        i18n:'nav_plan',    ic:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'},
+  {k:'trips',  lbl:'Trips',       i18n:'nav_trips',   ic:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'},
+  {k:'blog',   lbl:'Blog',        i18n:'nav_blog',    ic:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>'},
+  {k:'bucket', lbl:'Bucket List', i18n:'bucket_list_title', ic:'<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'},
+  {k:'account',lbl:'Profile',     i18n:'nav_profile', ic:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'},
+];
+
+const DS_TOPBAR_INFO = {
+  home:   {title:'Where to next?',      sub:'Plan your next adventure'},
+  plan:   {title:'New trip',            sub:'Set destination and preferences'},
+  trips:  {title:'Trips',              sub:'Your travel calendar'},
+  itin:   {title:'Itinerary',          sub:'Your generated trip'},
+  blog:   {title:'Travel Blog',        sub:'Stories from the community'},
+  bucket: {title:'Bucket List',        sub:'Destinations you want to visit'},
+  account:{title:'Profile',            sub:'Your account and settings'},
+  auth:   {title:'Sign in',            sub:''},
+  gen:    {title:'Generating…',        sub:'AI is planning your trip'},
+};
+
+let _desktopInitialized = false;
+
+function initDesktopApp() {
+  if (_desktopInitialized) return;
+  _desktopInitialized = true;
+
+  // Build nav items
+  const nav = document.getElementById('ds-nav-items');
+  DS_NAV_DEF.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'ds-nav-item';
+    el.dataset.tab = item.k;
+    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${item.ic}</svg><span class="ds-ni-lbl" data-i18n="${item.i18n}">${item.lbl}</span>`;
+    el.onclick = () => goTabDesktop(item.k);
+    nav.appendChild(el);
+  });
+
+  // Move all screens + overlays + toast into desktop layout
+  const area = document.getElementById('ds-screen-area');
+  const desktopApp = document.getElementById('desktop-app');
+  if (!area || !desktopApp) return;
+
+  document.querySelectorAll('.screen').forEach(s => area.appendChild(s));
+  document.querySelectorAll('.ovl, #toast, #ad-banner').forEach(el => desktopApp.appendChild(el));
+}
+
+function goTabDesktop(tab) {
+  // Run shared logic first (sets .active class, loads data)
+  Object.values(TABS).forEach(id => { const e = document.getElementById(id); if(e) e.classList.remove('active'); });
+  if (tab === 'account' && !currentUser && !isGuest) tab = 'auth';
+  if (tab === 'bucket' && !isPremium) { openPremium(); return; }
+  if (tab === 'blog') {
+    document.getElementById('blog-list').style.display = 'flex';
+    document.getElementById('blog-compose').style.display = 'none';
+    document.getElementById('blog-post-view').style.display = 'none';
+  }
+  const s = document.getElementById(TABS[tab]);
+  if (s) s.classList.add('active');
+
+  // Update sidebar active state
+  document.querySelectorAll('.ds-nav-item').forEach(ni => {
+    ni.classList.toggle('active', ni.dataset.tab === tab);
+  });
+
+  // Update topbar
+  const info = DS_TOPBAR_INFO[tab] || {};
+  const titleEl = document.getElementById('ds-topbar-title');
+  const subEl   = document.getElementById('ds-topbar-sub');
+  if (titleEl) titleEl.textContent = info.title || '';
+  if (subEl)   subEl.textContent   = info.sub   || '';
+
+  // Update user info in sidebar
+  if (currentUser) {
+    const av = document.getElementById('ds-avatar');
+    const un = document.getElementById('ds-username');
+    if (av) av.textContent = currentUser.email[0].toUpperCase();
+    if (un) un.textContent = currentUser.email.split('@')[0];
+  }
+
+  // Load data as needed
+  if (tab === 'itin' && generatedDays.length) buildDaysFromData(generatedDays);
+  if (tab === 'account' && currentUser) { loadProfile(); setTimeout(loadSavedTrips, 300); }
+  if (tab === 'blog')   initBlog();
+  if (tab === 'home')   loadHomeTrips();
+  if (tab === 'trips')  initCalendar();
+  if (tab === 'bucket') initBucketList();
+}
+
 function showLanding() {
   document.getElementById('landing').style.display = 'block';
   document.getElementById('app-wrapper').style.display = 'none';
+  document.getElementById('desktop-app').classList.remove('active');
 }
 
 function showApp() {
   document.getElementById('landing').style.display = 'none';
-  document.getElementById('app-wrapper').style.display = 'flex';
-  // If not logged in, show auth screen
-  if (!currentUser && !isGuest) {
-    // Trigger auth flow
-    Object.values(TABS).forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
-    document.getElementById('s-auth')?.classList.add('active');
+  if (IS_DESKTOP()) {
+    document.getElementById('app-wrapper').style.display = 'none';
+    document.getElementById('desktop-app').classList.add('active');
+    initDesktopApp();
+    if (currentUser || isGuest) {
+      goTabDesktop('home');
+    } else {
+      goTabDesktop('auth');
+    }
+  } else {
+    document.getElementById('app-wrapper').style.display = 'flex';
+    document.getElementById('desktop-app').classList.remove('active');
+    if (!currentUser && !isGuest) goTab('auth');
+    else goTab('home');
   }
 }
 
@@ -1050,7 +1217,6 @@ function openPremiumWaitlist() {
   setTimeout(() => openPremium(), 400);
 }
 
-// Decide which view to show on load
 function initView() {
   if (IS_DESKTOP() && !currentUser && !isGuest) {
     showLanding();
@@ -1092,6 +1258,10 @@ function buildNav(slot,active){
 Object.keys(NAV_SLOTS).forEach(k=>buildNav(NAV_SLOTS[k],NAV_KEY[k]));
 
 function goTab(tab){
+  // On desktop logged-in, use desktop layout
+  if (IS_DESKTOP() && (currentUser || isGuest) && document.getElementById('desktop-app').classList.contains('active')) {
+    goTabDesktop(tab); return;
+  }
   Object.values(TABS).forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
   if(tab==='account'&&!currentUser&&!isGuest){tab='auth';}
   if(tab==='bucket'&&!isPremium){openPremium();return;}
@@ -1360,15 +1530,12 @@ async function initAuth() {
         currentUser=data.user;currentProfile=data.profile;
         isPremium=(currentProfile?.plan==='premium');
         tripCount=currentProfile?.trip_count||0;
-        showApp();
-        goTab('home');return;
+        showApp(); return;
       }
     } catch(e){}
     sessionStorage.removeItem('pp_token');
   }
-  // Not logged in — landing on desktop, auth screen on mobile
   initView();
-  if (!IS_DESKTOP()) goTab('auth');
 }
 
 
