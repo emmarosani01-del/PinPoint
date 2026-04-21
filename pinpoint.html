@@ -16,63 +16,13 @@
   --ac:#FF4C6A;--ac2:rgba(255,76,106,0.14);
   --tl:#00E5C4;--pu:#9B6FFF;--go:#FFB830;
   --r:14px;--rl:22px;--rxl:30px;
-  --sidebar-w:220px;--sidebar-w-sm:64px;
 }
 html{background:#000}
-/* Landing page */
-#landing{background:#0B0B0E;min-height:100vh;color:#fff}
-html{scroll-behavior:smooth}
 
-/* ─── MOBILE / default app wrapper ────────────────────────── */
-body{font-family:'Instrument Sans',sans-serif;background:#000;margin:0;padding:0}
-#app-wrapper{width:100%;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px 48px;background:#000}
+body{font-family:'Instrument Sans',sans-serif;background:#000;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px 48px}
 .shell{width:390px;min-height:844px;background:var(--bg);border-radius:50px;box-shadow:0 50px 140px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.07);overflow:hidden;position:relative;display:flex;flex-direction:column}
 .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:36px;background:#000;border-radius:0 0 22px 22px;z-index:200}
-@media(max-width:430px){#app-wrapper{padding:0}.shell{width:100vw;min-height:100dvh;border-radius:0;box-shadow:none}.notch{display:none}}
-
-/* ─── DESKTOP APP layout (≥900px, logged in) ──────────────── */
-#desktop-app{display:none;width:100%;min-height:100vh;background:var(--bg)}
-#desktop-app.active{display:flex}
-
-/* Sidebar */
-#ds-sidebar{width:220px;min-height:100vh;background:var(--s1);border-right:.5px solid var(--b1);display:flex;flex-direction:column;padding:20px 12px;flex-shrink:0;position:sticky;top:0;height:100vh}
-#ds-sidebar .ds-logo{display:flex;align-items:center;gap:9px;padding:6px 8px 24px}
-#ds-sidebar .ds-logo-text{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--tx)}
-#ds-sidebar .ds-logo-text span{color:var(--ac)}
-.ds-nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;color:var(--t2);font-size:14px;font-weight:500;transition:all .15s;margin-bottom:2px;white-space:nowrap}
-.ds-nav-item:hover{background:var(--s2);color:var(--tx)}
-.ds-nav-item.active{background:var(--ac2);color:var(--ac)}
-.ds-nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.6}
-.ds-nav-item.active svg{opacity:1}
-.ds-divider{height:.5px;background:var(--b1);margin:10px 0}
-.ds-user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;margin-top:auto}
-.ds-user-row:hover{background:var(--s2)}
-.ds-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#FF2050);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.ds-username{font-size:13px;color:var(--tx);overflow:hidden;text-overflow:ellipsis}
-
-/* Main content area */
-#ds-main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100vh}
-#ds-topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px 18px;border-bottom:.5px solid var(--b1);flex-shrink:0}
-#ds-topbar-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--tx)}
-#ds-topbar-sub{font-size:13px;color:var(--t2);margin-top:2px}
-#ds-screen-area{flex:1;overflow:hidden;position:relative}
-
-/* Screens inside desktop — full width, no shell constraints */
-#desktop-app .screen{border-radius:0!important;width:100%!important}
-#desktop-app .screen.active{display:flex;height:100%}
-#desktop-app .bnav{display:none!important}
-#desktop-app .scr{scrollbar-width:thin;scrollbar-color:var(--s4) transparent;padding-bottom:40px!important}
-#desktop-app .scr::-webkit-scrollbar{width:5px}
-#desktop-app .scr::-webkit-scrollbar-thumb{background:var(--s4);border-radius:4px}
-#desktop-app .notch{display:none}
-#desktop-app .sb{display:none}
-/* Wider padding in desktop */
-#desktop-app .scr > *{max-width:860px}
-#desktop-app #blog-posts-container{display:grid!important;grid-template-columns:repeat(2,1fr);gap:16px;padding:0 32px 40px!important}
-#desktop-app #blog-posts-container .bp{margin-bottom:0}
-/* Overlays full-screen on desktop */
-#desktop-app .ovl{position:fixed!important}
-#desktop-app #toast{position:fixed!important;bottom:40px;left:50%;transform:translateX(-50%)}
+@media(max-width:430px){body{padding:0}.shell{width:100vw;min-height:100dvh;border-radius:0;box-shadow:none}.notch{display:none}}
 
 .sb{display:flex;align-items:center;justify-content:space-between;padding:14px 26px 0;flex-shrink:0}
 .sb-time{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:var(--tx)}
@@ -263,225 +213,6 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 </head>
 <body>
 
-
-<!-- ═══ DESKTOP LANDING PAGE ══════════════════════════════ -->
-<div id="landing" style="display:none">
-  <!-- NAVBAR -->
-  <nav style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,11,14,.92);backdrop-filter:blur(20px);border-bottom:.5px solid rgba(255,255,255,.07)">
-    <div style="max-width:1100px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:10px">
-        <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/></svg>
-        <span style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff">Pin<span style="color:#FF4C6A">Point</span></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:32px">
-        <a href="#features" style="font-size:14px;color:#888890;text-decoration:none;transition:.15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888890'">Features</a>
-        <a href="#how" style="font-size:14px;color:#888890;text-decoration:none;transition:.15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888890'">How it works</a>
-        <a href="#pricing" style="font-size:14px;color:#888890;text-decoration:none;transition:.15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888890'">Pricing</a>
-        <button onclick="showApp()" style="padding:9px 20px;background:rgba(255,76,106,.12);color:#FF4C6A;border:.5px solid rgba(255,76,106,.35);border-radius:40px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.15s" onmouseover="this.style.background='rgba(255,76,106,.22)'" onmouseout="this.style.background='rgba(255,76,106,.12)'">Sign in</button>
-        <button onclick="showApp()" style="padding:9px 22px;background:#FF4C6A;color:#fff;border:none;border-radius:40px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.15s" onmouseover="this.style.background='#ff3558'" onmouseout="this.style.background='#FF4C6A'">Start free →</button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 80px;position:relative;overflow:hidden">
-    <!-- Background glow -->
-    <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(255,76,106,.12) 0%,transparent 65%);pointer-events:none"></div>
-    <div style="position:absolute;bottom:-100px;left:20%;width:400px;height:400px;background:radial-gradient(ellipse,rgba(155,111,255,.07) 0%,transparent 65%);pointer-events:none"></div>
-
-    <div style="max-width:1100px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
-      <!-- Left: copy -->
-      <div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,76,106,.1);border:.5px solid rgba(255,76,106,.25);border-radius:40px;padding:6px 14px;margin-bottom:28px">
-          <div style="width:6px;height:6px;border-radius:50%;background:#FF4C6A;animation:pulse 1.5s infinite"></div>
-          <span style="font-size:12px;font-weight:600;color:#FF4C6A;letter-spacing:.5px">FREE BETA — NOW LIVE</span>
-        </div>
-        <h1 style="font-family:'Syne',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:24px">Plan your next<br>adventure with <span style="color:#FF4C6A">AI</span></h1>
-        <p style="font-size:18px;color:#888890;line-height:1.7;margin-bottom:36px;max-width:480px">Day-by-day itineraries with real places, estimated costs, and booking links — generated in seconds. Free forever for up to 2 trips.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:48px">
-          <button onclick="showApp()" style="padding:16px 32px;background:#FF4C6A;color:#fff;border:none;border-radius:40px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 32px rgba(255,76,106,.35);transition:.15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Start planning free →</button>
-          <span style="font-size:13px;color:#505058">No credit card · No signup required</span>
-        </div>
-        <!-- Stats -->
-        <div style="display:flex;gap:32px">
-          <div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff">12</div><div style="font-size:13px;color:#505058;margin-top:2px">Languages</div></div>
-          <div style="width:.5px;background:rgba(255,255,255,.08)"></div>
-          <div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff">20</div><div style="font-size:13px;color:#505058;margin-top:2px">Currencies</div></div>
-          <div style="width:.5px;background:rgba(255,255,255,.08)"></div>
-          <div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff">30s</div><div style="font-size:13px;color:#505058;margin-top:2px">To generate</div></div>
-        </div>
-      </div>
-
-      <!-- Right: app mockup -->
-      <div style="position:relative;display:flex;justify-content:center">
-        <div style="position:absolute;inset:-40px;background:radial-gradient(ellipse,rgba(155,111,255,.1) 0%,transparent 65%);pointer-events:none"></div>
-        <!-- Phone frame -->
-        <div style="width:280px;background:#1C1C21;border-radius:36px;border:.5px solid rgba(255,255,255,.12);box-shadow:0 40px 100px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.05);overflow:hidden;position:relative">
-          <!-- Notch -->
-          <div style="height:28px;background:#141417;display:flex;align-items:center;justify-content:center">
-            <div style="width:80px;height:14px;background:#0B0B0E;border-radius:0 0 10px 10px"></div>
-          </div>
-          <!-- App screen -->
-          <div style="background:#0B0B0E;padding:20px 18px">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-              <div style="width:20px;height:20px;background:#FF4C6A;border-radius:50%"></div>
-              <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff">PinPoint</span>
-            </div>
-            <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:18px">Where to<br><span style="color:#FF4C6A">next?</span></div>
-            <!-- CTA card -->
-            <div style="background:linear-gradient(135deg,#FF4C6A,#FF2050);border-radius:18px;padding:16px;margin-bottom:14px">
-              <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:1px;margin-bottom:6px">AI-POWERED PLANNER</div>
-              <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:12px">Plan your next adventure</div>
-              <div style="background:rgba(255,255,255,.18);color:#fff;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">Start planning →</div>
-            </div>
-            <!-- Trip card -->
-            <div style="background:#141417;border-radius:14px;padding:12px;border:.5px solid rgba(255,255,255,.07)">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:#fff">Tokyo · 7 days</span>
-                <span style="font-size:9px;background:rgba(255,76,106,.14);color:#FF4C6A;padding:2px 7px;border-radius:8px;font-weight:600">Saved</span>
-              </div>
-              <div style="font-size:10px;color:#888890">Apr 15–22 · $420 est.</div>
-            </div>
-            <!-- Nav bar -->
-            <div style="display:flex;justify-content:space-around;margin-top:16px;padding-top:12px;border-top:.5px solid rgba(255,255,255,.07)">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:18px;height:18px;background:#FF4C6A;border-radius:4px"></div><div style="width:4px;height:4px;border-radius:50%;background:#FF4C6A"></div></div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.3"><div style="width:18px;height:18px;background:#505058;border-radius:4px"></div></div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.3"><div style="width:18px;height:18px;background:#505058;border-radius:4px"></div></div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.3"><div style="width:18px;height:18px;background:#505058;border-radius:4px"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how" style="padding:100px 40px;background:rgba(255,255,255,.015);border-top:.5px solid rgba(255,255,255,.06)">
-    <div style="max-width:1100px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:64px">
-        <div style="font-size:12px;font-weight:600;color:#FF4C6A;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">HOW IT WORKS</div>
-        <h2 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff;letter-spacing:-1.5px">Plan a trip in 3 steps</h2>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-        <div style="background:#141417;border-radius:24px;border:.5px solid rgba(255,255,255,.07);padding:32px;position:relative;overflow:hidden" onmouseover="this.style.borderColor='rgba(255,76,106,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
-          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(255,76,106,.08) 0%,transparent 70%)"></div>
-          <div style="width:44px;height:44px;background:rgba(255,76,106,.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#FF4C6A;margin-bottom:20px">1</div>
-          <h3 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:10px">Set your trip</h3>
-          <p style="font-size:14px;color:#888890;line-height:1.7">Choose destination, dates, budget and interests. Up to 4 cities in one plan.</p>
-        </div>
-        <div style="background:#141417;border-radius:24px;border:.5px solid rgba(255,255,255,.07);padding:32px;position:relative;overflow:hidden" onmouseover="this.style.borderColor='rgba(155,111,255,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
-          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(155,111,255,.08) 0%,transparent 70%)"></div>
-          <div style="width:44px;height:44px;background:rgba(155,111,255,.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#9B6FFF;margin-bottom:20px">2</div>
-          <h3 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:10px">AI generates</h3>
-          <p style="font-size:14px;color:#888890;line-height:1.7">Real venues, day-by-day schedule, transport tips, cost estimates and live booking links.</p>
-        </div>
-        <div style="background:#141417;border-radius:24px;border:.5px solid rgba(255,255,255,.07);padding:32px;position:relative;overflow:hidden" onmouseover="this.style.borderColor='rgba(0,229,196,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
-          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(0,229,196,.08) 0%,transparent 70%)"></div>
-          <div style="width:44px;height:44px;background:rgba(0,229,196,.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#00E5C4;margin-bottom:20px">3</div>
-          <h3 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:10px">Save &amp; explore</h3>
-          <p style="font-size:14px;color:#888890;line-height:1.7">Save to your calendar, tweak on the fly, and share your story on the community blog.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section id="features" style="padding:100px 40px">
-    <div style="max-width:1100px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:64px">
-        <div style="font-size:12px;font-weight:600;color:#FF4C6A;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">FEATURES</div>
-        <h2 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff;letter-spacing:-1.5px">Everything you need to travel smarter</h2>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-        <div id="lp-feat-0" style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;cursor:default;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(255,76,106,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">🤖</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">AI Itineraries</div><div style="font-size:13px;color:#888890;line-height:1.6">Real venues, times, costs and transport between spots — all in your language.</div></div>
-        <div style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(0,229,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">🌐</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">12 Languages</div><div style="font-size:13px;color:#888890;line-height:1.6">Full UI and AI output in EN, IT, ES, FR, DE, PT, JA, ZH, KO, AR, HI, RU.</div></div>
-        <div style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(255,184,48,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">💱</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">20 Currencies</div><div style="font-size:13px;color:#888890;line-height:1.6">Budget estimates converted instantly to your currency with live FX rates.</div></div>
-        <div style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(155,111,255,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">📅</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Trip Calendar</div><div style="font-size:13px;color:#888890;line-height:1.6">All your trips on a monthly calendar. Today's itinerary highlighted automatically.</div></div>
-        <div style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(255,76,106,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">🌍</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Bucket List</div><div style="font-size:13px;color:#888890;line-height:1.6">Save dream destinations. AI generates a preview itinerary for each one. (Premium)</div></div>
-        <div style="background:#141417;border-radius:20px;border:.5px solid rgba(255,255,255,.07);padding:26px;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(0,229,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:28px;margin-bottom:14px">📝</div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Community Blog</div><div style="font-size:13px;color:#888890;line-height:1.6">Read and share real travel stories. Comments, likes, search and filters.</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section id="pricing" style="padding:100px 40px;background:rgba(255,255,255,.015);border-top:.5px solid rgba(255,255,255,.06)">
-    <div style="max-width:700px;margin:0 auto;text-align:center">
-      <div style="font-size:12px;font-weight:600;color:#FF4C6A;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">PRICING</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff;letter-spacing:-1.5px;margin-bottom:48px">Simple, transparent pricing</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left">
-        <!-- Free -->
-        <div style="background:#141417;border-radius:24px;border:.5px solid rgba(255,255,255,.07);padding:32px">
-          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#888890;margin-bottom:8px">Free</div>
-          <div style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff;margin-bottom:24px">€0<span style="font-size:16px;color:#888890;font-weight:400">/forever</span></div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(0,229,196,.12);display:flex;align-items:center;justify-content:center;font-size:10px;color:#00E5C4;flex-shrink:0">✓</div><span style="font-size:14px;color:#888890">2 AI-generated trips</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(0,229,196,.12);display:flex;align-items:center;justify-content:center;font-size:10px;color:#00E5C4;flex-shrink:0">✓</div><span style="font-size:14px;color:#888890">Full itinerary view</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(0,229,196,.12);display:flex;align-items:center;justify-content:center;font-size:10px;color:#00E5C4;flex-shrink:0">✓</div><span style="font-size:14px;color:#888890">Community blog</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(0,229,196,.12);display:flex;align-items:center;justify-content:center;font-size:10px;color:#00E5C4;flex-shrink:0">✓</div><span style="font-size:14px;color:#888890">12 languages · 20 currencies</span></div>
-          </div>
-          <button onclick="showApp()" style="width:100%;margin-top:28px;padding:14px;background:var(--s2,#1C1C21);color:#fff;border:.5px solid rgba(255,255,255,.1);border-radius:40px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer">Get started free</button>
-        </div>
-        <!-- Premium -->
-        <div style="background:linear-gradient(135deg,#1A0F2E,#2A1535);border-radius:24px;border:1.5px solid rgba(155,111,255,.4);padding:32px;position:relative;overflow:hidden">
-          <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(155,111,255,.15) 0%,transparent 65%)"></div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#9B6FFF">Premium</span><span style="font-size:10px;font-weight:700;background:linear-gradient(135deg,#9B6FFF,#FFB830);-webkit-background-clip:text;-webkit-text-fill-color:transparent;padding:2px 0">✦</span></div>
-          <div style="margin-bottom:6px"><span style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#fff">$4.99</span><span style="font-size:16px;color:#888890;font-weight:400">/mo</span></div>
-          <div style="font-size:12px;color:#9B6FFF;margin-bottom:24px">or $2.99/mo billed yearly · 7-day free trial</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(155,111,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#9B6FFF;flex-shrink:0">✓</div><span style="font-size:14px;color:#fff">Unlimited trips</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(155,111,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#9B6FFF;flex-shrink:0">✓</div><span style="font-size:14px;color:#fff">Bucket List + AI preview</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(155,111,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#9B6FFF;flex-shrink:0">✓</div><span style="font-size:14px;color:#fff">No ads · Offline access</span></div>
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(155,111,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#9B6FFF;flex-shrink:0">✓</div><span style="font-size:14px;color:#fff">PDF export</span></div>
-          </div>
-          <button onclick="openPremiumWaitlist()" style="width:100%;margin-top:28px;padding:14px;background:linear-gradient(135deg,#9B6FFF,#7B4FFF);color:#fff;border:none;border-radius:40px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(155,111,255,.35)">Join Premium waitlist →</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer style="padding:48px 40px;border-top:.5px solid rgba(255,255,255,.06)">
-    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:8px">
-        <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/></svg>
-        <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff">Pin<span style="color:#FF4C6A">Point</span></span>
-        <span style="font-size:12px;color:#505058;margin-left:8px">AI travel planner for backpackers</span>
-      </div>
-      <div style="display:flex;gap:24px;align-items:center">
-        <span style="font-size:12px;color:#505058">© 2025 PinPoint</span>
-        <button onclick="showApp()" style="font-size:13px;color:#888890;background:none;border:none;cursor:pointer;transition:.15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888890'">Open app →</button>
-      </div>
-    </div>
-  </footer>
-</div>
-
-<!-- ═══ DESKTOP APP (logged in, ≥900px) ════════════════════ -->
-<div id="desktop-app">
-  <!-- Sidebar -->
-  <div id="ds-sidebar">
-    <div class="ds-logo">
-      <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><path d="M16 2C11 2 7 6.3 7 11.5C7 18.5 16 30 16 30s9-11.5 9-18.5C25 6.3 21 2 16 2Z" fill="#FF4C6A"/><circle cx="16" cy="11.5" r="4" fill="white"/><circle cx="16" cy="11.5" r="2.2" fill="#FF4C6A"/></svg>
-      <div class="ds-logo-text">Pin<span>Point</span></div>
-    </div>
-    <div id="ds-nav-items"></div>
-    <div class="ds-divider"></div>
-    <div class="ds-user-row" onclick="goTabDesktop('account')">
-      <div class="ds-avatar" id="ds-avatar">?</div>
-      <div class="ds-username" id="ds-username">Profile</div>
-    </div>
-  </div>
-  <!-- Main content -->
-  <div id="ds-main">
-    <div id="ds-topbar">
-      <div>
-        <div id="ds-topbar-title">PinPoint</div>
-        <div id="ds-topbar-sub"></div>
-      </div>
-      <div id="ds-topbar-actions" style="display:flex;gap:8px"></div>
-    </div>
-    <div id="ds-screen-area"></div>
-  </div>
-</div>
 
 <!-- ═══ MOBILE / LOGGED-IN APP ═════════════════════════════ -->
 <div id="app-wrapper" style="display:none">
@@ -1091,139 +822,8 @@ textarea.inp{resize:none;height:72px;line-height:1.5}
 
 <div id="toast"></div>
 </div><!-- end .shell -->
-</div><!-- end #app-wrapper -->
 
 <script>
-
-// ─── LANDING vs APP ──────────────────────────────────────────
-const IS_DESKTOP = () => window.innerWidth >= 900;
-
-const DS_NAV_DEF = [
-  {k:'home',   lbl:'Home',        i18n:'nav_home',    ic:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>'},
-  {k:'plan',   lbl:'Plan',        i18n:'nav_plan',    ic:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>'},
-  {k:'trips',  lbl:'Trips',       i18n:'nav_trips',   ic:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'},
-  {k:'blog',   lbl:'Blog',        i18n:'nav_blog',    ic:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>'},
-  {k:'bucket', lbl:'Bucket List', i18n:'bucket_list_title', ic:'<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'},
-  {k:'account',lbl:'Profile',     i18n:'nav_profile', ic:'<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>'},
-];
-
-const DS_TOPBAR_INFO = {
-  home:   {title:'Where to next?',      sub:'Plan your next adventure'},
-  plan:   {title:'New trip',            sub:'Set destination and preferences'},
-  trips:  {title:'Trips',              sub:'Your travel calendar'},
-  itin:   {title:'Itinerary',          sub:'Your generated trip'},
-  blog:   {title:'Travel Blog',        sub:'Stories from the community'},
-  bucket: {title:'Bucket List',        sub:'Destinations you want to visit'},
-  account:{title:'Profile',            sub:'Your account and settings'},
-  auth:   {title:'Sign in',            sub:''},
-  gen:    {title:'Generating…',        sub:'AI is planning your trip'},
-};
-
-let _desktopInitialized = false;
-
-function initDesktopApp() {
-  if (_desktopInitialized) return;
-  _desktopInitialized = true;
-
-  // Build nav items
-  const nav = document.getElementById('ds-nav-items');
-  DS_NAV_DEF.forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'ds-nav-item';
-    el.dataset.tab = item.k;
-    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${item.ic}</svg><span class="ds-ni-lbl" data-i18n="${item.i18n}">${item.lbl}</span>`;
-    el.onclick = () => goTabDesktop(item.k);
-    nav.appendChild(el);
-  });
-
-  // Move all screens + overlays + toast into desktop layout
-  const area = document.getElementById('ds-screen-area');
-  const desktopApp = document.getElementById('desktop-app');
-  if (!area || !desktopApp) return;
-
-  document.querySelectorAll('.screen').forEach(s => area.appendChild(s));
-  document.querySelectorAll('.ovl, #toast, #ad-banner').forEach(el => desktopApp.appendChild(el));
-}
-
-function goTabDesktop(tab) {
-  // Run shared logic first (sets .active class, loads data)
-  Object.values(TABS).forEach(id => { const e = document.getElementById(id); if(e) e.classList.remove('active'); });
-  if (tab === 'account' && !currentUser && !isGuest) tab = 'auth';
-  if (tab === 'bucket' && !isPremium) { openPremium(); return; }
-  if (tab === 'blog') {
-    document.getElementById('blog-list').style.display = 'flex';
-    document.getElementById('blog-compose').style.display = 'none';
-    document.getElementById('blog-post-view').style.display = 'none';
-  }
-  const s = document.getElementById(TABS[tab]);
-  if (s) s.classList.add('active');
-
-  // Update sidebar active state
-  document.querySelectorAll('.ds-nav-item').forEach(ni => {
-    ni.classList.toggle('active', ni.dataset.tab === tab);
-  });
-
-  // Update topbar
-  const info = DS_TOPBAR_INFO[tab] || {};
-  const titleEl = document.getElementById('ds-topbar-title');
-  const subEl   = document.getElementById('ds-topbar-sub');
-  if (titleEl) titleEl.textContent = info.title || '';
-  if (subEl)   subEl.textContent   = info.sub   || '';
-
-  // Update user info in sidebar
-  if (currentUser) {
-    const av = document.getElementById('ds-avatar');
-    const un = document.getElementById('ds-username');
-    if (av) av.textContent = currentUser.email[0].toUpperCase();
-    if (un) un.textContent = currentUser.email.split('@')[0];
-  }
-
-  // Load data as needed
-  if (tab === 'itin' && generatedDays.length) buildDaysFromData(generatedDays);
-  if (tab === 'account' && currentUser) { loadProfile(); setTimeout(loadSavedTrips, 300); }
-  if (tab === 'blog')   initBlog();
-  if (tab === 'home')   loadHomeTrips();
-  if (tab === 'trips')  initCalendar();
-  if (tab === 'bucket') initBucketList();
-}
-
-function showLanding() {
-  document.getElementById('landing').style.display = 'block';
-  document.getElementById('app-wrapper').style.display = 'none';
-  document.getElementById('desktop-app').classList.remove('active');
-}
-
-function showApp() {
-  document.getElementById('landing').style.display = 'none';
-  if (IS_DESKTOP()) {
-    document.getElementById('app-wrapper').style.display = 'none';
-    document.getElementById('desktop-app').classList.add('active');
-    initDesktopApp();
-    if (currentUser || isGuest) {
-      goTabDesktop('home');
-    } else {
-      goTabDesktop('auth');
-    }
-  } else {
-    document.getElementById('app-wrapper').style.display = 'flex';
-    document.getElementById('desktop-app').classList.remove('active');
-    if (!currentUser && !isGuest) goTab('auth');
-    else goTab('home');
-  }
-}
-
-function openPremiumWaitlist() {
-  showApp();
-  setTimeout(() => openPremium(), 400);
-}
-
-function initView() {
-  if (IS_DESKTOP() && !currentUser && !isGuest) {
-    showLanding();
-  } else {
-    showApp();
-  }
-}
 
 // ─── CLOCK ───────────────────────────────────────────────────
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();}
@@ -1258,10 +858,6 @@ function buildNav(slot,active){
 Object.keys(NAV_SLOTS).forEach(k=>buildNav(NAV_SLOTS[k],NAV_KEY[k]));
 
 function goTab(tab){
-  // On desktop logged-in, use desktop layout
-  if (IS_DESKTOP() && (currentUser || isGuest) && document.getElementById('desktop-app').classList.contains('active')) {
-    goTabDesktop(tab); return;
-  }
   Object.values(TABS).forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
   if(tab==='account'&&!currentUser&&!isGuest){tab='auth';}
   if(tab==='bucket'&&!isPremium){openPremium();return;}
@@ -1311,7 +907,6 @@ async function signIn() {
     isGuest     = false;
     errEl.style.display='none';
     showToast('Welcome back!');
-    showApp();
     await loadProfile();
     goTab('home');
   } catch(e){errEl.textContent='Connection error.';errEl.style.display='block';}
@@ -1331,7 +926,7 @@ async function signUp() {
     // Auto sign in after signup
     if (data.access_token){
       authToken=data.access_token;currentUser=data.user;isGuest=false;
-      showApp();await loadProfile();goTab('home');showToast('Account created! Welcome to PinPoint 🎉');
+      await loadProfile();goTab('home');showToast('Account created! Welcome to PinPoint 🎉');
     } else {
       showToast('Check your email to confirm your account, then sign in.');
       switchAuthTab('signin');
@@ -1342,7 +937,6 @@ async function signUp() {
 function continueAsGuest() {
   isGuest=true;currentUser=null;authToken=null;
   isPremium=false;tripCount=0;
-  showApp();
   goTab('home');
   showToast('Continuing as guest · 2 trip limit');
 }
@@ -1350,13 +944,8 @@ function continueAsGuest() {
 async function signOut() {
   currentUser=null;authToken=null;currentProfile=null;isGuest=false;
   isPremium=false;tripCount=0;
-  sessionStorage.removeItem('pp_token');
   showToast('Signed out');
-  if (IS_DESKTOP()) {
-    showLanding();
-  } else {
-    goTab('auth');
-  }
+  goTab('auth');
 }
 
 async function loadProfile() {
@@ -1530,12 +1119,12 @@ async function initAuth() {
         currentUser=data.user;currentProfile=data.profile;
         isPremium=(currentProfile?.plan==='premium');
         tripCount=currentProfile?.trip_count||0;
-        showApp(); return;
+        goTab('home');return;
       }
     } catch(e){}
     sessionStorage.removeItem('pp_token');
   }
-  initView();
+  goTab('auth');
 }
 
 
