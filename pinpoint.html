@@ -1346,17 +1346,23 @@ function buildDaysFromData(days){
       if(item.transport)return'<div class="trans">↓ '+item.transport+'</div>';
       const cc={free:'bf',low:'bl',mid:'bm',high:'bh'}[item.costLevel]||'bm';
       const costTxt=item.costDisplay||(item.cost===0?'free':'$'+item.cost);
+      const cityName=((day.city||'').split('→')[0].trim());
+      const placeName=item.name+' '+cityName;
       let bookBadge='';
       if(item.bookingRequired){
-        const url=item.bookingUrl||('https://www.google.com/search?q=book+'+encodeURIComponent(item.name));
-        bookBadge='<a href="'+url+'" class="book-badge book-req" target="_blank" rel="noopener">🔴 Book ahead</a>';
+        // Always use Google search for booking — never trust AI-generated booking URLs
+        const bookUrl='https://www.google.com/search?q=book+ticket+'+encodeURIComponent(item.name+' '+cityName);
+        bookBadge='<a href="'+bookUrl+'" class="book-badge book-req" target="_blank" rel="noopener">🔴 Book ahead</a>';
       }else if(item.costLevel==='mid'||item.costLevel==='high'){
         bookBadge='<span class="book-badge book-rec">🟡 Recommended</span>';
       }else{
         bookBadge='<span class="book-badge book-free">🟢 Walk-in</span>';
       }
-      const infoUrl=item.infoUrl||('https://www.google.com/search?q='+encodeURIComponent(item.name+' '+((day.city||'').split('→')[0].trim())));
-      const infoBtn='<a href="'+infoUrl+'" class="info-link" target="_blank" rel="noopener">ℹ Info →</a>';
+      // Always build info URL from place name — never use AI-generated infoUrl
+      const infoUrl='https://www.google.com/search?q='+encodeURIComponent(placeName);
+      const mapsUrl='https://maps.google.com/maps?q='+encodeURIComponent(placeName);
+      const infoBtn='<a href="'+infoUrl+'" class="info-link" target="_blank" rel="noopener">🔍 Search</a>'
+                  +'<a href="'+mapsUrl+'" class="info-link" target="_blank" rel="noopener" style="margin-left:4px">📍 Maps</a>';
       const fact=item.fact?'<div class="fact-box">'+item.fact+'</div>':'';
       return'<div class="act'+(item.highlight?' hl':'')+'"><div class="act-row"><div class="at">'+(item.time||'–')+'</div><div class="ab"><div class="an">'+item.name+'</div><div class="am">'+item.meta+'</div><div class="act-badges"><span class="bdg '+cc+'">'+costTxt+'</span>'+bookBadge+infoBtn+'</div>'+fact+'</div></div></div>';
     }).join('');
@@ -1417,8 +1423,8 @@ function renderQaOptions(opts,city,cfg,dayLabel){
     const bookBadge=opt.bookingRequired
       ?'<span class="book-badge book-req" style="font-size:9px;padding:2px 6px">🔴 Book ahead</span>'
       :'<span class="book-badge book-free" style="font-size:9px;padding:2px 6px">🟢 Walk-in</span>';
-    const infoUrl=opt.infoUrl||('https://www.google.com/search?q='+encodeURIComponent(opt.label+' '+city));
-    const infoBtn='<a href="'+infoUrl+'" class="info-link" target="_blank" rel="noopener" style="font-size:9px;padding:2px 6px" onclick="event.stopPropagation()">ℹ Info</a>';
+    const infoUrl='https://www.google.com/search?q='+encodeURIComponent(opt.label+' '+city);
+    const infoBtn='<a href="'+infoUrl+'" class="info-link" target="_blank" rel="noopener" style="font-size:9px;padding:2px 6px" onclick="event.stopPropagation()">🔍 Search</a>';
     const card=document.createElement('div');
     card.style.cssText='background:var(--s2);border-radius:var(--r);border:.5px solid var(--b1);padding:13px 14px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px';
     const dot=document.createElement('div');

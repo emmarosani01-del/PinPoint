@@ -217,9 +217,7 @@ Respond with ONLY valid JSON. No markdown. No backticks. Start with { end with }
           "cost": 5,
           "costLevel": "low",
           "highlight": true,
-          "bookingRequired": false,
-          "bookingUrl": "",
-          "infoUrl": "https://www.tripadvisor.com/..."
+          "bookingRequired": false
         },
         { "transport": "15 min walk to next area" },
         {
@@ -231,9 +229,7 @@ Respond with ONLY valid JSON. No markdown. No backticks. Start with { end with }
           "cost": 12,
           "costLevel": "mid",
           "highlight": false,
-          "bookingRequired": false,
-          "bookingUrl": "",
-          "infoUrl": ""
+          "bookingRequired": false
         }
       ]
     }
@@ -245,12 +241,10 @@ RULES (no exceptions):
 2. cost = integer USD (0 if free). Used for budget calculation.
 3. costDisplay = readable e.g. "$8" or "free".
 4. bookingRequired = true only for famous museums, top restaurants, guided tours, shows.
-5. bookingUrl = real URL to book (GetYourGuide, Viator, official site). Empty string otherwise.
-6. infoUrl = real URL for info (TripAdvisor, official site, Google Maps). Always provide.
-7. fact = real verifiable fact about THAT specific place.
-8. cityNote = concrete local tip about ${city}.
-9. Include real named restaurants for every meal.
-10. Generate EXACTLY ${n} day objects.`;
+5. fact = real verifiable fact about THAT specific place.
+6. cityNote = concrete local tip about ${city}.
+7. Include real named restaurants for every meal.
+8. Generate EXACTLY ${n} day objects.`;
 }
 
 function qaPrompt(p) {
@@ -283,9 +277,7 @@ Respond with ONLY valid JSON. Start with { end with }.
       "costDisplay": "$X or free",
       "cost": 5,
       "costLevel": "low",
-      "bookingRequired": false,
-      "bookingUrl": "",
-      "infoUrl": "https://..."
+      "bookingRequired": false
     }
   ]
 }
